@@ -1,8 +1,8 @@
-from django import from
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from scorer.models import Student, Admin, User
+from scorer.models import User
 
 
 class StudentSignUpForm(UserCreationForm):
@@ -15,16 +15,4 @@ class StudentSignUpForm(UserCreationForm):
         user.is_student = True
         user.save()
         student = Student.objects.create(user=user)
-        return user
-
-
-class AdminSignUpForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.is_teacher = True
-        if commit:
-            user.save()
         return user
