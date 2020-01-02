@@ -13,7 +13,7 @@ class AdminNavBar extends Component {
                 <a className={active('/admin/')} href='/admin/'>QUESTIONS</a>
                 <a className={active('/admin/addquestion/')} href='/admin/addquestion/'>ADD QUESTION</a>
                 <a className={active('/admin/model/')} href='/admin/model/'>MODEL</a>
-                <a className={active('/admin/students/')} href='admin/students/'>STUDENTS</a>
+                <a className={active('/admin/students/')} href='/admin/students/'>STUDENTS</a>
             </div>
         )
     }
