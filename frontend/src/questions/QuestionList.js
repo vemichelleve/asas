@@ -13,13 +13,7 @@ class QuestionList extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* {this.state.questions.map(q =>
-                            <tr key={q.pk}>
-                                <td>{q.pk}</td>
-                                <td>{q.question}</td>
-                                <td>{q.refans}</td>
-                            </tr>
-                        )} */}
+
                     </tbody>
                 </table>
             </div>
