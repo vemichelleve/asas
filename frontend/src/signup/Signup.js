@@ -7,6 +7,7 @@ class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            username: '',
             email: '',
             first_name: '',
             last_name: '',
@@ -20,16 +21,20 @@ class Signup extends Component {
 
     handleCreate() {
         signupService.createStudent({
+            'username': this.state.username,
             'email': this.state.email,
             'first_name': this.state.first_name,
             'last_name': this.state.last_name,
             'password': this.state.password,
             'is_student': this.state.is_student,
             'is_admin': this.state.is_admin,
-        }).then(() => {
-            alert('Student created!');
+        }).then((response) => {
+            alert(response.message);
+            if (response.status) {
+                window.location.href = '/';
+            }
         }).catch(() => {
-            alert('There was an error! Please re-check your form.');
+            alert('There was an error! Please check your form.');
         });
     }
 
@@ -49,6 +54,10 @@ class Signup extends Component {
                 <div className='card' style={{ width: '50%' }}>
                     <form className='card-body' onSubmit={this.handleSubmit}>
                         <h5 className='card-title'>Sign up</h5>
+                        <div className='form-group'>
+                            <label>Username</label>
+                            <input className='form-control' type='text' placeholder='username' onChange={(e) => this.setState({ username: e.target.value })} />
+                        </div>
                         <div className='form-group'>
                             <label>Email</label>
                             <input className='form-control' type='email' placeholder='example@e.ntu.edu.sg' onChange={(e) => this.setState({ email: e.target.value })} />

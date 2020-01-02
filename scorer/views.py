@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
+from django.contrib.auth import login, authenticate
+
 from .models import User, Student
 from .serializers import *
 
@@ -23,8 +25,10 @@ class StudentSignUpView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        user = request.data
+        if not (User.objects.filter(email=user['email']).exists()):
+            User.objects.create_user(user['username'], user['email'], user['password'], first_name=user['first_name'],
+                                     last_name=user['last_name'], is_student=True, is_admin=False).save()
+            return Response({'message': 'Account successfully created!', 'status': 1})
+        else:
+            return Response({'message': 'There was an error', 'status': 0})
