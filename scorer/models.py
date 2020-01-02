@@ -16,6 +16,7 @@ class Admin(models.Model):
     def __str__(self):
         return self.user.email
 
+
 class Post(models.Model):
     admin = models.ForeignKey(
         Admin, on_delete=models.CASCADE, related_name='post')

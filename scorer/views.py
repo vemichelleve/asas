@@ -6,7 +6,6 @@ from rest_framework import status
 from django.contrib.auth import login, authenticate
 
 from .models import User, Student, Admin
-from .serializers import *
 
 
 class UserSignUpView(APIView):
@@ -37,3 +36,28 @@ class UserSignUpView(APIView):
             return Response({'message': 'Account successfully created!', 'status': 1})
         else:
             return Response({'message': 'There was an error', 'status': 0})
+
+
+class AdminLoginView(APIView):
+    def get_object(self, data):
+        try:
+            return User.objects.get(username=data)
+        except:
+            return None
+
+    def post(self, request, format=None):
+        login = request.data
+        generaluser = self.get_object(login['username'])
+
+        if generaluser is None:
+            return Response({'message': 'User not found', 'status': 0})
+        elif Admin.objects.filter(user=generaluser).exists():
+            user = authenticate(
+                username=login['username'], password=login['password'])
+            if user is not None:
+                # login(request, user)
+                return Response({'message': 'Login successful', 'status': 1})
+            else:
+                return Response({'message': 'Wrong password', 'status': 0})
+        else:
+            return Response({'message': 'You are not registered as admin', 'status': 0})
