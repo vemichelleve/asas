@@ -20,5 +20,6 @@ import scorer.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^accounts/students/$', scorer.views.StudentSignUpView.as_view()),
+    url(r'^accounts/students/$', scorer.views.UserSignUpView.as_view()),
+    # url(r'^login/$', scorer.views.AdminLoginView.as_view()),
 ]

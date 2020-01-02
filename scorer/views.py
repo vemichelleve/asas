@@ -5,11 +5,11 @@ from rest_framework import status
 
 from django.contrib.auth import login, authenticate
 
-from .models import User, Student
+from .models import User, Student, Admin
 from .serializers import *
 
 
-class StudentSignUpView(APIView):
+class UserSignUpView(APIView):
     def get_object(self):
         try:
             return User.objects.all()
@@ -26,9 +26,14 @@ class StudentSignUpView(APIView):
 
     def post(self, request, format=None):
         user = request.data
-        if not (User.objects.filter(email=user['email']).exists()):
-            User.objects.create_user(user['username'], user['email'], user['password'], first_name=user['first_name'],
-                                     last_name=user['last_name'], is_student=True, is_admin=False).save()
+        if not (User.objects.filter(email=user['email']).exists() or User.objects.filter(username=user['username']).exists()):
+            userobj = User.objects.create_user(user['username'], user['email'], user['password'], first_name=user['first_name'],
+                                               last_name=user['last_name'], is_student=user['is_student'], is_admin=user['is_admin'])
+            userobj.save()
+            if user['is_admin']:
+                Admin.objects.create(user=userobj)
+            if user['is_student']:
+                Student.objects.create(user=userobj)
             return Response({'message': 'Account successfully created!', 'status': 1})
         else:
             return Response({'message': 'There was an error', 'status': 0})
