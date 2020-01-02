@@ -5,12 +5,8 @@ import { Route } from 'react-router-dom'
 import './App.css'
 import Signup from './signup/Signup'
 import Login from './login/Login'
-
-// function active(str) {
-//   if (window.location.href === ('http://localhost:3000' + str))
-//     return ' active'
-//   else return ''
-// }
+import AdminNavBar from './navbar/AdminNavBar'
+import StudentNavBar from './navbar/StudentNavBar'
 
 const BaseLayout = () => (
   <div className='container-fluid'>
@@ -20,8 +16,8 @@ const BaseLayout = () => (
         <span className='navbar-toggler-icon'></span>
       </button>
       <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
-        <div className='navbar-nav'>
-        </div>
+        <Route path='/admin' component={AdminNavBar} />
+        <Route path='/student' component={StudentNavBar} />
       </div>
     </nav>
 
