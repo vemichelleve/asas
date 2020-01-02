@@ -26,9 +26,11 @@ class Login extends Component {
             'username': this.state.admin_username,
             'password': this.state.admin_password,
         }).then((response) => {
-            alert(response.message);
             if (response.status) {
-                // window.location.href = '/admin/';
+                window.location.href = '/admin/';
+            }
+            else {
+                alert(response.message);
             }
         }).catch((response) => {
             alert(response.message);
