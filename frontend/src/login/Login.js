@@ -18,6 +18,21 @@ class Login extends Component {
 
     handleStudentSubmit(event) {
         event.preventDefault();
+        loginService.authenticate({
+            'username': this.state.student_username,
+            'password': this.state.student_password,
+            'is_student': true,
+            'is_admin': false,
+        }).then((response) => {
+            if (response.status) {
+                window.location.href = '/student/';
+            }
+            else {
+                alert(response.message);
+            }
+        }).catch((response) => {
+            alert(response.message);
+        })
     }
 
     handleAdminSubmit(event) {
@@ -25,6 +40,8 @@ class Login extends Component {
         loginService.authenticate({
             'username': this.state.admin_username,
             'password': this.state.admin_password,
+            'is_student': false,
+            'is_admin': true,
         }).then((response) => {
             if (response.status) {
                 window.location.href = '/admin/';

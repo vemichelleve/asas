@@ -7,6 +7,7 @@ import Signup from './signup/Signup'
 import Login from './login/Login'
 import AdminNavBar from './navbar/AdminNavBar'
 import StudentNavBar from './navbar/StudentNavBar'
+import QuestionList from './questions/QuestionList'
 
 const BaseLayout = () => (
   <div className='container-fluid'>
@@ -24,6 +25,7 @@ const BaseLayout = () => (
     <div className='content'>
       <Route path='/' exact component={Login} />
       <Route path='/signup' exact component={Signup} />
+      <Route path='/admin' exact component={QuestionList} />
     </div>
 
   </div>
