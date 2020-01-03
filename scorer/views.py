@@ -87,3 +87,11 @@ class StudentDetailsView(APIView):
 class QuestionListView(APIView):
     def get(self, request, format=None):
         return Response({'message': 'try', 'status': 0})
+
+
+class AddQuestionView(APIView):
+    def post(self, request, format=None):
+        print(request.user)
+        if request.user.is_authenticated:
+            return Response({'message': 'done'})
+        return Response({'message': 'try'})
