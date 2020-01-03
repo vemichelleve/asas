@@ -3,7 +3,7 @@ const API_URL = 'http://127.0.0.1:8000';
 
 export default class SignupService {
     createStudent(student) {
-        return axios.post(`${API_URL}/accounts/students/`, student).then(response => response.data);
+        return axios.post(`${API_URL}/signup/`, student).then(response => response.data);
     }
 
     getStudents() {

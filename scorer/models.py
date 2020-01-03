@@ -14,7 +14,7 @@ class Admin(models.Model):
         User, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 
 class Post(models.Model):
@@ -42,7 +42,7 @@ class Student(models.Model):
     questions = models.ManyToManyField(Question, through='AnsweredQuestions')
 
     def __str__(self):
-        return self.user.email
+        return self.user.username
 
 
 class Answer(models.Model):

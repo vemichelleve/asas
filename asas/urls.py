@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
-import scorer.views
+from scorer import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^accounts/students/$', scorer.views.UserSignUpView.as_view()),
-    url(r'^login/$', scorer.views.UserLoginView.as_view()),
+    url(r'^signup/$', views.UserSignUpView.as_view()),
+    url(r'^login/$', views.UserLoginView.as_view()),
+    url(r'^students/$', views.StudentListView.as_view()),
 ]

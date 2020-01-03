@@ -1,37 +1,63 @@
 import React, { Component } from 'react'
+import StudentService from './StudentService'
+
+const studentService = new StudentService();
 
 class StudentList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            students: [],
+            status: 0,
+        }
+    }
+
+    componentDidMount() {
+        var self = this;
+        studentService.getStudents().then(function (result) {
+            self.setState({ students: result.data, status: result.status })
+        });
+    }
+
     render() {
-        return (
-            <div>
-                <table className='table'>
-                    <thead key='thead'>
-                        <tr>
-                            <th>#</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* {this.state.students.map(c => */}
-                        {/* <tr key={c.pk}>
-                                <td>{c.pk}</td>
-                                <td>{c.full_name}</td>
-                                <td>{c.email}</td>
-                                <td>
-                                    <button className='btn btn-primary' onClick={(e) => window.location = ('/student/' + c.pk)}>Details</button>
-                                </td> */}
-                        {/* <td>
-                                    <button className='btn btn-primary' onClick={(e) => this.handleDelete(e, c.pk)}>Delete</button>
-                                    <button className='btn btn-secondary' onClick={(e) => window.location=('/student/' + c.pk)}>Update</button>
-                                </td> */}
-                        {/* </tr>)} */}
-                    </tbody>
-                </table>
-                {/* <button className='btn btn-primary' onClick={this.nextPage}>Next</button> */}
-            </div>
-        );
+        switch (this.state.status) {
+            case 0:
+                return (
+                    <div>
+                        <h1 className="display-4" style={{ textAlign: 'center', marginTop: '20px' }}>No students found</h1>
+                    </div>
+                );
+            case 1:
+                return (
+                    <div>
+                        <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.students.map(user =>
+                                    <tr key={user.pk}>
+                                        <td>{user.pk}</td>
+                                        <td>{user.first_name} {user.last_name}</td>
+                                        <td>{user.username}</td>
+                                        <td>{user.email}</td>
+                                        <td>
+                                            <button className='btn btn-primary'>Details</button>
+                                        </td>
+                                    </tr>)}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            default:
+                return <div>Error occured</div>;
+        }
     }
 }
 

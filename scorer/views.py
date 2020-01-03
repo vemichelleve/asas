@@ -4,25 +4,13 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from django.contrib.auth import login, authenticate
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import User, Student, Admin
+from .serializers import *
 
 
 class UserSignUpView(APIView):
-    def get_object(self):
-        try:
-            return User.objects.all()
-        except:
-            return None
-
-    def get(self, request, format=None):
-        user = self.get_object()
-        if not user:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = UserSerializer(user, many=True)
-        return Response(serializer.data)
-
     def post(self, request, format=None):
         user = request.data
         if not (User.objects.filter(email=user['email']).exists() or User.objects.filter(username=user['username']).exists()):
@@ -71,3 +59,14 @@ class UserLoginView(APIView):
                 return Response({'message': 'Login successful', 'status': 1})
             else:
                 return Response({'message': 'Wrong password', 'status': 0})
+
+
+class StudentListView(APIView):
+    def get(self, request, format=None):
+        students = User.objects.all().filter(is_student=True)
+        if students is not None:
+            serializer = UserSerializer(
+                students, context={'request': request}, many=True)
+            return Response({'message': 'Students retrieved', 'status': 1, 'data': serializer.data})
+        else:
+            return Response({'message': 'Students not found', 'status': 0})
