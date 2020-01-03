@@ -34,28 +34,28 @@ class UserLoginView(APIView):
             return None
 
     def post(self, request, format=None):
-        login = request.data
-        generaluser = self.get_object(login['username'])
+        data = request.data
+        generaluser = self.get_object(data['username'])
 
         if generaluser is None:
             return Response({'message': 'User not found', 'status': 0})
 
         else:
-            if login['is_admin']:
+            if data['is_admin']:
                 if Admin.objects.filter(user=generaluser).exists():
                     user = authenticate(
-                        username=login['username'], password=login['password'])
+                        username=data['username'], password=data['password'])
                 else:
                     return Response({'message': 'You are not registered as admin', 'status': 0})
-            elif login['is_student']:
+            elif data['is_student']:
                 if Student.objects.filter(user=generaluser).exists():
                     user = authenticate(
-                        username=login['username'], password=login['password'])
+                        username=data['username'], password=data['password'])
                 else:
                     return Response({'message': 'You are not registered as student', 'status': 0})
 
             if user is not None:
-                # login(request, user)
+                login(request, user)
                 return Response({'message': 'Login successful', 'status': 1})
             else:
                 return Response({'message': 'Wrong password', 'status': 0})
