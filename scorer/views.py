@@ -82,3 +82,8 @@ class StudentDetailsView(APIView):
         serializer = UserSerializer(
             student, context={'request': request})
         return Response({'message': 'Student fount', 'status': 1, 'data': serializer.data})
+
+
+class QuestionListView(APIView):
+    def get(self, request, format=None):
+        return Response({'message': 'try', 'status': 0})

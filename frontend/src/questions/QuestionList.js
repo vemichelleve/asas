@@ -1,23 +1,52 @@
 import React, { Component } from 'react'
+import QuestionService from './QuestionService'
+
+const questionService = new QuestionService();
 
 class QuestionList extends Component {
-    render() {
-        return (
-            <div>
-                <table className="table">
-                    <thead key="thead">
-                        <tr>
-                            <th>#</th>
-                            <th>Question</th>
-                            <th>Reference answer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    constructor(props) {
+        super(props);
+        this.state = {
+            questions: [],
+            stauts: 0,
+        }
+    }
 
-                    </tbody>
-                </table>
-            </div>
-        );
+    componentDidMount() {
+        var self = this;
+        questionService.getQuestions().then(function (result) {
+            self.setState({ questions: result.data, status: result.status })
+        });
+    }
+
+    render() {
+        switch (this.state.status) {
+            case 0:
+                return (
+                    <div>
+                        <h1 className="display-4" style={{ textAlign: 'center', marginTop: '20px' }}>No questions found</h1>
+                    </div>
+                );
+            case 1:
+                return (
+                    <div>
+                        <table className="table">
+                            <thead key="thead">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Question</th>
+                                    <th>Reference answer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            default:
+                return <div>Error occured</div>;
+        }
     }
 }
 
