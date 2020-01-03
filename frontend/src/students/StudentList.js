@@ -48,7 +48,7 @@ class StudentList extends Component {
                                         <td>{user.username}</td>
                                         <td>{user.email}</td>
                                         <td>
-                                            <button className='btn btn-primary'>Details</button>
+                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/students/' + user.pk}>Details</button>
                                         </td>
                                     </tr>)}
                             </tbody>

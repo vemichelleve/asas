@@ -5,4 +5,8 @@ export default class StudentService {
     getStudents() {
         return axios.get(`${API_URL}/students/`).then(response => response.data);
     }
+
+    getStudent(pk) {
+        return axios.get(`${API_URL}/students/${pk}`).then(response => response.data);
+    }
 }

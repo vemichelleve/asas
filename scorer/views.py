@@ -70,3 +70,15 @@ class StudentListView(APIView):
             return Response({'message': 'Students retrieved', 'status': 1, 'data': serializer.data})
         else:
             return Response({'message': 'Students not found', 'status': 0})
+
+
+class StudentDetailsView(APIView):
+    def get(self, request, pk, format=None):
+        try:
+            student = User.objects.get(pk=pk)
+        except:
+            return Response({'message': 'Student not found', 'status': 0})
+
+        serializer = UserSerializer(
+            student, context={'request': request})
+        return Response({'message': 'Student fount', 'status': 1, 'data': serializer.data})
