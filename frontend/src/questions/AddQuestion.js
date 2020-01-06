@@ -18,9 +18,14 @@ class AddQuestion extends Component {
             'question': this.state.question,
             'refans': this.state.refans,
         }).then((response) => {
-            console.log(response);
+            if (!response.status) {
+                alert(response.message)
+            }
+            else {
+                alert(response.message) //Redirect to question details
+            }
         }).catch(() => {
-            console.log('error');
+            alert('Error occured')
         });
     }
 

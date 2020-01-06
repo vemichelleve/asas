@@ -21,9 +21,10 @@ from scorer import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^signup/$', views.UserSignUpView.as_view()),
-    url(r'^login/$', views.UserLoginView.as_view()),
+    url(r'^accounts/login/$', views.UserLoginView.as_view()),
     url(r'^students/$', views.StudentListView.as_view()),
     url(r'^students/(?P<pk>[0-9]+)$', views.StudentDetailsView.as_view()),
-    url(r'^addquestion/$', views.AddQuestionView.as_view()),
+    url(r'^addquestion/manual/$', views.AddManualQuestionView.as_view()),
     url(r'^questions/$', views.QuestionListView.as_view()),
+    url(r'^accounts/login/?next=/questions/%', views.QuestionListView.as_view()),
 ]

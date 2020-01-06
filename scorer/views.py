@@ -4,9 +4,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import User, Student, Admin
+from .models import User, Student, Admin, Post, Question
 from .serializers import *
 
 
@@ -79,8 +81,7 @@ class StudentDetailsView(APIView):
         except:
             return Response({'message': 'Student not found', 'status': 0})
 
-        serializer = UserSerializer(
-            student, context={'request': request})
+        serializer = UserSerializer(student, context={'request': request})
         return Response({'message': 'Student fount', 'status': 1, 'data': serializer.data})
 
 
@@ -89,9 +90,17 @@ class QuestionListView(APIView):
         return Response({'message': 'try', 'status': 0})
 
 
-class AddQuestionView(APIView):
+class AddManualQuestionView(APIView):
     def post(self, request, format=None):
-        print(request.user)
-        if request.user.is_authenticated:
-            return Response({'message': 'done'})
-        return Response({'message': 'try'})
+        user = User.objects.get(username='admin')  # Logged in user!
+        admin = Admin.objects.get(user=user)
+        if not Post.objects.filter(name='Manually added').exists():
+            post = Post(admin=admin, name='Manually added').save()
+        else:
+            post = Post.objects.get(name='Manually added')
+        if not Question.objects.filter(question=request.data['question']).exists():
+            question = Question(
+                post=post, question=request.data['question'], refans=request.data['refans']).save()
+            return Response({'message': 'Question added', 'status': 1})
+        else:
+            return Response({'message': 'Question already exists', 'status': 0})

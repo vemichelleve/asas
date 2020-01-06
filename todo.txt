@@ -1,0 +1,6 @@
+DJANGO
+login required
+logout user
+
+REACT
+logout alignment
