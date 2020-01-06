@@ -37,7 +37,7 @@ class StudentList extends Component {
                                     <th>Full Name</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Actions</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

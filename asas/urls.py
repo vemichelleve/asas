@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^addquestion/manual/$', views.AddManualQuestionView.as_view()),
     url(r'^questions/$', views.QuestionListView.as_view()),
     url(r'^questions/(?P<pk>[0-9]+)$', views.QuestionDetailsView.as_view()),
+    url(r'^posts/$', views.PostListView.as_view()),
+    url(r'^posts/(?P<pk>[0-9]+)$', views.PostDetailsView.as_view()),
 ]

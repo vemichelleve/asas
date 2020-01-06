@@ -126,3 +126,46 @@ class QuestionDetailsView(APIView):
             return Response({'message': 'Question not found', 'status': 0})
         serializer = QuestionSerializer(question, context={'request': request})
         return Response({'message': 'Question retrieved', 'status': 1, 'data': serializer.data})
+
+
+class PostListView(APIView):
+    def get(self, request, format=None):
+        try:
+            posts = Post.objects.all()
+        except:
+            return Response({'message': 'No posts found', 'status': 0})
+        serializer = PostSerializer(
+            posts, context={'request': request}, many=True)
+        return Response({'message': 'Posts retrieved', 'status': 1, 'data': serializer.data})
+
+
+class PostDetailsView(APIView):
+    def get_question(self):
+        try:
+            return Question.objects.all()
+        except:
+            return None
+    
+    def get_post(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except:
+            return None
+
+    def get(self, request, pk, format=None):
+        post = self.get_post(pk)
+        if post is None:
+            return Response({'message': 'Post not found', 'status': 0})
+        else:
+            # try:
+                # admin = User.objects.get(pk=post.admin)
+            # except:
+                # return Response({'message': 'No admin', 'status': 0})
+            serializer = PostSerializer(post, context={'request': request})
+            questions = self.get_question()
+            if questions is None:
+                return Repsonse({'message': 'Post retrieved', 'status': 1, 'data': serializer.data})
+            else:
+                serializer2 = QuestionSerializer(
+                    questions, context={'request': request}, many=True)
+                return Response({'message': 'Post retrieved', 'status': 1, 'data': serializer.data, 'questions': serializer2.data})

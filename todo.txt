@@ -1,6 +1,11 @@
 DJANGO
+get admin name in post details
 login required
 logout user
 
 REACT
 logout alignment
+
+auto question - in excel
+add model
+post
