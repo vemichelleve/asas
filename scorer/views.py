@@ -86,8 +86,20 @@ class StudentDetailsView(APIView):
 
 
 class QuestionListView(APIView):
+    def get_object(self):
+        try:
+            return Question.objects.all()
+        except:
+            return None
+
     def get(self, request, format=None):
-        return Response({'message': 'try', 'status': 0})
+        questions = self.get_object()
+        if questions is not None:
+            serializer = QuestionSerializer(
+                questions, context={'request': request}, many=True)
+            return Response({'message': 'Questions retrieved', 'status': 1, 'data': serializer.data})
+        else:
+            return Response({'message': 'No questions available', 'status': 0})
 
 
 class AddManualQuestionView(APIView):
@@ -104,3 +116,13 @@ class AddManualQuestionView(APIView):
             return Response({'message': 'Question added', 'status': 1})
         else:
             return Response({'message': 'Question already exists', 'status': 0})
+
+
+class QuestionDetailsView(APIView):
+    def get(self, request, pk, format=None):
+        try:
+            question = Question.objects.get(pk=pk)
+        except:
+            return Response({'message': 'Question not found', 'status': 0})
+        serializer = QuestionSerializer(question, context={'request': request})
+        return Response({'message': 'Question retrieved', 'status': 1, 'data': serializer.data})

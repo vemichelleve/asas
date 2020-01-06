@@ -8,7 +8,7 @@ class QuestionList extends Component {
         super(props);
         this.state = {
             questions: [],
-            stauts: 0,
+            status: 0,
         }
     }
 
@@ -33,13 +33,23 @@ class QuestionList extends Component {
                         <table className="table">
                             <thead key="thead">
                                 <tr>
-                                    <th>#</th>
+                                    <th>ID</th>
                                     <th>Question</th>
                                     <th>Reference answer</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                {this.state.questions.map(question =>
+                                    <tr key={question.pk}>
+                                        <td>{question.pk}</td>
+                                        <td>{question.question}</td>
+                                        <td>{question.refans}</td>
+                                        <td>
+                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

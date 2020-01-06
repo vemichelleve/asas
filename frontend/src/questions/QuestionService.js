@@ -9,4 +9,8 @@ export default class QuestionService {
     addQuestion(data) {
         return axios.post(`${API_URL}/addquestion/manual/`, data).then(response => response.data)
     }
+
+    getQuestion(pk) {
+        return axios.get(`${API_URL}/questions/${pk}`).then(response => response.data)
+    }
 }

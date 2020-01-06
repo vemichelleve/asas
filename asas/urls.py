@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^students/(?P<pk>[0-9]+)$', views.StudentDetailsView.as_view()),
     url(r'^addquestion/manual/$', views.AddManualQuestionView.as_view()),
     url(r'^questions/$', views.QuestionListView.as_view()),
-    url(r'^accounts/login/?next=/questions/%', views.QuestionListView.as_view()),
+    url(r'^questions/(?P<pk>[0-9]+)$', views.QuestionDetailsView.as_view()),
 ]

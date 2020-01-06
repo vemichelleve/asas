@@ -11,6 +11,7 @@ import QuestionList from './questions/QuestionList'
 import StudentList from './students/StudentList'
 import StudentDetails from './students/StudentDetails'
 import AddQuestion from './questions/AddQuestion'
+import QuestionDetails from './questions/QuestionDetails'
 
 const BaseLayout = () => (
   <div className='container-fluid'>
@@ -32,6 +33,7 @@ const BaseLayout = () => (
       <Route path='/admin/students' exact component={StudentList} />
       <Route path='/admin/students/:pk' component={StudentDetails} />
       <Route path='/admin/addquestion' exact component={AddQuestion} />
+      <Route path='/admin/questions/:pk' component={QuestionDetails} />
     </div>
 
   </div>
