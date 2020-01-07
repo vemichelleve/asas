@@ -5,6 +5,7 @@ logout user
 
 REACT
 logout alignment
+login if back to previous page
 
 auto question - in excel
 add model

@@ -140,15 +140,21 @@ class PostListView(APIView):
 
 
 class PostDetailsView(APIView):
-    def get_question(self):
+    def get_question(self, post):
         try:
-            return Question.objects.all()
+            return Question.objects.filter(post=post)
         except:
             return None
-    
+
     def get_post(self, pk):
         try:
             return Post.objects.get(pk=pk)
+        except:
+            return None
+
+    def get_admin(self, post):
+        try:
+            return User.objects.get(pk=post.get_admin())
         except:
             return None
 
@@ -157,15 +163,15 @@ class PostDetailsView(APIView):
         if post is None:
             return Response({'message': 'Post not found', 'status': 0})
         else:
-            # try:
-                # admin = User.objects.get(pk=post.admin)
-            # except:
-                # return Response({'message': 'No admin', 'status': 0})
-            serializer = PostSerializer(post, context={'request': request})
-            questions = self.get_question()
+            admin = self.get_admin(post)
+            if admin is not None:
+                adminSerializer = UserSerializer(
+                    admin, context={'request': request})
+            questions = self.get_question(post)
+            postSerializer = PostSerializer(post, context={'request': request})
             if questions is None:
-                return Repsonse({'message': 'Post retrieved', 'status': 1, 'data': serializer.data})
+                return Response({'message': 'Post retrieved, no questions', 'status': 1, 'post': postSerializer.data, 'admin': adminSerializer.data})
             else:
-                serializer2 = QuestionSerializer(
+                questionSerializer = QuestionSerializer(
                     questions, context={'request': request}, many=True)
-                return Response({'message': 'Post retrieved', 'status': 1, 'data': serializer.data, 'questions': serializer2.data})
+                return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data, 'admin': adminSerializer.data, 'questions': questionSerializer.data})

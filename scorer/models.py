@@ -15,6 +15,9 @@ class Admin(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def get_pk(self):
+        return self.user.pk
 
 
 class Post(models.Model):
@@ -24,6 +27,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_admin(self):
+        return self.admin.get_pk()
 
 
 class Question(models.Model):
