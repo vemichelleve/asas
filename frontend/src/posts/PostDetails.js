@@ -37,11 +37,11 @@ class PostDetails extends Component {
                 return (
                     <div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
-                            <div style={{ minWidth: '45%' }}>
+                            <div style={{ minWidth: '45%', margin: '10px' }}>
                                 <div>Post name</div>
                                 <div style={{ fontSize: '30px' }}>{this.state.post_name}</div>
                             </div>
-                            <div style={{ minWidth: '45%' }}>
+                            <div style={{ minWidth: '45%', margin: '10px' }}>
                                 <div>Poster</div>
                                 <div style={{ fontSize: '30px' }}>{this.state.poster_first} {this.state.poster_last}</div>
                             </div>

@@ -39,8 +39,17 @@ class StudentDetails extends Component {
                 );
             case 1:
                 return (
-                    <div style={{ marginTop: '20px' }}>
-                        <div style={{ 'fontSize': '30px' }}>{this.state.first_name} {this.state.last_name} - {this.state.email}</div>
+                    <div>
+                        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                                <div>Name</div>
+                                <div style={{ fontSize: '30px' }}>{this.state.first_name} {this.state.last_name}</div>
+                            </div>
+                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                                <div >Email</div>
+                                <div style={{ fontSize: '30px' }}>{this.state.email}</div>
+                            </div>
+                        </div>
                         <table className='table' style={{ marginTop: '20px' }}>
                             <thead>
                                 <tr>
@@ -56,7 +65,10 @@ class StudentDetails extends Component {
                                 </tr>
                             </tbody> */}
                         </table>
-                    </div>
+                    </div >
+                    // <div style={{ marginTop: '20px' }}>
+                    //     <div style={{ 'fontSize': '30px' }}>{this.state.first_name} {this.state.last_name} - {this.state.email}</div>
+                    // </div>
                 );
             default:
                 return <div>Error occured</div>;

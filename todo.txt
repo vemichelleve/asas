@@ -1,5 +1,5 @@
 DJANGO
-get admin name in post details
+admin name in post list
 login required
 logout user
 
@@ -7,6 +7,7 @@ REACT
 logout alignment
 login if back to previous page
 
+student pages
 auto question - in excel
 add model
 post
