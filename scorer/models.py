@@ -55,9 +55,9 @@ class Answer(models.Model):
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name='answers')
     answer = models.TextField('Answer')
-    score1 = models.FloatField('Score 1')
-    score2 = models.FloatField('Score 2')
-    systemscore = models.FloatField('System score')
+    score1 = models.FloatField('Score 1', null=True)
+    score2 = models.FloatField('Score 2', null=True)
+    systemscore = models.FloatField('System score', null=True)
 
     def __str__(self):
         return self.answer

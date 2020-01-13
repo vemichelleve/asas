@@ -1,4 +1,12 @@
+student pages
+auto question - in excel
+add model
+login page: set state not only after change -> componentdidmount
+change status 0 to undefined (use default case)
+remove actions button, change name&question into a with href
+
 DJANGO
+why pk in function parameter but other are passed as json data
 admin name in post list
 login required
 logout user
@@ -6,8 +14,3 @@ logout user
 REACT
 logout alignment
 login if back to previous page
-
-student pages
-auto question - in excel
-add model
-post

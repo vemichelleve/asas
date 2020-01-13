@@ -57,32 +57,32 @@ class Login extends Component {
     render() {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', paddingTop: '20px' }}>
-                <div className="card" style={{ width: '45%' }}>
-                    <form className="card-body" onSubmit={this.handleAdminSubmit}>
-                        <h5 className="card-title">Admin login</h5>
-                        <div className="form-group">
+                <div className='card' style={{ width: '45%' }}>
+                    <form className='card-body' onSubmit={this.handleAdminSubmit}>
+                        <h5 className='card-title'>Admin login</h5>
+                        <div className='form-group'>
                             <label>Username</label>
-                            <input className="form-control" type="text" onChange={(e) => { this.setState({ admin_username: e.target.value }) }} />
+                            <input className='form-control' type='text' onChange={(e) => { this.setState({ admin_username: e.target.value }) }} />
                         </div>
-                        <div className="form-group">
+                        <div className='form-group'>
                             <label>Password</label>
-                            <input className="form-control" type="password" onChange={(e) => { this.setState({ admin_password: e.target.value }) }} />
+                            <input className='form-control' type='password' onChange={(e) => { this.setState({ admin_password: e.target.value }) }} />
                         </div>
-                        <button type="submit" className="btn btn-primary">Log in</button>
+                        <button type='submit' className='btn btn-primary'>Log in</button>
                     </form>
                 </div>
-                <div className="card" style={{ width: '45%' }}>
-                    <form className="card-body" onSubmit={this.handleStudentSubmit}>
-                        <h5 className="card-title">Student login</h5>
-                        <div className="form-group">
+                <div className='card' style={{ width: '45%' }}>
+                    <form className='card-body' onSubmit={this.handleStudentSubmit}>
+                        <h5 className='card-title'>Student login</h5>
+                        <div className='form-group'>
                             <label>Username</label>
-                            <input className="form-control" type="username" onChange={(e) => { this.setState({ student_username: e.target.value }) }} />
+                            <input className='form-control' type='username' onChange={(e) => { this.setState({ student_username: e.target.value }) }} />
                         </div>
-                        <div className="form-group">
+                        <div className='form-group'>
                             <label>Password</label>
-                            <input className="form-control" type="password" onChange={(e) => { this.setState({ student_password: e.target.value }) }} />
+                            <input className='form-control' type='password' onChange={(e) => { this.setState({ student_password: e.target.value }) }} />
                         </div>
-                        <button type="submit" className="btn btn-primary">Log in</button>
+                        <button type='submit' className='btn btn-primary'>Log in</button>
                     </form>
                 </div>
             </div>

@@ -15,7 +15,7 @@ class AdminNavBar extends Component {
                 <a className={this.active('/admin/posts/')} href='/admin/posts/'>POSTS</a>
                 <a className={this.active('/admin/model/')} href='/admin/model/'>MODEL</a>
                 <a className={this.active('/admin/students/')} href='/admin/students/'>STUDENTS</a>
-                <a className='nav-tiem nav-link' href='/'>LOGOUT</a>
+                <a className='nav-item nav-link' href='/'>LOGOUT</a>
             </div>
         )
     }

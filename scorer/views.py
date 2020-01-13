@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import User, Student, Admin, Post, Question
+from .models import *
 from .serializers import *
 
 
@@ -175,3 +175,33 @@ class PostDetailsView(APIView):
                 questionSerializer = QuestionSerializer(
                     questions, context={'request': request}, many=True)
                 return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data, 'admin': adminSerializer.data, 'questions': questionSerializer.data})
+
+
+class AnswerView(APIView):
+    def get(self, request, pk, format=None):
+        answers = Answer.objects.all()
+        answeredquestions = AnsweredQuestions.objects.all()
+        studentanswer = StudentAnswer.objects.all()
+        ansSerializer = AnswerSerializer(
+            answers, context={'request': request}, many=True)
+        aqSerializer = AnsweredQuestionsSerializer(
+            answeredquestions, context={'request': request}, many=True)
+        saSerializer = StudentAnswerSerializer(
+            studentanswer, context={'request': request}, many=True)
+        return Response({'message': 'try', 'answer': ansSerializer.data, 'answered questions': aqSerializer.data, 'student answer': saSerializer.data})
+
+    def post(self, request, pk, format=None):
+        answer = request.data['answer']
+        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        student = Student.objects.get(user=user)
+        question = Question.objects.get(pk=pk)
+        if not (AnsweredQuestions.objects.filter(student=student, question=question).exists()):
+            student.questions.add(question)
+            student.save()
+            ans = Answer.objects.create(
+                question=question, answer=answer)
+            ans.save()
+            StudentAnswer.objects.create(student=student, answer=ans).save()
+            return Response({'message': 'Question answered', 'status': 1})
+        else:
+            return Response({'message': 'Question is already answered', 'status': 0})
