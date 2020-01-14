@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^posts/$', views.PostListView.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)$', views.PostDetailsView.as_view()),
     url(r'^answer/(?P<pk>[0-9]+)$', views.AnswerView.as_view()),
+    url(r'^answers/$', views.AnswersView.as_view()),
 ]

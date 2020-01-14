@@ -205,3 +205,18 @@ class AnswerView(APIView):
             return Response({'message': 'Question answered', 'status': 1})
         else:
             return Response({'message': 'Question is already answered', 'status': 0})
+
+
+class AnswersView(APIView):
+    def get(self, request, format=None):
+        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        student = Student.objects.get(user=user)
+        studentans = StudentAnswer.objects.filter(student=student)
+
+        answers = Answer.objects.none()
+        for x in studentans:
+            answers |= Answer.objects.filter(answer=x.answer)
+
+        serializer = AnswerSerializer(
+            answers, context={'request': request}, many=True)
+        return Response({'message': 'Answers retrieved', 'status': 1, 'data': serializer.data})

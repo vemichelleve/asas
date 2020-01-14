@@ -1,4 +1,8 @@
+student account
 student pages
+move answer/(pk) from django, remove pk
+disable button if question is answered
+optimise answer in student page using search algo
 auto question - in excel
 add model
 login page: set state not only after change -> componentdidmount

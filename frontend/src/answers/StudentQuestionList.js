@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import QuestionService from '../questions/QuestionService'
+import AnswerService from './AnswerService'
 
 const questionService = new QuestionService();
+const answerService = new AnswerService();
 
 class StudentQuestionList extends Component {
     constructor(props) {
@@ -9,6 +11,7 @@ class StudentQuestionList extends Component {
         this.state = {
             questions: [],
             status: '',
+            ans: [],
         }
     }
 
@@ -16,6 +19,9 @@ class StudentQuestionList extends Component {
         var self = this;
         questionService.getQuestions().then(function (result) {
             self.setState({ questions: result.data, status: result.status })
+        });
+        answerService.getAnswer().then(function (result) {
+            self.setState({ ans: result.data })
         });
     }
 
@@ -37,7 +43,13 @@ class StudentQuestionList extends Component {
                             <tr key={question.pk}>
                                 <td>{question.pk}</td>
                                 <td>{question.question}</td>
-                                <td></td>
+                                <td>
+                                    {this.state.ans.map(answer => {
+                                        if (answer.question === question.pk)
+                                            return answer.answer
+                                        else return ''
+                                    })}
+                                </td>
                                 <td>
                                     <button className='btn btn-primary' onClick={(e) => window.location = '/student/answer/' + question.pk}>Answer</button>
                                 </td>

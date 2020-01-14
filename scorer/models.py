@@ -15,7 +15,7 @@ class Admin(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
     def get_pk(self):
         return self.user.pk
 
@@ -76,3 +76,6 @@ class StudentAnswer(models.Model):
         Student, on_delete=models.CASCADE, related_name='question_answers')
     answer = models.ForeignKey(
         Answer, on_delete=models.CASCADE, related_name='+')
+
+    def get_answer(self):
+        return self.answer.pk
