@@ -1,7 +1,8 @@
 student account
 student pages
 move answer/(pk) from django, remove pk
-disable button if question is answered
+student question list: disable button if question is answered
+student accoutn: disable button if no changes made
 optimise answer in student page using search algo
 auto question - in excel
 add model

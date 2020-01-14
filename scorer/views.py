@@ -227,3 +227,21 @@ class StudentAccountView(APIView):
         user = User.objects.get(username='vemichelleve')  # Logged in user!
         serializer = UserSerializer(user, context={'request': request})
         return Response({'message': 'Details retreived', 'data': serializer.data})
+
+
+class StudentEditAccountView(APIView):
+    def get_user(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except:
+            return None
+
+    def put(self, request, pk, format=None):
+        student = self.get_user(pk)
+        serializer = UserSerializer(
+            student, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Changes saved', 'status': 1})
+        else:
+            return Response({'message': 'Data is not valid', 'status': 0})

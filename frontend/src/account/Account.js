@@ -22,6 +22,7 @@ class Account extends Component {
                 last_name: result.last_name,
                 username: result.username,
                 email: result.email,
+                pk: result.pk,
             })
         });
     }
@@ -50,7 +51,10 @@ class Account extends Component {
                             <div>Email</div>
                             <div style={{ fontSize: '20px' }}>{this.state.email}</div>
                         </div>
-                        <button className='btn btn-primary'>Edit</button>
+                        <div className='form-group'>
+                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/edit' + this.state.pk} style={{ marginRight: '10px' }}>Edit</button>
+                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/password' + this.state.pk}>Change password</button>
+                        </div>
                     </div>
                 </div>
             </div>
