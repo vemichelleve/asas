@@ -242,6 +242,6 @@ class StudentEditAccountView(APIView):
             student, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Changes saved', 'status': 1})
+            return Response({'message': 'Changes successfully saved!', 'status': 1})
         else:
             return Response({'message': 'Data is not valid', 'status': 0})

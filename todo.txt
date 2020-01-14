@@ -1,21 +1,17 @@
-student account
-student pages
-move answer/(pk) from django, remove pk
-student question list: disable button if question is answered
-student accoutn: disable button if no changes made
-optimise answer in student page using search algo
+admin name in post list
+optimise:
+    move answer/(pk) from django, remove pk
+    student question list: disable button if question is answered
+    student accoutn: disable button if no changes made
+    optimise answer in student page using search algo
+    change status 0 to undefined (use default case)
+    remove actions button, change name&question into a with href
+    set state not only after change -> componentdidmount
+change password
+ui:
+    logout alignment
 auto question - in excel
 add model
-login page: set state not only after change -> componentdidmount
-change status 0 to undefined (use default case)
-remove actions button, change name&question into a with href
-
-DJANGO
-why pk in function parameter but other are passed as json data
-admin name in post list
-login required
-logout user
-
-REACT
-logout alignment
-login if back to previous page
+django:
+    login required
+    logout user

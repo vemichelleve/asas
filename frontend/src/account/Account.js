@@ -52,8 +52,8 @@ class Account extends Component {
                             <div style={{ fontSize: '20px' }}>{this.state.email}</div>
                         </div>
                         <div className='form-group'>
-                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/edit' + this.state.pk} style={{ marginRight: '10px' }}>Edit</button>
-                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/password' + this.state.pk}>Change password</button>
+                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/edit'} style={{ marginRight: '10px' }}>Edit</button>
+                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/password'}>Update password</button>
                         </div>
                     </div>
                 </div>
