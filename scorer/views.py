@@ -220,3 +220,10 @@ class AnswersView(APIView):
         serializer = AnswerSerializer(
             answers, context={'request': request}, many=True)
         return Response({'message': 'Answers retrieved', 'status': 1, 'data': serializer.data})
+
+
+class StudentAccountView(APIView):
+    def get(self, request, format=None):
+        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        serializer = UserSerializer(user, context={'request': request})
+        return Response({'message': 'Details retreived', 'data': serializer.data})

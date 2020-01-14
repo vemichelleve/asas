@@ -15,7 +15,10 @@ class QuestionList extends Component {
     componentDidMount() {
         var self = this;
         questionService.getQuestions().then(function (result) {
-            self.setState({ questions: result.data, status: result.status })
+            self.setState({
+                questions: result.data,
+                status: result.status
+            })
         });
     }
 

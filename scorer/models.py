@@ -76,6 +76,3 @@ class StudentAnswer(models.Model):
         Student, on_delete=models.CASCADE, related_name='question_answers')
     answer = models.ForeignKey(
         Answer, on_delete=models.CASCADE, related_name='+')
-
-    def get_answer(self):
-        return self.answer.pk
