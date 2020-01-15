@@ -1,11 +1,10 @@
 optimise:
-    change status 0 to undefined (use default case)
     remove actions button, change name&question into a with href
-change password
 testing
 auto question - in excel
 add model
 django:
+    change password
     login required
     logout user
 optimise answer in student page using search algo
