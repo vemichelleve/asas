@@ -58,7 +58,10 @@ class QuestionDetails extends Component {
                                 <div style={{ fontSize: '30px' }}>{this.state.refans}</div>
                             </div>
                             <div style={{ margin: '10px', minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                <button className='btn btn-primary'>Edit score</button>
+                                <div>
+                                    <button className='btn btn-secondary' onClick={(e)=>window.history.back()}>Back</button>
+                                    <button className='btn btn-primary' style={{ marginLeft: '10px' }}>Edit score</button>
+                                </div>
                             </div>
                         </div>
                         <table className='table' style={{ marginTop: '20px' }}>

@@ -44,6 +44,9 @@ class PostDetails extends Component {
                                 <div>Poster</div>
                                 <div style={{ fontSize: '30px' }}>{this.state.poster_first} {this.state.poster_last}</div>
                             </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Back</button>
+                            </div>
                         </div>
                         <table className='table' style={{ marginTop: '20px' }}>
                             <thead>
