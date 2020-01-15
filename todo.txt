@@ -1,17 +1,11 @@
-admin name in post list
 optimise:
-    move answer/(pk) from django, remove pk
-    student question list: disable button if question is answered
-    student accoutn: disable button if no changes made
-    optimise answer in student page using search algo
     change status 0 to undefined (use default case)
     remove actions button, change name&question into a with href
-    set state not only after change -> componentdidmount
 change password
-ui:
-    logout alignment
+testing
 auto question - in excel
 add model
 django:
     login required
     logout user
+optimise answer in student page using search algo

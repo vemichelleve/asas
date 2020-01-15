@@ -26,6 +26,7 @@ class StudentQuestionList extends Component {
     }
 
     render() {
+        var answered = []
         return (
             <div>
                 <table className='table'>
@@ -45,13 +46,15 @@ class StudentQuestionList extends Component {
                                 <td>{question.question}</td>
                                 <td>
                                     {this.state.ans.map(answer => {
-                                        if (answer.question === question.pk)
+                                        if (answer.question === question.pk) {
+                                            answered[question.pk] = true;
                                             return answer.answer
+                                        }
                                         else return ''
                                     })}
                                 </td>
                                 <td>
-                                    <button className='btn btn-primary' onClick={(e) => window.location = '/student/answer/' + question.pk}>Answer</button>
+                                    <button className={'btn btn-primary' + (answered[question.pk] ? ' disabled' : '')} disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
                                 </td>
                                 <td></td>
                             </tr>)}

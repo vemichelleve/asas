@@ -8,6 +8,7 @@ class PostList extends Component {
         super(props);
         this.state = {
             posts: [],
+            users: [],
             status: 0,
         }
     }
@@ -15,7 +16,11 @@ class PostList extends Component {
     componentDidMount() {
         var self = this;
         postService.getPosts().then(function (result) {
-            self.setState({ posts: result.data, status: result.status })
+            self.setState({
+                posts: result.data,
+                status: result.status,
+                users: result.users,
+            })
         });
     }
 
@@ -44,7 +49,13 @@ class PostList extends Component {
                                     <tr key={post.pk}>
                                         <td>{post.pk}</td>
                                         <td>{post.name}</td>
-                                        <td>{post.admin}</td>
+                                        <td>
+                                            {this.state.users.map(user => {
+                                                if (user.pk === post.admin)
+                                                    return user.first_name + ' ' + user.last_name
+                                                else return ''
+                                            })}
+                                        </td>
                                         <td>
                                             <button className='btn btn-primary' onClick={(e) => window.location = '/admin/posts/' + post.pk}>Details</button>
                                         </td>

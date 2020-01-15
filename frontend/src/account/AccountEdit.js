@@ -24,6 +24,7 @@ class AccountEdit extends Component {
                 username: result.username,
                 email: result.email,
                 pk: result.pk,
+                changed: false,
             })
         });
     }
@@ -57,23 +58,23 @@ class AccountEdit extends Component {
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <div className='form-group' style={{ minWidth: '48%' }}>
                                 <label>First name</label>
-                                <input type='text' className='form-control' value={this.state.first_name} onChange={(e) => this.setState({ first_name: e.target.value })} />
+                                <input type='text' className='form-control' value={this.state.first_name} onChange={(e) => this.setState({ first_name: e.target.value, changed: true })} />
                             </div>
                             <div className='form-group' style={{ minWidth: '48%' }}>
                                 <label>Last name</label>
-                                <input type='text' className='form-control' value={this.state.last_name} onChange={(e) => this.setState({ last_name: e.target.value })} />
+                                <input type='text' className='form-control' value={this.state.last_name} onChange={(e) => this.setState({ last_name: e.target.value, changed: true })} />
                             </div>
                         </div>
                         <div className='form-group'>
                             <label>Username</label>
-                            <input type='text' className='form-control' value={this.state.username} onChange={(e) => this.setState({ username: e.target.value })} />
+                            <input type='text' className='form-control' value={this.state.username} onChange={(e) => this.setState({ username: e.target.value, changed: true })} />
                         </div>
                         <div className='form-group'>
                             <label>Email</label>
-                            <input type='text' className='form-control' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} />
+                            <input type='text' className='form-control' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value, changed: true })} />
                         </div>
                         <div className='form-group'>
-                            <button className='btn btn-primary' style={{ marginRight: '10px' }} type='submit'>Save</button>
+                            <button className={'btn btn-primary' + (this.state.changed ? '' : ' disabled')} disabled={!this.state.changed} style={{ marginRight: '10px' }} type='submit'>Save</button>
                             <button className='btn btn-secondary' onClick={(e) => window.location = '/student/account'}>Cancel</button>
                         </div>
                     </form>

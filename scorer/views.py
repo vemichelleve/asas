@@ -136,7 +136,10 @@ class PostListView(APIView):
             return Response({'message': 'No posts found', 'status': 0})
         serializer = PostSerializer(
             posts, context={'request': request}, many=True)
-        return Response({'message': 'Posts retrieved', 'status': 1, 'data': serializer.data})
+        users = User.objects.all()
+        userSerializer = UserSerializer(
+            users, context={'request': request}, many=True)
+        return Response({'message': 'Posts retrieved', 'status': 1, 'data': serializer.data, 'users': userSerializer.data})
 
 
 class PostDetailsView(APIView):
@@ -178,18 +181,6 @@ class PostDetailsView(APIView):
 
 
 class AnswerView(APIView):
-    def get(self, request, pk, format=None):
-        answers = Answer.objects.all()
-        answeredquestions = AnsweredQuestions.objects.all()
-        studentanswer = StudentAnswer.objects.all()
-        ansSerializer = AnswerSerializer(
-            answers, context={'request': request}, many=True)
-        aqSerializer = AnsweredQuestionsSerializer(
-            answeredquestions, context={'request': request}, many=True)
-        saSerializer = StudentAnswerSerializer(
-            studentanswer, context={'request': request}, many=True)
-        return Response({'message': 'try', 'answer': ansSerializer.data, 'answered questions': aqSerializer.data, 'student answer': saSerializer.data})
-
     def post(self, request, pk, format=None):
         answer = request.data['answer']
         user = User.objects.get(username='vemichelleve')  # Logged in user!
