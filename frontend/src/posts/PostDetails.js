@@ -19,7 +19,6 @@ class PostDetails extends Component {
         const { match: { params } } = this.props;
         if (params && params.pk) {
             postService.getPost(params.pk).then(function (result) {
-                console.log(result);
                 self.setState({
                     post_name: result.post.name,
                     poster_first: result.admin.first_name,

@@ -20,7 +20,7 @@ class StudentQuestionList extends Component {
         questionService.getQuestions().then(function (result) {
             self.setState({ questions: result.data, status: result.status })
         });
-        answerService.getAnswer().then(function (result) {
+        answerService.getAnswers().then(function (result) {
             self.setState({ ans: result.data })
         });
     }

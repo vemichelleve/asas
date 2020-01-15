@@ -1,5 +1,9 @@
+answers: questiondetails
+score
 optimise:
     remove actions button, change name&question into a with href
+users in post
+userservice: admin name in posts, student name in questions
 testing
 auto question - in excel
 add model

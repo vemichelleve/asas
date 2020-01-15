@@ -140,7 +140,7 @@ class AddManualQuestionView(APIView):
 class QuestionDetailsView(APIView):
     def get_question(self, pk):
         try:
-            return Question.objects.get(pk)
+            return Question.objects.get(pk=pk)
         except:
             return None
 
@@ -158,7 +158,7 @@ class QuestionDetailsView(APIView):
 
 # Post list in admin page
 class PostListView(APIView):
-    def get_posts():
+    def get_posts(self):
         try:
             return Post.objects.all()
         except:
@@ -246,6 +246,36 @@ class AnswerView(APIView):
             return Response({'message': 'Question answered', 'status': 1})
         else:
             return Response({'message': 'Question is already answered', 'status': 0})
+
+    def get_question(self, pk):
+        try:
+            return Question.objects.get(pk=pk)
+        except:
+            return None
+
+    def get_answers(self, question):
+        try:
+            return Answer.objects.filter(question=question)
+        except:
+            return None
+
+    def get(self, request, pk, format=None):
+        question = self.get_question(pk)
+        if question is not None:
+            answers = self.get_answers(question)
+            if answers is not None:
+                answerSerializer = AnswerSerializer(
+                    answers, context={'request': request}, many=True)
+                studnetans = StudentAnswer.objects.none()
+                for x in answers:
+                    studnetans |= StudentAnswer.objects.filter(answer=x)
+                studentansSerializer = StudentAnswerSerializer(
+                    studnetans, context={'request': request}, many=True)
+                return Response({'message': 'Answers retrieved', 'status': 1, 'answers': answerSerializer.data, 'students': studentansSerializer.data})
+            else:
+                return Response({'message': 'No answer for this question', 'status': 0})
+        else:
+            return Repsonse({'message': 'Question not found', 'status': 0})
 
 
 # Retrieve answers by student

@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
+import AnswerService from '../answers/AnswerService'
 
 const questionService = new QuestionService()
+const answerService = new AnswerService()
 
 class QuestionDetails extends Component {
     constructor(props) {
@@ -10,6 +12,8 @@ class QuestionDetails extends Component {
             question: '',
             refans: '',
             status: 0,
+            answers: [],
+            students: [],
         }
     }
 
@@ -22,6 +26,12 @@ class QuestionDetails extends Component {
                     question: result.data.question,
                     refans: result.data.refans,
                     status: result.status,
+                })
+            });
+            answerService.getAnswer(params.pk).then(function (result) {
+                self.setState({
+                    answers: result.answers,
+                    students: result.students,
                 })
             });
         }
@@ -56,17 +66,31 @@ class QuestionDetails extends Component {
                                 <tr>
                                     <th>ID</th>
                                     <th>Student answer</th>
-                                    <th>Student name</th>
+                                    {/* <th>Student name</th> */}
                                     <th>System score</th>
                                     <th>Score 1</th>
                                     <th>Score 2</th>
                                 </tr>
                             </thead>
-                            {/* <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody> */}
+                            <tbody>
+                                {this.state.answers.map(answer =>
+                                    <tr key={answer.pk}>
+                                        <td>{answer.pk}</td>
+                                        <td>{answer.answer}</td>
+                                        {/* <td>
+                                            {this.state.students.map(student => {
+                                                if (student.answer === answer.pk) {
+                                                    return student.student;
+                                                }
+                                                else return ''
+                                            }
+                                            )}
+                                        </td> */}
+                                        <td>{answer.systemscore ? answer.systemscore : '-'}</td>
+                                        <td>{answer.score1 ? answer.score1 : '-'}</td>
+                                        <td>{answer.score2 ? answer.score2 : '-'}</td>
+                                    </tr>)}
+                            </tbody>
                         </table>
                     </div>
                 )
