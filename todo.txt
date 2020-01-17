@@ -1,11 +1,8 @@
-scoring: splice, array cannot be empty -> use dict?
-score
-optimise:
-    remove actions button, change name&question into a with href
-    scoring
-    put style in css -> className
-    update student no pk in url
-    pagination
+remove actions button, change name&question into a with href
+put style in css -> className
+update student no pk in url
+average score
+pagination
 users in post
 userservice: admin name in posts, student name in questions
 testing
@@ -16,3 +13,4 @@ django:
     login required
     logout user
 optimise answer in student page using search algo
+dependencies on readme.md
