@@ -1,7 +1,11 @@
-answers: questiondetails
+scoring: splice, array cannot be empty -> use dict?
 score
 optimise:
     remove actions button, change name&question into a with href
+    scoring
+    put style in css -> className
+    update student no pk in url
+    pagination
 users in post
 userservice: admin name in posts, student name in questions
 testing

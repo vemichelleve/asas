@@ -75,7 +75,7 @@ class AccountEdit extends Component {
                         </div>
                         <div className='form-group'>
                             <button className={'btn btn-primary' + (this.state.changed ? '' : ' disabled')} disabled={!this.state.changed} style={{ marginRight: '10px' }} type='submit'>Save</button>
-                            <button className='btn btn-secondary' onClick={(e) => window.location = '/student/account'}>Cancel</button>
+                            <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Cancel</button>
                         </div>
                     </form>
                 </div>

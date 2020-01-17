@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Max
 
 from .models import *
 from .serializers import *
@@ -242,7 +243,8 @@ class AnswerView(APIView):
                 question=question, answer=answer)
             ans.save()
             # Create student answer object
-            StudentAnswer.objects.create(student=student, answer=ans).save()
+            StudentAnswer.objects.create(
+                student=student, answer=ans).save()
             return Response({'message': 'Question answered', 'status': 1})
         else:
             return Response({'message': 'Question is already answered', 'status': 0})
@@ -271,7 +273,7 @@ class AnswerView(APIView):
                     studnetans |= StudentAnswer.objects.filter(answer=x)
                 studentansSerializer = StudentAnswerSerializer(
                     studnetans, context={'request': request}, many=True)
-                return Response({'message': 'Answers retrieved', 'status': 1, 'answers': answerSerializer.data, 'students': studentansSerializer.data})
+                return Response({'message': 'Answers retrieved', 'status': 1, 'answers': answerSerializer.data, 'students': studentansSerializer.data, 'max': answers.aggregate(Max('pk'))})
             else:
                 return Response({'message': 'No answer for this question', 'status': 0})
         else:
@@ -325,3 +327,44 @@ class StudentEditAccountView(APIView):
                 return Response({'message': 'Data is not valid', 'status': 0})
         else:
             return Response({'message': 'Student not found', 'status': 0})
+
+
+class ScoreAnswerView(APIView):
+    def get_answer(self, pk):
+        try:
+            return Answer.objects.get(pk=pk)
+        except:
+            return None
+
+    def put(self, request, format=None):
+        score1 = request.data['score1']
+        score2 = request.data['score2']
+        stat1 = False
+        stat2 = False
+        for x in range(0, len(score1)):
+            if score1[x] is not None:
+                answer = self.get_answer(x)
+                if answer is not None:
+                    data = {'score1': score1[x]}
+                    serializer = AnswerSerializer(
+                        answer, data=data, context={'request': request}, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        stat1 = True
+            if score2[x] is not None:
+                answer = self.get_answer(x)
+                if answer is not None:
+                    data = {'score2': score2[x]}
+                    serializer = AnswerSerializer(
+                        answer, data=data, context={'request': request}, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        stat2 = True
+        if stat1 and stat2:
+            return Response({'message': 'Scores successfully saved', 'status': 1})
+        elif stat1 and not stat2:
+            return Response({'message': 'Score 1 successfully saved', 'status': 1})
+        elif not stat1 and stat2:
+            return Response({'message': 'Score 2 successfully saved', 'status': 1})
+        else:
+            return Response({'message': 'Scores not saved', 'status': 0})

@@ -1,3 +1,4 @@
+import update from 'react-addons-update'
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
 import AnswerService from '../answers/AnswerService'
@@ -14,10 +15,19 @@ class QuestionDetails extends Component {
             status: 0,
             answers: [],
             students: [],
+            edit: false,
+            score1: [],
+            score2: [],
+            changed: false,
         }
+        this.handleEdit = this.handleEdit.bind(this)
     }
 
     componentDidMount() {
+        this.retrieveData();
+    }
+
+    retrieveData() {
         var self = this;
         const { match: { params } } = this.props;
         if (params && params.pk) {
@@ -32,8 +42,51 @@ class QuestionDetails extends Component {
                 self.setState({
                     answers: result.answers,
                     students: result.students,
+                    maxpk: result.max.pk__max,
+                })
+                var x = new Array(self.state.maxpk + 1);
+                self.setState({
+                    score1: x,
+                    score2: x,
                 })
             });
+        }
+    }
+
+    handleEdit() {
+        var self = this;
+        if (this.state.edit && this.state.changed) {
+            questionService.scoreAnswer({
+                score1: this.state.score1,
+                score2: this.state.score2,
+            }).then(result => {
+                this.setState({ changed: false })
+                alert(result.message);
+                if (result.status)
+                    self.retrieveData();
+            }).catch(result => {
+                alert(result.message);
+            })
+        }
+        var temp = this.state.edit;
+        this.setState({ edit: !temp })
+    }
+
+    handleChange(e, pk, score1) {
+        var x = e.target.value;
+        var self = this;
+        this.setState({ changed: true })
+        if (x < 0 || x > 5)
+            alert('Score must be between 0 and 5');
+        else {
+            if (score1)
+                self.setState({
+                    score1: update(self.state.score1, { $splice: [[pk, 1, x]] }),
+                })
+            else
+                self.setState({
+                    score2: update(self.state.score2, { $splice: [[pk, 1, x]] }),
+                })
         }
     }
 
@@ -59,8 +112,10 @@ class QuestionDetails extends Component {
                             </div>
                             <div style={{ margin: '10px', minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                 <div>
-                                    <button className='btn btn-secondary' onClick={(e)=>window.history.back()}>Back</button>
-                                    <button className='btn btn-primary' style={{ marginLeft: '10px' }}>Edit score</button>
+                                    <button className='btn btn-secondary' onClick={(e) => window.history.back()} style={{ marginRight: '10px' }}>Back</button>
+                                    <button className='btn btn-primary' onClick={this.handleEdit} style={{ width: '70px' }}>
+                                        {this.state.edit ? 'Save' : 'Score'}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +124,6 @@ class QuestionDetails extends Component {
                                 <tr>
                                     <th>ID</th>
                                     <th>Student answer</th>
-                                    {/* <th>Student name</th> */}
                                     <th>System score</th>
                                     <th>Score 1</th>
                                     <th>Score 2</th>
@@ -80,18 +134,19 @@ class QuestionDetails extends Component {
                                     <tr key={answer.pk}>
                                         <td>{answer.pk}</td>
                                         <td>{answer.answer}</td>
-                                        {/* <td>
-                                            {this.state.students.map(student => {
-                                                if (student.answer === answer.pk) {
-                                                    return student.student;
-                                                }
-                                                else return ''
-                                            }
-                                            )}
-                                        </td> */}
                                         <td>{answer.systemscore ? answer.systemscore : '-'}</td>
-                                        <td>{answer.score1 ? answer.score1 : '-'}</td>
-                                        <td>{answer.score2 ? answer.score2 : '-'}</td>
+                                        <td>
+                                            {answer.score1 ? answer.score1 : (
+                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control' style={{ maxWidth: '70px' }}
+                                                    onChange={(e) => this.handleChange(e, answer.pk, true)} /> :
+                                                    '-')}
+                                        </td>
+                                        <td>
+                                            {answer.score2 ? answer.score2 : (
+                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control' style={{ maxWidth: '70px' }}
+                                                    onChange={(e) => this.handleChange(e, answer.pk, false)} /> :
+                                                    '-')}
+                                        </td>
                                     </tr>)}
                             </tbody>
                         </table>

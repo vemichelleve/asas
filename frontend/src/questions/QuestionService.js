@@ -13,4 +13,8 @@ export default class QuestionService {
     getQuestion(pk) {
         return axios.get(`${API_URL}/questions/${pk}`).then(response => response.data)
     }
+
+    scoreAnswer(data) {
+        return axios.put(`${API_URL}/score/`, data).then(response => response.data)
+    }
 }
