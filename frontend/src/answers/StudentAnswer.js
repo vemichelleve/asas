@@ -36,6 +36,7 @@ class StudentAnswer extends Component {
             'answer': this.state.answer,
         }).then((response) => {
             alert(response.message)
+            window.location = '/student/'
         }).catch((response) => {
             alert(response);
         })

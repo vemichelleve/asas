@@ -32,6 +32,7 @@ class AddQuestion extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.handleAdd();
+        window.location = '/admin/';
     }
 
     render() {

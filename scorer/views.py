@@ -73,7 +73,7 @@ class StudentListView(APIView):
         # Retrieve all students
         students = User.objects.all().filter(is_student=True)
         # Check if queryset empty
-        if not students:
+        if students is not None:
             serializer = UserSerializer(
                 students, context={'request': request}, many=True)
             return Response({'message': 'Students retrieved', 'status': 1, 'data': serializer.data})
