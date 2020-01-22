@@ -306,15 +306,9 @@ class StudentAccountView(APIView):
 
 # Edit student account
 class StudentEditAccountView(APIView):
-    def get_student(self, pk):
-        try:
-            return User.objects.get(pk=pk)
-        except:
-            return None
-
-    def put(self, request, pk, format=None):
-        # Retrieve studend
-        student = self.get_student(pk)
+    def put(self, request, format=None):
+        # Retrieve student
+        student = User.objects.get(username='vemichelleve')  # Logged in user!
         # Check if student exists
         if student is not None:
             serializer = UserSerializer(

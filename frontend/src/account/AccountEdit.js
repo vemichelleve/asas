@@ -46,7 +46,6 @@ class AccountEdit extends Component {
         }).catch((result) => {
             alert('Error occured');
         });
-        console.log('save')
     }
 
     render() {

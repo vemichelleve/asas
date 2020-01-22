@@ -1,11 +1,10 @@
-remove actions button, change name&question into a with href
 put style in css -> className
 update student no pk in url
 average score
 pagination
 users in post
+change post to topic
 userservice: admin name in posts, student name in questions
-testing
 auto question - in excel
 add model
 django:
