@@ -29,7 +29,7 @@ class PostList extends Component {
             case 0:
                 return (
                     <div>
-                        <h1 className="display-4" style={{ textAlign: 'center', marginTop: '20px' }}>No posts found</h1>
+                        <h1 className="display-4 Error-Msg">No posts found</h1>
                     </div>
                 )
             case 1:

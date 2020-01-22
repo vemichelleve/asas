@@ -29,30 +29,30 @@ class Account extends Component {
 
     render() {
         return (
-            <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                <div className='card' style={{ width: '50%' }}>
+            <div className='Form-Container'>
+                <div className='card Form-Card'>
                     <div className='card-body'>
                         <h4 className='card-title'>Your account</h4>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <div className='form-group' style={{ minWidth: '50%' }}>
+                        <div className='Table-Top'>
+                            <div className='form-group Label-Width'>
                                 <div>First name</div>
-                                <div style={{ fontSize: '20px' }}>{this.state.first_name}</div>
+                                <div className='Header-Label'>{this.state.first_name}</div>
                             </div>
-                            <div className='form-group' style={{ minWidth: '50%' }}>
+                            <div className='form-group Label-Width'>
                                 <div>Last name</div>
-                                <div style={{ fontSize: '20px' }}>{this.state.last_name}</div>
+                                <div className='Header-Label'>{this.state.last_name}</div>
                             </div>
                         </div>
                         <div className='form-group'>
                             <div>Username</div>
-                            <div style={{ fontSize: '20px' }}>{this.state.username}</div>
+                            <div className='Header-Label'>{this.state.username}</div>
                         </div>
                         <div className='form-group'>
                             <div>Email</div>
-                            <div style={{ fontSize: '20px' }}>{this.state.email}</div>
+                            <div className='Header-Label'>{this.state.email}</div>
                         </div>
                         <div className='form-group'>
-                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/edit'} style={{ marginRight: '10px' }}>Edit</button>
+                            <button className='btn btn-primary Button-Left' onClick={(e) => window.location = '/student/account/edit'}>Edit</button>
                             <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/password'}>Update password</button>
                         </div>
                     </div>

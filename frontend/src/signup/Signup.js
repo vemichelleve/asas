@@ -50,8 +50,8 @@ class Signup extends Component {
 
     render() {
         return (
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '20px' }}>
-                <div className='card' style={{ width: '50%' }}>
+            <div className='Form-Container'>
+                <div className='card Form-Card'>
                     <form className='card-body' onSubmit={this.handleSubmit}>
                         <h5 className='card-title'>Sign up</h5>
                         <div className='form-group'>

@@ -35,20 +35,20 @@ class PostDetails extends Component {
             case 2:
                 return (
                     <div>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
-                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                        <div className='Table-Top'>
+                            <div className='Table-No-Button'>
                                 <div>Post name</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.post_name}</div>
+                                <div className='Header-Text'>{this.state.post_name}</div>
                             </div>
-                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                            <div className='Table-No-Button'>
                                 <div>Poster</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.poster_first} {this.state.poster_last}</div>
+                                <div className='Header-Text'>{this.state.poster_first} {this.state.poster_last}</div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <div className='Button-Group'>
                                 <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Back</button>
                             </div>
                         </div>
-                        <table className='table' style={{ marginTop: '20px' }}>
+                        <table className='table Table-Below'>
                             <thead>
                                 <tr>
                                     <th>ID</th>

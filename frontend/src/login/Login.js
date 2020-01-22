@@ -57,8 +57,8 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', paddingTop: '20px' }}>
-                    <div className='card' style={{ width: '45%' }}>
+                <div className='Form-Container'>
+                    <div className='card Form-Card'>
                         <form className='card-body' onSubmit={this.handleAdminSubmit}>
                             <h5 className='card-title'>Admin login</h5>
                             <div className='form-group'>
@@ -72,7 +72,7 @@ class Login extends Component {
                             <button type='submit' className='btn btn-primary'>Log in</button>
                         </form>
                     </div>
-                    <div className='card' style={{ width: '45%' }}>
+                    <div className='card Form-Card'>
                         <form className='card-body' onSubmit={this.handleStudentSubmit}>
                             <h5 className='card-title'>Student login</h5>
                             <div className='form-group'>
@@ -87,9 +87,9 @@ class Login extends Component {
                         </form>
                     </div>
                 </div>
-                <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                <div className='Line-Container'>
                     <div>Don't have an account?</div>
-                    <a style={{ paddingLeft: '5px' }} href='/signup'>Sign up</a>
+                    <a className='Separator' href='/signup'>Sign up</a>
                 </div>
             </div>
         )

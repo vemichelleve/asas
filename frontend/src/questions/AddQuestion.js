@@ -37,7 +37,7 @@ class AddQuestion extends Component {
 
     render() {
         return (
-            <div className='row' style={{ marginTop: '20px' }}>
+            <div className='row Table-Below'>
                 <div className='col-sm-6'>
                     <div className='card'>
                         <div className='card-body'>

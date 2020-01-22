@@ -47,16 +47,16 @@ class StudentAnswer extends Component {
             case 0:
                 return (
                     <div>
-                        <h1 className="display-4" style={{ textAlign: 'center', marginTop: '20px' }}>Question not found</h1>
+                        <h1 className="display-4 Error-Msg">Question not found</h1>
                     </div>
                 )
             case 1:
                 return (
-                    <div className='card' style={{ marginTop: '20px' }}>
+                    <div className='card Table-Below'>
                         <form className='card-body' onSubmit={this.handleSubmit}>
                             <div className='form-group'>
                                 <label>Question</label>
-                                <div style={{ fontSize: '20px' }}>{this.state.question}</div>
+                                <div className='Header-label'>{this.state.question}</div>
                             </div>
                             <div className='form-group'>
                                 <label>Answer</label>

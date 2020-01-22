@@ -50,16 +50,16 @@ class AccountEdit extends Component {
 
     render() {
         return (
-            <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                <div className='card' style={{ width: '50%' }}>
+            <div className='Form-Container'>
+                <div className='card Form-Card'>
                     <form className='card-body' onSubmit={this.handleSubmit}>
                         <h4 className='card-title'>Edit account</h4>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <div className='form-group' style={{ minWidth: '48%' }}>
+                        <div className='Table-Top'>
+                            <div className='form-group Input-Width'>
                                 <label>First name</label>
                                 <input type='text' className='form-control' value={this.state.first_name} onChange={(e) => this.setState({ first_name: e.target.value, changed: true })} />
                             </div>
-                            <div className='form-group' style={{ minWidth: '48%' }}>
+                            <div className='form-group Input-Width'>
                                 <label>Last name</label>
                                 <input type='text' className='form-control' value={this.state.last_name} onChange={(e) => this.setState({ last_name: e.target.value, changed: true })} />
                             </div>
@@ -73,7 +73,7 @@ class AccountEdit extends Component {
                             <input type='text' className='form-control' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value, changed: true })} />
                         </div>
                         <div className='form-group'>
-                            <button className={'btn btn-primary' + (this.state.changed ? '' : ' disabled')} disabled={!this.state.changed} style={{ marginRight: '10px' }} type='submit'>Save</button>
+                            <button className={'btn btn-primary Button-Left' + (this.state.changed ? '' : ' disabled')} disabled={!this.state.changed} type='submit'>Save</button>
                             <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Cancel</button>
                         </div>
                     </form>

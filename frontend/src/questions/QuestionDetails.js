@@ -95,31 +95,31 @@ class QuestionDetails extends Component {
             case 0:
                 return (
                     <div>
-                        <h1 className='display-4' style={{ textAlign: 'center', marginTop: '20px' }}>Data not found</h1>
+                        <h1 className='display-4 Error-Msg'>Data not found</h1>
                     </div>
                 )
             case 1:
                 return (
                     <div>
-                        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <div style={{ minWidth: '40%', margin: '10px' }}>
+                        <div className='Table-Top'>
+                            <div className='Header-Button'>
                                 <div>Question</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.question}</div>
+                                <div className='Header-Text'>{this.state.question}</div>
                             </div>
-                            <div style={{ minWidth: '40%', margin: '10px' }}>
+                            <div className='Header-Button'>
                                 <div>Reference answer</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.refans}</div>
+                                <div className='Header-Text'>{this.state.refans}</div>
                             </div>
-                            <div style={{ margin: '10px', minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <div className='Button-Group'>
                                 <div>
-                                    <button className='btn btn-secondary' onClick={(e) => window.history.back()} style={{ marginRight: '10px' }}>Back</button>
-                                    <button className='btn btn-primary' onClick={this.handleEdit} style={{ width: '70px' }}>
+                                    <button className='btn btn-secondary Button-Left' onClick={(e) => window.history.back()}>Back</button>
+                                    <button className='btn btn-primary Button-Width' onClick={this.handleEdit}>
                                         {this.state.edit ? 'Save' : 'Score'}
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <table className='table' style={{ marginTop: '20px' }}>
+                        <table className='table Table-Below'>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -137,13 +137,13 @@ class QuestionDetails extends Component {
                                         <td>{answer.systemscore ? answer.systemscore : '-'}</td>
                                         <td>
                                             {answer.score1 ? answer.score1 : (
-                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control' style={{ maxWidth: '70px' }}
+                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control TextBox-Width'
                                                     onChange={(e) => this.handleChange(e, answer.pk, true)} /> :
                                                     '-')}
                                         </td>
                                         <td>
                                             {answer.score2 ? answer.score2 : (
-                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control' style={{ maxWidth: '70px' }}
+                                                this.state.edit ? <input type='number' min='0' max='5' className='form-control TextBoxWidth'
                                                     onChange={(e) => this.handleChange(e, answer.pk, false)} /> :
                                                     '-')}
                                         </td>

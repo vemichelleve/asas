@@ -34,23 +34,23 @@ class StudentDetails extends Component {
             case 0:
                 return (
                     <div>
-                        <h1 className="display-4" style={{ textAlign: 'center', marginTop: '20px' }}>Data not found</h1>
+                        <h1 className="display-4 Error-Msg">Data not found</h1>
                     </div>
                 );
             case 1:
                 return (
                     <div>
-                        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                        <div className='Table-Top'>
+                            <div className='Header-No-Button'>
                                 <div>Name</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.first_name} {this.state.last_name}</div>
+                                <div className='Header-Text'>{this.state.first_name} {this.state.last_name}</div>
                             </div>
-                            <div style={{ minWidth: '45%', margin: '10px' }}>
+                            <div className='Header-No-Button'>
                                 <div >Email</div>
-                                <div style={{ fontSize: '30px' }}>{this.state.email}</div>
+                                <div className='Header-Text'>{this.state.email}</div>
                             </div>
                         </div>
-                        <table className='table' style={{ marginTop: '20px' }}>
+                        <table className='table Table-Below'>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -66,8 +66,8 @@ class StudentDetails extends Component {
                             </tbody> */}
                         </table>
                     </div >
-                    // <div style={{ marginTop: '20px' }}>
-                    //     <div style={{ 'fontSize': '30px' }}>{this.state.first_name} {this.state.last_name} - {this.state.email}</div>
+                    // <div className='Table-Below>
+                    //     <div className='Header-Text'>{this.state.first_name} {this.state.last_name} - {this.state.email}</div>
                     // </div>
                 );
             default:

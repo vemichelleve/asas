@@ -38,3 +38,87 @@
     transform: rotate(360deg);
   }
 }
+
+.Table-Top {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Header-Text {
+  font-size: 30px;
+}
+
+.Table-Below {
+  margin-top: 20px;
+}
+
+.Header-Button {
+  min-width: 40%;
+  margin: 10px;
+}
+
+.Header-No-Button {
+  min-width: 45%;
+  margin: 10px;
+}
+
+.Error-Msg {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.Button-Group {
+  margin: 10px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Button-Left {
+  margin-right: 10px;
+}
+
+.Button-Width {
+  width: 70px;
+}
+
+.TextBox-Width {
+  max-width: 70px;
+}
+
+.Header-Label {
+  font-size: 20px;
+}
+
+.Form-Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.Form-Card {
+  width: 45%;
+}
+
+.Separator {
+  padding-left: 5px;
+}
+
+.Line-Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.Label-Width {
+  min-width: 50%;
+}
+
+.Input-Width {
+  min-width: 48%;
+}
