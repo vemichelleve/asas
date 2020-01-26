@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import StudentService from './StudentService'
+import QuestionService from '../questions/QuestionService';
 
 const studentService = new StudentService();
+const questionService = new QuestionService();
 
 class StudentDetails extends Component {
     constructor(props) {
@@ -11,6 +13,9 @@ class StudentDetails extends Component {
             last_name: '',
             email: '',
             status: 0,
+            questions: [],
+            questionlist: [],
+            answers: [],
         }
     }
 
@@ -24,6 +29,13 @@ class StudentDetails extends Component {
                     last_name: result.data.last_name,
                     email: result.data.email,
                     status: result.status,
+                    id: result.data.pk,
+                })
+            });
+            questionService.getQuestionbyUser(params.pk).then(function (result) {
+                self.setState({
+                    questions: result.data.questions,
+                    questionlist: result.questionlist,
                 })
             });
         }
@@ -49,6 +61,9 @@ class StudentDetails extends Component {
                                 <div >Email</div>
                                 <div className='Header-Text'>{this.state.email}</div>
                             </div>
+                            <div className='Button-Group'>
+                                <button className='btn btn-secondary' onClick={() => window.history.back()}>Back</button>
+                            </div>
                         </div>
                         <table className='table Table-Below'>
                             <thead>
@@ -59,16 +74,26 @@ class StudentDetails extends Component {
                                     <th>Score</th>
                                 </tr>
                             </thead>
-                            {/* <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody> */}
+                            <tbody>
+                                {this.state.questions.map(question =>
+                                    <tr key={question}>
+                                        <td>{question}</td>
+                                        {this.state.questionlist.map(qn => {
+                                            if (qn.pk === question)
+                                                return <td key={qn.pk}>{qn.question}</td>
+                                            else return null
+                                        })}
+                                        {this.state.questionlist.map(qn => {
+                                            if (qn.pk === question)
+                                                return <td key={qn.pk}>{qn.refans}</td>
+                                            else return null
+                                        })}
+                                        <td>-</td>
+                                    </tr>
+                                )}
+                            </tbody>
                         </table>
                     </div >
-                    // <div className='Table-Below>
-                    //     <div className='Header-Text'>{this.state.first_name} {this.state.last_name} - {this.state.email}</div>
-                    // </div>
                 );
             default:
                 return <div>Error occured</div>;

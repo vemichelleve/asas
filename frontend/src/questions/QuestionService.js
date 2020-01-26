@@ -25,4 +25,8 @@ export default class QuestionService {
             }
         }).then(response => response.data)
     }
+
+    getQuestionbyUser(pk) {
+        return axios.get(`${API_URL}/questions/user/${pk}`).then(response => response.data)
+    }
 }

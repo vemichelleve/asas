@@ -8,6 +8,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('pk', 'username', 'first_name', 'last_name', 'email')
 
 
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('pk', 'questions')
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question

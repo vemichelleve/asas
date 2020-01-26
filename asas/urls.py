@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^accounts/student/edit/$', views.StudentEditAccountView.as_view()),
     url(r'^score/$', views.ScoreAnswerView.as_view()),
     url(r'^addquestion/auto/$', views.AddAutoQuestionView.as_view()),
+    url(r'^questions/user/(?P<pk>[0-9]+)$', views.QuestionbyUserView.as_view()),
 ]

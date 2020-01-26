@@ -395,3 +395,28 @@ class AddAutoQuestionView(APIView):
             #     question = Question(
             #         post=post, question=question, refans=refans).save()
         return Response({'message': 'Questions added', 'status': 1})
+
+
+class QuestionbyUserView(APIView):
+    def get_student(self, pk):
+        try:
+            return Student.objects.get(user=pk)
+        except:
+            return None
+
+    def get_questions(self):
+        try:
+            return Question.objects.all()
+        except:
+            return None
+
+    def get(self, request, pk, format=None):
+        student = self.get_student(pk)
+        if student is not None:
+            serializer = StudentSerializer(
+                student, context={'request': request})
+            questions = self.get_questions()
+            qnSerializer = QuestionSerializer(
+                questions, context={'request': request}, many=True)
+            return Response({'message': 'try', 'status': 1, 'data': serializer.data, 'questionlist': qnSerializer.data})
+        return Response({'message': 'fail', 'status': 0})
