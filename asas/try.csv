@@ -1,0 +1,22 @@
+﻿Where do C programs begin to execute?,At the main function
+What is a variable?,A location in memory that can store a value
+Where are variables declared in a C program?,Variables can be declared anywhere in a program. They can be declared inside a function (local variables) or outside the functions (global variables)
+What is the main difference between a while and a do...while statement?,The block inside a do...while statement will execute at least once.
+What is typically included in a class definition?,Data members (attributes) and member functions.
+What is the difference between a data member and a local variable inside a member function?,Data members can be accessed from any member functions inside the class definition. Local variables can only be accessed inside the member function that defines them.
+What is the difference between a function prototype and a function definition?,"A function prototype includes the function signature, i.e., the name of the function, the return type, and the parameters' type. The function definition includes the actual body of the function. "
+What is the role of a header-file?,"To store a class interface, including data members and member function prototypes."
+What does a function signature include?,The name of the function and the types of the parameters.
+What is the scope of global variables?,File scope.
+How does the compiler handle inline functions?,It makes a copy of the function code in every place where a function call is made.
+What is the role of a prototype program in problem solving?,To simulate the behaviour of portions of the desired software product.
+What are the elements typically included in a class definition?,Function members and data members.
+What is a function signature?,A function that calls itself.
+Is ArrayIndexOutOfBoundsException a run-time error or a compilation error?,Run-time error.
+What is scope of a variable?,"Scope of a variable is the part of the program where the variable may directly be accessible. In C, all identifiers are lexically (or statically) scoped."
+What is a static function?,A function in which acccess to it is restricted to the file where they are declared.
+What is the difference between i++ and ++i?,The expression i++ returns the old value and then increments i. The expression ++i increments the value and returns new value.
+What is the difference between including the header file within angular braces < > and double quotes ” “?,"Header file in angular braces is searched only within the built-in include path. Header file in double quotes is searched in the working directory first, then the built-in include path."
+What is a data structure?,A data structure is a particular way of organizing data in a computer so that it can be used effectively.
+What is dynamic data structure?,Dynamic data structure is an organization or collection of data in a memory that grows and shrinks as needed by allocating and deallocating memory from heap.
+What is static data structure?,Static data structures isare an organization or collection of data in memory that is fixed in size.

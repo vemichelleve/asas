@@ -9,8 +9,12 @@ class AddQuestion extends Component {
         this.state = {
             question: '',
             refans: '',
+            file: null,
+            uploaded: false,
+            post: '',
         }
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleUpload = this.handleUpload.bind(this)
     }
 
     handleAdd() {
@@ -33,6 +37,16 @@ class AddQuestion extends Component {
         event.preventDefault();
         this.handleAdd();
         window.location = '/admin/';
+    }
+
+    handleUpload(event) {
+        const data = new FormData()
+        data.append('file', this.state.file)
+        data.append('post', this.state.post)
+        questionService.addQuestions(data).then((response) => {
+            alert(response.message)
+        })
+        event.preventDefault()
     }
 
     render() {
@@ -58,15 +72,20 @@ class AddQuestion extends Component {
                     </div>
                 </div>
                 <div className='col-sm-6'>
-                    <div className='card'>
+                    <form className='card' onSubmit={this.handleUpload}>
                         <div className='card-body'>
                             <h5 className='card-title'>Automated</h5>
                             <p className='card-text'>Add multiple questions simultaneously from .xls file.</p>
-                            <div>
-                                form
+                            <div className='form-group'>
+                                <label><b>Post name</b></label>
+                                <input className='form-control' type='text' onChange={(e) => this.setState({ post: e.target.value })} />
+                            </div>
+                            <div className='Table-Top'>
+                                <input type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
+                                <button type='submit' className={'btn btn-primary' + (this.state.uploaded ? '' : ' disabled')} disabled={!this.state.uploaded}>Add question</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         );

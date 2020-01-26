@@ -1,15 +1,15 @@
-put style in css -> className
-update student no pk in url
-average score
-pagination
-users in post
-change post to topic
-userservice: admin name in posts, student name in questions
 auto question - in excel
+pagination
 add model
+change post to topic
+topic -> dropdown
 django:
     change password
     login required
     logout user
+optimise:
+    userservice: return name instead of returning all users then iterate (postlist)
+    combine auto add and manual add
+    manual score added from csv file
 optimise answer in student page using search algo
 dependencies on readme.md

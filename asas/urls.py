@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^accounts/student/$', views.StudentAccountView.as_view()),
     url(r'^accounts/student/edit/$', views.StudentEditAccountView.as_view()),
     url(r'^score/$', views.ScoreAnswerView.as_view()),
+    url(r'^addquestion/auto/$', views.AddAutoQuestionView.as_view()),
 ]

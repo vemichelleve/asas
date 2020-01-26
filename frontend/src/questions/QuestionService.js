@@ -17,4 +17,12 @@ export default class QuestionService {
     scoreAnswer(data) {
         return axios.put(`${API_URL}/score/`, data).then(response => response.data)
     }
+
+    addQuestions(data) {
+        return axios.post(`${API_URL}/addquestion/auto/`, data, {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }).then(response => response.data)
+    }
 }

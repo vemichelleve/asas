@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -11,6 +12,9 @@ from django.db.models import Max
 
 from .models import *
 from .serializers import *
+
+import csv
+import re
 
 
 # User sign up page
@@ -362,3 +366,32 @@ class ScoreAnswerView(APIView):
             return Response({'message': 'Score 2 successfully saved', 'status': 1})
         else:
             return Response({'message': 'Scores not saved', 'status': 0})
+
+
+class AddAutoQuestionView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, format=None):
+        user = User.objects.get(username='admin')  # Logged in user!
+        admin = Admin.objects.get(user=user)
+        name = request.data['post']
+        alluploaded = True
+        # if not Post.objects.filter(name=name).exists():
+        #     post = Post(admin-admin, name=name).save()
+        # else:
+        #     post = Post.objects.get(name=name)
+        fileobj = request.data['file']
+        for line in fileobj:
+            # arr = line.decode('utf-8').split(',')
+            arr = re.compile(
+                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
+            print(arr)
+            # question = arr[0]
+            # refans = arr[1]
+            # print(question)
+            # print(refans)
+            # print('\n')
+            # if not Question.objects.filter(question=question).exists():
+            #     question = Question(
+            #         post=post, question=question, refans=refans).save()
+        return Response({'message': 'Questions added', 'status': 1})
