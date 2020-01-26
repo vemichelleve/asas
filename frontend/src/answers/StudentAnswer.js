@@ -12,6 +12,7 @@ class StudentAnswer extends Component {
             question: '',
             answer: '',
             qstatus: 0,
+            answered: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -52,18 +53,21 @@ class StudentAnswer extends Component {
                 )
             case 1:
                 return (
-                    <div className='card Table-Below'>
-                        <form className='card-body' onSubmit={this.handleSubmit}>
-                            <div className='form-group'>
-                                <label>Question</label>
-                                <div className='Header-label'>{this.state.question}</div>
-                            </div>
-                            <div className='form-group'>
-                                <label>Answer</label>
-                                <input className='form-control' type='text' onChange={(e) => this.setState({ answer: e.target.value })} />
-                            </div>
-                            <button className='btn btn-primary' type='submit'>Submit</button>
-                        </form>
+                    <div className='Form-Container'>
+                        <div className='card Form-Card'>
+                            <form className='card-body' onSubmit={this.handleSubmit}>
+                                <div className='form-group'>
+                                    <label><b>Question</b></label>
+                                    <div className='Header-label'>{this.state.question}</div>
+                                </div>
+                                <div className='form-group'>
+                                    <label><b>Answer</b></label>
+                                    <input className='form-control' type='text' onChange={(e) => this.setState({ answer: e.target.value, answered: true })} />
+                                </div>
+                                <button className='btn btn-primary Button-Left' disabled={!this.state.answered} type='submit'>Submit</button>
+                                <button className='btn btn-secondary' onClick={() => window.history.back()}>Back</button>
+                            </form>
+                        </div>
                     </div>
                 )
             default:

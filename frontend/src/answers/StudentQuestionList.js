@@ -54,7 +54,7 @@ class StudentQuestionList extends Component {
                                     })}
                                 </td>
                                 <td>
-                                    <button className={'btn btn-primary' + (answered[question.pk] ? ' disabled' : '')} disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
+                                    <button className='btn btn-primary' disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
                                 </td>
                                 <td></td>
                             </tr>)}

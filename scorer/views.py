@@ -371,15 +371,6 @@ class ScoreAnswerView(APIView):
 class AddAutoQuestionView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    def get(self, request, format=None):
-        posts = Post.objects.all()
-        postSerializer = PostSerializer(
-            posts, context={'request': request}, many=True)
-        questions = Question.objects.all()
-        qnSerializer = QuestionSerializer(
-            questions, context={'request': request}, many=True)
-        return Response({'posts': postSerializer.data, 'questions': qnSerializer.data})
-
     def post(self, request, format=None):
         user = User.objects.get(username='admin')  # Logged in user!
         admin = Admin.objects.get(user=user)

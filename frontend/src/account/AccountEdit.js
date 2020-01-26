@@ -73,7 +73,7 @@ class AccountEdit extends Component {
                             <input type='text' className='form-control' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value, changed: true })} />
                         </div>
                         <div className='form-group'>
-                            <button className={'btn btn-primary Button-Left' + (this.state.changed ? '' : ' disabled')} disabled={!this.state.changed} type='submit'>Save</button>
+                            <button className='btn btn-primary Button-Left' disabled={!this.state.changed} type='submit'>Save</button>
                             <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Cancel</button>
                         </div>
                     </form>
