@@ -371,29 +371,35 @@ class ScoreAnswerView(APIView):
 class AddAutoQuestionView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
+    def get(self, request, format=None):
+        posts = Post.objects.all()
+        postSerializer = PostSerializer(
+            posts, context={'request': request}, many=True)
+        questions = Question.objects.all()
+        qnSerializer = QuestionSerializer(
+            questions, context={'request': request}, many=True)
+        return Response({'posts': postSerializer.data, 'questions': qnSerializer.data})
+
     def post(self, request, format=None):
         user = User.objects.get(username='admin')  # Logged in user!
         admin = Admin.objects.get(user=user)
         name = request.data['post']
         alluploaded = True
-        # if not Post.objects.filter(name=name).exists():
-        #     post = Post(admin-admin, name=name).save()
-        # else:
-        #     post = Post.objects.get(name=name)
+        if not Post.objects.filter(name=name).exists():
+            post = Post(admin=admin, name=name)
+            post.save()
+        else:
+            post = Post.objects.get(name=name)
         fileobj = request.data['file']
         for line in fileobj:
-            # arr = line.decode('utf-8').split(',')
             arr = re.compile(
                 '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
-            print(arr)
-            # question = arr[0]
-            # refans = arr[1]
-            # print(question)
-            # print(refans)
-            # print('\n')
-            # if not Question.objects.filter(question=question).exists():
-            #     question = Question(
-            #         post=post, question=question, refans=refans).save()
+            arr = list(filter(None, arr))
+            question = arr[0].replace('"', '')
+            refans = arr[1].replace('"', '')
+            if not Question.objects.filter(question=question).exists():
+                question = Question(
+                    post=post, question=question, refans=refans).save()
         return Response({'message': 'Questions added', 'status': 1})
 
 

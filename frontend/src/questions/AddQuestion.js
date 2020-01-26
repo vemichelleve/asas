@@ -82,7 +82,7 @@ class AddQuestion extends Component {
                             </div>
                             <div className='Table-Top'>
                                 <input type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
-                                <button type='submit' className={'btn btn-primary' + (this.state.uploaded ? '' : ' disabled')} disabled={!this.state.uploaded}>Add question</button>
+                                <button type='submit' className={'btn btn-primary' + (this.state.uploaded && this.state.post !== '' ? '' : ' disabled')} disabled={!this.state.uploaded}>Add question</button>
                             </div>
                         </div>
                     </form>
