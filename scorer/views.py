@@ -12,10 +12,10 @@ from django.db.models import Max
 
 from .models import *
 from .serializers import *
+from .model.main import *
 
 import csv
 import re
-from .preprocess import *
 
 
 # User sign up page
@@ -126,7 +126,7 @@ class QuestionListView(APIView):
 # Add question manually
 class AddManualQuestionView(APIView):
     def post(self, request, format=None):
-        user = User.objects.get(username='admin')  # Logged in user!
+        user = User.objects.get(username='admin')  # TODO: Logged in user!
         admin = Admin.objects.get(user=user)
         # Add question to 'Manually added' post
         if not Post.objects.filter(name='Manually added').exists():
@@ -234,7 +234,7 @@ class PostDetailsView(APIView):
 class AnswerView(APIView):
     def post(self, request, pk, format=None):
         answer = request.data['answer']
-        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
         # Retrieve student and question object
         student = Student.objects.get(user=user)
         question = Question.objects.get(pk=pk)
@@ -288,7 +288,7 @@ class AnswerView(APIView):
 # Retrieve answers by student
 class AnswersView(APIView):
     def get(self, request, format=None):
-        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
         # Retrieve student and student answer
         student = Student.objects.get(user=user)
         studentans = StudentAnswer.objects.filter(student=student)
@@ -304,7 +304,7 @@ class AnswersView(APIView):
 # Student account details
 class StudentAccountView(APIView):
     def get(self, request, format=None):
-        user = User.objects.get(username='vemichelleve')  # Logged in user!
+        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
         serializer = UserSerializer(user, context={'request': request})
         return Response({'message': 'Details retreived', 'data': serializer.data})
 
@@ -313,7 +313,7 @@ class StudentAccountView(APIView):
 class StudentEditAccountView(APIView):
     def put(self, request, format=None):
         # Retrieve student
-        student = User.objects.get(username='vemichelleve')  # Logged in user!
+        student = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
         # Check if student exists
         if student is not None:
             serializer = UserSerializer(
@@ -373,7 +373,7 @@ class AddAutoQuestionView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, format=None):
-        user = User.objects.get(username='admin')  # Logged in user!
+        user = User.objects.get(username='admin')  # TODO: Logged in user!
         admin = Admin.objects.get(user=user)
         name = request.data['post']
         alluploaded = True
@@ -434,10 +434,11 @@ class ProcessData(APIView):
             return None
 
     def get(self, request, format=None):
-        questions = self.get_question()  # change question pk!
-        answers = self.get_answers(1)  # change question pk!
+        questions = self.get_question()  # TODO: change question pk!
+        answers = self.get_answers(10)  # TODO: change question pk!
 
-        preprocess(questions, answers)
+        buildmodel(questions, answers)
+        # trial(questions, answers)
 
         if answers is not None:
             serializer = AnswerSerializer(
