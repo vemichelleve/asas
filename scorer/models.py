@@ -38,6 +38,12 @@ class Question(models.Model):
     question = models.TextField("Question")
     refans = models.TextField("Reference anser")
 
+    def get_refans(self):
+        return self.refans
+
+    def get_pk(self):
+        return self.pk
+
     def __str__(self):
         return self.question
 

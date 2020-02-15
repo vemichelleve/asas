@@ -1,7 +1,11 @@
+create view that returns array for training model
+separate preprocessing
 auto question - in excel
+if qn alr exist, add to the current post (?)
 pagination
 add model
 change post to topic
+add psot in student page
 topic -> dropdown
 django:
     change password

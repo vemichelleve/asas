@@ -15,6 +15,7 @@ from .serializers import *
 
 import csv
 import re
+from .preprocess import *
 
 
 # User sign up page
@@ -417,3 +418,28 @@ class QuestionbyUserView(APIView):
                 questions, context={'request': request}, many=True)
             return Response({'message': 'try', 'status': 1, 'data': serializer.data, 'questionlist': qnSerializer.data})
         return Response({'message': 'fail', 'status': 0})
+
+
+class ProcessData(APIView):
+    def get_question(self):
+        try:
+            return Question.objects.all()
+        except:
+            return None
+
+    def get_answers(self, pk):
+        try:
+            return Answer.objects.filter(question=pk)
+        except:
+            return None
+
+    def get(self, request, format=None):
+        questions = self.get_question()  # change question pk!
+        answers = self.get_answers(1)  # change question pk!
+
+        preprocess(questions, answers)
+
+        if answers is not None:
+            serializer = AnswerSerializer(
+                answers, context={'request': request}, many=True)
+        return Response({'message': 'try', 'answers': serializer.data})
