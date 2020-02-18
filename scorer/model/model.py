@@ -44,7 +44,7 @@ def train(df):
     print('===== TRAIN DONE =====')
     return preds, model, tokenizer
 
-def testdata(df_test, model, tokenizer):
+def predict(df_test, model, tokenizer):
     print('===== TEST =====')
     answer1_test = df_test['Ref Answer'].values.tolist()
     answer2_test = df_test['Answer'].values.tolist()

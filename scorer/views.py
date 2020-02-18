@@ -437,6 +437,17 @@ class ProcessData(APIView):
         questions = self.get_question()  # TODO: change question pk!
         answers = self.get_answers(10)  # TODO: change question pk!
 
-        metric = buildmodel(questions, answers)
+        metric, model, tokenizer, data = buildmodel(questions, answers)
+        result = score(data, model, tokenizer)
+        result = [x * 5 for x in result]
 
-        return Response({'message': 'try', 'metrics': metric})
+        index = 0
+        if len(result) == len(answers):
+            for ans in answers:
+                data = {'systemscore': result[index]}
+                serializer = AnswerSerializer(ans, data=data, context={'request': request}, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                index += 1
+
+        return Response({'message': 'try', 'metrics': metric, 'scores': result})
