@@ -438,7 +438,6 @@ class ProcessData(APIView):
         answers = self.get_answers(10)  # TODO: change question pk!
 
         buildmodel(questions, answers)
-        # trial(questions, answers)
 
         if answers is not None:
             serializer = AnswerSerializer(

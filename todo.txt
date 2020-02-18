@@ -1,5 +1,7 @@
 create view that returns array for training model
 separate preprocessing
+number of answers of a question
+save score to djangodb
 check if answer is scored
 improve dataframe -> lambda?
 auto question - in excel

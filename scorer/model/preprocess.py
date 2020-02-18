@@ -114,7 +114,7 @@ def scale(df):
     scaler_y.fit(y)
     y = scaler_y.transform(y)
 
-    return X, y
+    return X, y, scaler_y
 
 def split(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=101)
@@ -125,7 +125,7 @@ def split(X, y):
     df_test = X_test
     df_test['ans_grade'] = y_test
 
-    return df, df_test
+    return df, df_test, y_test
 
 def cleaning_dataset(input_file):
     df_train = pd.read_csv(input_file, encoding = 'unicode escape')
