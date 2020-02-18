@@ -1,3 +1,5 @@
+save model
+score and save score
 create view that returns array for training model
 separate preprocessing
 number of answers of a question

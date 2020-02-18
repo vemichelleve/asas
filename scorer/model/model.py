@@ -109,3 +109,5 @@ def evaluate(test_results, y_true):
     print("MAE", mae)
 
     print('===== EVAULATE DONE =====')
+
+    return rho, pearson, rms, mae

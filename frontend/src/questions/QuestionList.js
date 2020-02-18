@@ -27,14 +27,14 @@ class QuestionList extends Component {
             case 0:
                 return (
                     <div>
-                        <h1 className="display-4 Error-Msg">No questions found</h1>
+                        <h1 className='display-4 Error-Msg'>No questions found</h1>
                     </div>
                 );
             case 1:
                 return (
                     <div>
-                        <table className="table">
-                            <thead key="thead">
+                        <table className='table'>
+                            <thead key='thead'>
                                 <tr>
                                     <th>ID</th>
                                     <th>Question</th>

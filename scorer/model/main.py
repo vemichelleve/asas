@@ -18,9 +18,17 @@ def buildmodel(questions, answers):
     test, train_model, tokenizer = train(df)
     test_results = testdata(df_test, train_model, tokenizer)
     test_results, y_true = processresult(test_results, y_test, scaler_y)
-    evaluate(test_results, y_true)
+    rho, pearson, rms, mae = evaluate(test_results, y_true)
+
+    metric = []
+    metric.append({'metric': 'Spearman', 'value': rho})
+    metric.append({'metric': 'Pearson', 'value': pearson})
+    metric.append({'metric': 'RMS', 'value': rms})
+    metric.append({'metric': 'MAE', 'value': mae})
 
     print('======= BUILD DONE =======')
+
+    return metric
 
 def trial():
     # original data

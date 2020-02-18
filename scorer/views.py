@@ -437,9 +437,6 @@ class ProcessData(APIView):
         questions = self.get_question()  # TODO: change question pk!
         answers = self.get_answers(10)  # TODO: change question pk!
 
-        buildmodel(questions, answers)
+        metric = buildmodel(questions, answers)
 
-        if answers is not None:
-            serializer = AnswerSerializer(
-                answers, context={'request': request}, many=True)
-        return Response({'message': 'try', 'answers': serializer.data})
+        return Response({'message': 'try', 'metrics': metric})
