@@ -9,6 +9,7 @@ class Model extends Component {
         this.state = {
             metrics: [],
         }
+        this.trainModel = this.trainModel.bind(this)
     }
 
     componentDidMount() {
@@ -29,6 +30,7 @@ class Model extends Component {
         }).catch((result) => {
             alert(result.message)
         })
+        this.retrieveData();
     }
 
     render() {

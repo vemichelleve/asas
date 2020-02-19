@@ -437,7 +437,13 @@ class TrainModel(APIView):
         except:
             return None
 
-    def get(self, request, format=None):
+    def get_metrics(self):
+        try:
+            return Metrics.objects.all()
+        except:
+            return None
+
+    def put(self, request, format=None):
         questions = self.get_question()  # TODO: change question pk!
         answers = self.get_answers(11)  # TODO: change question pk!
 
@@ -457,28 +463,20 @@ class TrainModel(APIView):
                 if serializer.is_valid():
                     serializer.save()
 
-        # result = score(data, model, tokenizer)
-        # result = [x * 5 for x in result]
+        result = score(data, model, tokenizer)
+        result = [x * 5 for x in result]
 
-        # index = 0
-        # if len(result) == len(answers):
-        #     for ans in answers:
-        #         data = {'systemscore': result[index]}
-        #         serializer = AnswerSerializer(ans, data=data, context={
-        #                                       'request': request}, partial=True)
-        #         if serializer.is_valid():
-        #             serializer.save()
-        #         index += 1
+        index = 0
+        if len(result) == len(answers):
+            for ans in answers:
+                data = {'systemscore': result[index]}
+                serializer = AnswerSerializer(ans, data=data, context={
+                                              'request': request}, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                index += 1
 
         return Response({'message': 'Model successfully trained'})
-
-
-class ModelMetrics(APIView):
-    def get_metrics(self):
-        try:
-            return Metrics.objects.all()
-        except:
-            return None
 
     def get(self, request, format=None):
         metrics = self.get_metrics()
