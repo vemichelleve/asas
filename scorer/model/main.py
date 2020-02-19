@@ -39,5 +39,5 @@ def trial():
     return df
 
 
-def score(data, model, tokenizer):
-    return predict(data, model, tokenizer)
+def score(df_test, model, tokenizer):
+    return predict(df_test, model, tokenizer)

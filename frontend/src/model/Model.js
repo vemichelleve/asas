@@ -8,6 +8,7 @@ class Model extends Component {
         super(props);
         this.state = {
             metrics: [],
+            hide: true
         }
         this.trainModel = this.trainModel.bind(this)
     }
@@ -25,38 +26,47 @@ class Model extends Component {
     }
 
     trainModel() {
+        this.setState({ hide: false })
+        var self = this;
         modelService.trainModel().then((result) => {
             alert(result.message)
+            self.setState({ hide: true });
+            this.retrieveData();
         }).catch((result) => {
             alert(result.message)
+            self.setState({ hide: true });
         })
-        this.retrieveData();
     }
 
     render() {
         return (
-            <div className='Form-Container'>
-                <div className='card Form-Card'>
-                    <div className='card-body'>
-                        <h5 className='card-title'>Model details</h5>
-                        <table className='table'>
-                            <thead key='thead'>
-                                <tr>
-                                    <th>Evaluation method</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.metrics.map(metric =>
-                                    <tr key={metric.name}>
-                                        <td>{metric.name}</td>
-                                        <td>{metric.value.toFixed(4)}</td>
+            <div>
+                <div className='Form-Container'>
+                    <div className='card Form-Card'>
+                        <div className='card-body'>
+                            <h5 className='card-title'>Model details</h5>
+                            <table className='table'>
+                                <thead key='thead'>
+                                    <tr>
+                                        <th>Evaluation method</th>
+                                        <th>Value</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                        <div className='Center-Item'>
-                            <button className='btn btn-primary' onClick={this.trainModel}>Train model</button>
+                                </thead>
+                                <tbody>
+                                    {this.state.metrics.map(metric =>
+                                        <tr key={metric.name}>
+                                            <td>{metric.name}</td>
+                                            <td>{metric.value.toFixed(4)}</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                            <div className='Center-Item'>
+                                <button className='btn btn-primary' onClick={this.trainModel}>
+                                    Train model
+                                    <div hidden={this.state.hide} className='spinner-border Loader' role='status' />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

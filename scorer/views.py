@@ -447,7 +447,7 @@ class TrainModel(APIView):
         questions = self.get_question()  # TODO: change question pk!
         answers = self.get_answers(11)  # TODO: change question pk!
 
-        metrics, model, tokenizer, data = buildmodel(questions, answers)
+        metrics, model, tokenizer, df_test = buildmodel(questions, answers)
 
         for metric in metrics:
             name = metric['metric']
@@ -463,8 +463,9 @@ class TrainModel(APIView):
                 if serializer.is_valid():
                     serializer.save()
 
-        result = score(data, model, tokenizer)
+        result = score(df_test, model, tokenizer)
         result = [x * 5 for x in result]
+        print(result)
 
         index = 0
         if len(result) == len(answers):

@@ -1,15 +1,13 @@
-load if model is being trained
 save model
-check if answer is manually scored
-score 0 vs unscored
-number of answers of a question
-improve dataframe -> lambda?
+scores:
+    score 0 vs unscored
+    check if answer is manually scored
+improve dataframe -> lambda? instead of interation
 auto question - in excel
 if qn alr exist, add to the current post (?)
 pagination
-add model
 change post to topic
-add psot in student page
+add post in student page
 topic -> dropdown
 django:
     change password
