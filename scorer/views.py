@@ -435,7 +435,7 @@ class ProcessData(APIView):
 
     def get(self, request, format=None):
         questions = self.get_question()  # TODO: change question pk!
-        answers = self.get_answers(10)  # TODO: change question pk!
+        answers = self.get_answers(11)  # TODO: change question pk!
 
         metric, model, tokenizer, data = buildmodel(questions, answers)
         result = score(data, model, tokenizer)

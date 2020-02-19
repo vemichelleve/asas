@@ -1,7 +1,9 @@
+avg manual score
 test using real data
 save model
 check if answer is manually scored
 train button
+score 0 is not unscored
 number of answers of a question
 improve dataframe -> lambda?
 auto question - in excel

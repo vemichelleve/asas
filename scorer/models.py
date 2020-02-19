@@ -82,3 +82,11 @@ class StudentAnswer(models.Model):
         Student, on_delete=models.CASCADE, related_name='question_answers')
     answer = models.ForeignKey(
         Answer, on_delete=models.CASCADE, related_name='+')
+
+
+class Metrics(models.Model):
+    name = models.TextField('Name')
+    value = models.FloatField('Value', null=False)
+
+    def __str__(self):
+        return self.name

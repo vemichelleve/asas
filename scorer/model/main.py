@@ -14,7 +14,7 @@ def buildmodel(questions, answers):
     df, df_test, y_test = split(X, y)
 
     print('===== PREPROCESS DONE =====')
-    
+
     test, train_model, tokenizer = train(df)
     test_results = predict(df_test, train_model, tokenizer)
     test_results, y_true = processresult(test_results, y_test, scaler_y)
@@ -30,12 +30,14 @@ def buildmodel(questions, answers):
 
     return metric, train_model, tokenizer, data
 
+
 def trial():
     # original data
     input_dataset = '/Users/michellevanessa/Desktop/automatic-text-scoring-master/Final Code and Data/Augmented_Feat.csv'
     df = cleaning_dataset(input_dataset)
 
     return df
+
 
 def score(data, model, tokenizer):
     return predict(data, model, tokenizer)

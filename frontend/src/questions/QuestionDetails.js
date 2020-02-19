@@ -134,7 +134,7 @@ class QuestionDetails extends Component {
                                     <tr key={answer.pk}>
                                         <td>{answer.pk}</td>
                                         <td>{answer.answer}</td>
-                                        <td>{answer.systemscore ? answer.systemscore : '-'}</td>
+                                        <td>{answer.systemscore ? answer.systemscore.toFixed(2) : '-'}</td>
                                         <td>
                                             {answer.score1 ? answer.score1 : (
                                                 this.state.edit ? <input type='number' min='0' max='5' className='form-control TextBox-Width'

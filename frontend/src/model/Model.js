@@ -12,7 +12,7 @@ class Model extends Component {
     }
 
     componentDidMount() {
-        this.retrieveData();
+        // this.retrieveData(); //TODO: uncomment if want to train model
     }
 
     retrieveData() {
