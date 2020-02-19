@@ -12,16 +12,22 @@ class Model extends Component {
     }
 
     componentDidMount() {
-        // this.retrieveData(); //TODO: uncomment if want to train model
+        this.retrieveData();
     }
 
     retrieveData() {
-        console.log('retrieving')
         modelService.getMetrics().then((result) => {
-            console.log(result)
-            this.setState({ metrics: result.metrics })
-        }).catch(result => {
+            this.setState({ metrics: result.data })
+        }).catch((result) => {
             alert(result);
+        })
+    }
+
+    trainModel() {
+        modelService.trainModel().then((result) => {
+            alert(result.message)
+        }).catch((result) => {
+            alert(result.message)
         })
     }
 
@@ -40,13 +46,16 @@ class Model extends Component {
                             </thead>
                             <tbody>
                                 {this.state.metrics.map(metric =>
-                                    <tr key={metric.metric}>
-                                        <td>{metric.metric}</td>
-                                        <td>{metric.value}</td>
+                                    <tr key={metric.name}>
+                                        <td>{metric.name}</td>
+                                        <td>{metric.value.toFixed(4)}</td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
+                        <div className='Center-Item'>
+                            <button className='btn btn-primary' onClick={this.trainModel}>Train model</button>
+                        </div>
                     </div>
                 </div>
             </div>

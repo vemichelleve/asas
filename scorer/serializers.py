@@ -43,3 +43,9 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentAnswer
         fields = ('pk', 'student', 'answer')
+
+
+class MetricsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Metrics
+        fields = ('name', 'value')

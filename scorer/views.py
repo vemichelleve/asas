@@ -234,7 +234,8 @@ class PostDetailsView(APIView):
 class AnswerView(APIView):
     def post(self, request, pk, format=None):
         answer = request.data['answer']
-        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
+        # TODO: Logged in user!
+        user = User.objects.get(username='vemichelleve')
         # Retrieve student and question object
         student = Student.objects.get(user=user)
         question = Question.objects.get(pk=pk)
@@ -288,7 +289,8 @@ class AnswerView(APIView):
 # Retrieve answers by student
 class AnswersView(APIView):
     def get(self, request, format=None):
-        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
+        # TODO: Logged in user!
+        user = User.objects.get(username='vemichelleve')
         # Retrieve student and student answer
         student = Student.objects.get(user=user)
         studentans = StudentAnswer.objects.filter(student=student)
@@ -304,7 +306,8 @@ class AnswersView(APIView):
 # Student account details
 class StudentAccountView(APIView):
     def get(self, request, format=None):
-        user = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
+        # TODO: Logged in user!
+        user = User.objects.get(username='vemichelleve')
         serializer = UserSerializer(user, context={'request': request})
         return Response({'message': 'Details retreived', 'data': serializer.data})
 
@@ -313,7 +316,8 @@ class StudentAccountView(APIView):
 class StudentEditAccountView(APIView):
     def put(self, request, format=None):
         # Retrieve student
-        student = User.objects.get(username='vemichelleve')  # TODO: Logged in user!
+        student = User.objects.get(
+            username='vemichelleve')  # TODO: Logged in user!
         # Check if student exists
         if student is not None:
             serializer = UserSerializer(
@@ -420,7 +424,7 @@ class QuestionbyUserView(APIView):
         return Response({'message': 'fail', 'status': 0})
 
 
-class ProcessData(APIView):
+class TrainModel(APIView):
     def get_question(self):
         try:
             return Question.objects.all()
@@ -437,17 +441,50 @@ class ProcessData(APIView):
         questions = self.get_question()  # TODO: change question pk!
         answers = self.get_answers(11)  # TODO: change question pk!
 
-        metric, model, tokenizer, data = buildmodel(questions, answers)
-        result = score(data, model, tokenizer)
-        result = [x * 5 for x in result]
+        metrics, model, tokenizer, data = buildmodel(questions, answers)
 
-        index = 0
-        if len(result) == len(answers):
-            for ans in answers:
-                data = {'systemscore': result[index]}
-                serializer = AnswerSerializer(ans, data=data, context={'request': request}, partial=True)
+        for metric in metrics:
+            name = metric['metric']
+            value = metric['value']
+            if not Metrics.objects.filter(name=name).exists():
+                metricobj = Metrics.objects.create(name=name, value=value)
+                metricobj.save()
+            else:
+                metric = Metrics.objects.get(name=name)
+                data = {'value': value}
+                serializer = MetricsSerializer(metric, data=data, context={
+                                               'request': request}, partial=True)
                 if serializer.is_valid():
                     serializer.save()
-                index += 1
 
-        return Response({'message': 'try', 'metrics': metric, 'scores': result})
+        # result = score(data, model, tokenizer)
+        # result = [x * 5 for x in result]
+
+        # index = 0
+        # if len(result) == len(answers):
+        #     for ans in answers:
+        #         data = {'systemscore': result[index]}
+        #         serializer = AnswerSerializer(ans, data=data, context={
+        #                                       'request': request}, partial=True)
+        #         if serializer.is_valid():
+        #             serializer.save()
+        #         index += 1
+
+        return Response({'message': 'Model successfully trained'})
+
+
+class ModelMetrics(APIView):
+    def get_metrics(self):
+        try:
+            return Metrics.objects.all()
+        except:
+            return None
+
+    def get(self, request, format=None):
+        metrics = self.get_metrics()
+        if metrics is not None:
+            serializer = MetricsSerializer(
+                metrics, context={'request': request}, many=True)
+            return Response({'message': 'Metrics retrieved', 'status': 1, 'data': serializer.data})
+        else:
+            return Response({'message': 'No metrics found', 'status': 0})

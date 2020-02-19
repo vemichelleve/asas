@@ -122,3 +122,9 @@
 .Input-Width {
   min-width: 48%;
 }
+
+.Center-Item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
