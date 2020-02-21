@@ -7,8 +7,9 @@ import pandas as pd
 import numpy as np
 import gc
 
+
 def train_word2vec(gloveFile):
-    print("Loading Glove Model")
+    print("=== Loading Glove Model ===")
     f = open(gloveFile, 'r')
     model = {}
     for line in f:
@@ -18,12 +19,13 @@ def train_word2vec(gloveFile):
         model[word] = embedding
     print("Done.", len(model), " words loaded!")
     return model
-    
+
+
 def create_embedding_matrix(tokenizer, word_vectors, embedding_dim):
     nb_words = len(tokenizer.word_index) + 1
     word_index = tokenizer.word_index
     embedding_matrix = np.zeros((nb_words, embedding_dim))
-    ## Handling exceptions in the dataset, specifically the reference answer and student answer fields
+    # Handling exceptions in the dataset, specifically the reference answer and student answer fields
     for word, i in word_index.items():
         if(word == '*'):
             embedding_vector = np.zeros(300)
@@ -94,7 +96,7 @@ def create_embedding_matrix(tokenizer, word_vectors, embedding_dim):
         elif(word == 'doesn\x82\x90\x82¢\x82_\x90_\x82\x89\x82_\x90_\x82¢t'):
             embedding_vector = (word_vectors['does'] + word_vectors['not'])/2
         elif(word == 'definition´\x90´¢´_\x90_´ç´_\x90_´¢s'):
-            embedding_vector =  word_vectors['definition']
+            embedding_vector = word_vectors['definition']
         elif(word == '´\x90´¢´_\x90_´ç´\x8f´_int'):
             embedding_vector = np.zeros(300)
         elif(word == '´\x90´¢´_\x90_´ç´_\x90_´¢'):
@@ -158,16 +160,18 @@ def create_embedding_matrix(tokenizer, word_vectors, embedding_dim):
         if embedding_vector is not None:
             embedding_matrix[i] = embedding_vector
     return embedding_matrix
-    
-#creating word vector with GloVe model
+
+# creating word vector with GloVe model
+
+
 def word_embed_meta_data(documents, embedding_dim):
     vocabulary_size = 20000
-    tokenizer = Tokenizer(num_words= vocabulary_size, filters='')
+    tokenizer = Tokenizer(num_words=vocabulary_size, filters='')
     tokenizer.fit_on_texts(documents)
     gloveFile = "/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt"
     model = train_word2vec(gloveFile)
-    
-    ## Handling the exception cases where the word in dataset is not present in the GloVe embeddings vocabulary
+
+    # Handling the exception cases where the word in dataset is not present in the GloVe embeddings vocabulary
     model['dereferencing'] = (model['not'] + model['reference'])/2
     k = 300
     x = model['constant']
@@ -210,7 +214,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['bigo'] = (model['big'] + model['o'])/2
     model['pointerbased'] = (model['pointer'] + model['based'])/2
     model['dowhile'] = (model['do'] + model['while'])/2
-    model['divideandconquer'] = (model['divide'] + model['and'] + model['conquer'])/3
+    model['divideandconquer'] = (
+        model['divide'] + model['and'] + model['conquer'])/3
     model['xptr'] = (model['x'] + model['ptr'])/2
     model['repetiive'] = model['repetitive']
     model['toget'] = (model['to'] + model['get'])/2
@@ -238,7 +243,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['semicoln'] = model['semicolon']
     model['bublic'] = model['public']
     model['objectname'] = (model['object'] + model['name'])/2
-    model['objectnamefunciton'] = (model['object'] + model['name'] + model['function'])/3
+    model['objectnamefunciton'] = (
+        model['object'] + model['name'] + model['function'])/3
     model['differance'] = model['difference']
     model['disadvanate'] = model['disadvantage']
     model['2n1'] = (model['2'] + model['n'] + model['1'])/3
@@ -273,7 +279,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['inceasing'] = model['increasing']
     model['passedreturned'] = (model['passed'] + model['returned'])/2
     model['sepperate'] = model['separate']
-    model['accessspecifications'] = (model['access'] + model['specification'])/2
+    model['accessspecifications'] = (
+        model['access'] + model['specification'])/2
     model['recurse'] = model['recursive']
     model['ntimes'] = (model['n'] + model['times'])/2
     model['excute'] = model['execute']
@@ -288,7 +295,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['queuefront'] = (model['queue'] + model['front'])/2
     model['structs'] = model['structure']
     model['recursionrepeated'] = (model['recursion'] + model['repeated'])/2
-    model['iterationlooptermination'] = (model['iteration'] + model['loop'] + model['termination'])/3
+    model['iterationlooptermination'] = (
+        model['iteration'] + model['loop'] + model['termination'])/3
     k = 300
     x = model['allocate']
     x -= x.dot(k) * k       # make it orthogonal to k
@@ -306,7 +314,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['whenevery'] = (model['when'] + model['every'])/2
     model['specifiy'] = model['specify']
     model['entitiy'] = model['entity']
-    model['limitationdeclaration'] = (model['limitation'] + model['declaration'])/2
+    model['limitationdeclaration'] = (
+        model['limitation'] + model['declaration'])/2
     model['coquer'] = model['conquer']
     model['evaulate'] = model['evaluate']
     model['deallocateddeleted'] = (model['deallocate'] + model['deleted'])/2
@@ -322,7 +331,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['explicityly'] = model['explicitly']
     model['earch'] = model['each']
     model['inlineexpands'] = (model['inline'] + model['expands'])/2
-    model['ooadesign'] = (model['object'] + model['oriented'] + model['design'])/3
+    model['ooadesign'] = (
+        model['object'] + model['oriented'] + model['design'])/3
     model['employee1'] = (model['employee'] + model['1'])/2
     model['dynamicly'] = model['dynamically']
     model['recursuivly'] = model['recursively']
@@ -334,7 +344,7 @@ def word_embed_meta_data(documents, embedding_dim):
     model['flaxible'] = model['flexible']
     model['intializes'] = model['initialize']
     model['meomrry'] = model['memory']
-    model['sizeof'] =(model['size'] + model['of'])/2
+    model['sizeof'] = (model['size'] + model['of'])/2
     model['concatenate'] = model['add']
     model['ausednumber'] = (model['used']+model['number'])/2
     model['resizeable'] = model['resize']
@@ -387,7 +397,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['prototye'] = model['prototype']
     model['wantedneeded'] = (model['wanted'] + model['needed'])/2
     model['poiner'] = model['pointer']
-    model['encapsulationobjects'] = (model['encapsulation'] + model['objects'])/2
+    model['encapsulationobjects'] = (
+        model['encapsulation'] + model['objects'])/2
     model['solvin'] = model['solving']
     model['retreive'] = model['retrieve']
     model['bigoh'] = (model['big'] + model['oh'])/2
@@ -462,7 +473,8 @@ def word_embed_meta_data(documents, embedding_dim):
     model['linkedlist'] = (model['linked'] + model['list'])/2
     model['isfull'] = (model['is'] + model['full'])/2
     model['isfullq'] = (model['is'] + model['full'] + model['queue'])/3
-    model['maxqueuesize1'] = (model['max'] + model['queue'] + model['size'] + model['1'])/4
+    model['maxqueuesize1'] = (
+        model['max'] + model['queue'] + model['size'] + model['1'])/4
     model['pushpop'] = (model['push'] + model['pop'])/2
     model['oposite'] = model['opposite']
     model['reusuablitly'] = model['reusability']
@@ -471,7 +483,7 @@ def word_embed_meta_data(documents, embedding_dim):
     model['programer'] = model['programmer']
     model['userdefined'] = (model['user'] + model['defined'])/2
     model['agian'] = model['again']
-    model['4005'] = (model['4000'] +model['5'])
+    model['4005'] = (model['4000'] + model['5'])
     model['3580'] = (model['3500'] + model['80'])
     model['sourted'] = model['sorted']
     model['funcion'] = model['function']
@@ -482,8 +494,10 @@ def word_embed_meta_data(documents, embedding_dim):
     model['dequeueing'] = model['dequeue']
     model['feused'] = model['reused']
     model['splitproblems'] = (model['split'] + model['problems'])/2
-    model['bidimensionaltwodimensional'] = (model['bidimensional'] + model['two'] + model['dimensional'])/3
-    model['12345678910'] = (model['1'] + model['2'] + model['3'] + model['4'] + model['5'] + model['6'] + model['7'] + model['8'] + model['9'] + model['10'])/10
+    model['bidimensionaltwodimensional'] = (
+        model['bidimensional'] + model['two'] + model['dimensional'])/3
+    model['12345678910'] = (model['1'] + model['2'] + model['3'] + model['4'] +
+                            model['5'] + model['6'] + model['7'] + model['8'] + model['9'] + model['10'])/10
     model['accesed'] = model['accessed']
     model['comon'] = model['common']
     model['arrary'] = model['array']
@@ -547,18 +561,21 @@ def word_embed_meta_data(documents, embedding_dim):
         tokens = [w.lower() for w in tokens]
         table = str.maketrans('', '', string.punctuation)
         stripped = [w.translate(table) for w in tokens]
-        #remove remaining tokens that are not alphanumeric
+        # remove remaining tokens that are not alphanumeric
         words = [word for word in stripped if word.isalnum()]
         for word in words:
             word_vector[word] = model[word]
-    embedding_matrix = create_embedding_matrix(tokenizer, word_vector, embedding_dim)
+    embedding_matrix = create_embedding_matrix(
+        tokenizer, word_vector, embedding_dim)
     del word_vector
     gc.collect()
     return tokenizer, embedding_matrix
- 
-#creating training dataset...   
+
+# creating training dataset...
+
+
 def create_train_dev_set(tokenizer, answers_pair, feat, ans_grade, max_sequence_length, validation_split_ratio):
-        
+
     answers1 = [x[0] for x in answers_pair]
     answers2 = [x[1] for x in answers_pair]
     train_answers_1 = tokenizer.texts_to_sequences(answers1)
@@ -570,12 +587,14 @@ def create_train_dev_set(tokenizer, answers_pair, feat, ans_grade, max_sequence_
     len_ref_by_len_ans = feat['Len Ref By Ans'].to_numpy()
     words_ans = feat['Words Answer'].to_numpy()
     uniq_words_ans = feat['Unique Words Answer'].to_numpy()
-    
-    train_padded_data_1 = pad_sequences(train_answers_1, maxlen=max_sequence_length, padding='post')
-    train_padded_data_2 = pad_sequences(train_answers_2, maxlen=max_sequence_length, padding='post')
+
+    train_padded_data_1 = pad_sequences(
+        train_answers_1, maxlen=max_sequence_length, padding='post')
+    train_padded_data_2 = pad_sequences(
+        train_answers_2, maxlen=max_sequence_length, padding='post')
     train_scores = np.array(ans_grade)
     leaks = np.array(leaks)
-    
+
     shuffle_indices = np.random.permutation(np.arange(len(train_scores)))
     train_data_1_shuffled = train_padded_data_1[shuffle_indices]
     train_data_2_shuffled = train_padded_data_2[shuffle_indices]
@@ -586,30 +605,40 @@ def create_train_dev_set(tokenizer, answers_pair, feat, ans_grade, max_sequence_
     len_ref_by_len_ans_shuffled = len_ref_by_len_ans[shuffle_indices]
     words_ans_shuffled = words_ans[shuffle_indices]
     uniq_words_ans_shuffled = uniq_words_ans[shuffle_indices]
-    
+
     dev_idx = max(1, int(len(train_scores_shuffled) * validation_split_ratio))
-    print(train_data_2_shuffled, train_data_1_shuffled)
+    # print(train_data_2_shuffled, train_data_1_shuffled)
     del train_padded_data_1
     del train_padded_data_2
     gc.collect()
-    
-    train_data_1, val_data_1 = train_data_1_shuffled[:-dev_idx], train_data_1_shuffled[-dev_idx:]
-    train_data_2, val_data_2 = train_data_2_shuffled[:-dev_idx], train_data_2_shuffled[-dev_idx:]
-    scores_train, scores_val = train_scores_shuffled[:-dev_idx], train_scores_shuffled[-dev_idx:]
-    leaks_train, leaks_val = leaks_shuffled[:-dev_idx], leaks_shuffled[-dev_idx:]
-    len_answer_train, len_answer_val = len_answer_shuffled[:-dev_idx], len_answer_shuffled[-dev_idx:]
-    len_ref_answer_train, len_ref_answer_val = len_ref_answer_shuffled[:-dev_idx], len_ref_answer_shuffled[-dev_idx:]
-    len_ref_by_len_ans_train, len_ref_by_len_ans_val = len_ref_by_len_ans_shuffled[:-dev_idx], len_ref_by_len_ans_shuffled[-dev_idx:]
-    words_ans_train, words_ans_val = words_ans_shuffled[:-dev_idx], words_ans_shuffled[-dev_idx:]
-    uniq_words_ans_train, uniq_words_ans_val = uniq_words_ans_shuffled[:-dev_idx], uniq_words_ans_shuffled[-dev_idx:]
-    
+
+    train_data_1, val_data_1 = train_data_1_shuffled[:-
+                                                     dev_idx], train_data_1_shuffled[-dev_idx:]
+    train_data_2, val_data_2 = train_data_2_shuffled[:-
+                                                     dev_idx], train_data_2_shuffled[-dev_idx:]
+    scores_train, scores_val = train_scores_shuffled[:-
+                                                     dev_idx], train_scores_shuffled[-dev_idx:]
+    leaks_train, leaks_val = leaks_shuffled[:-
+                                            dev_idx], leaks_shuffled[-dev_idx:]
+    len_answer_train, len_answer_val = len_answer_shuffled[:-
+                                                           dev_idx], len_answer_shuffled[-dev_idx:]
+    len_ref_answer_train, len_ref_answer_val = len_ref_answer_shuffled[:-
+                                                                       dev_idx], len_ref_answer_shuffled[-dev_idx:]
+    len_ref_by_len_ans_train, len_ref_by_len_ans_val = len_ref_by_len_ans_shuffled[
+        :-dev_idx], len_ref_by_len_ans_shuffled[-dev_idx:]
+    words_ans_train, words_ans_val = words_ans_shuffled[:-
+                                                        dev_idx], words_ans_shuffled[-dev_idx:]
+    uniq_words_ans_train, uniq_words_ans_val = uniq_words_ans_shuffled[:-
+                                                                       dev_idx], uniq_words_ans_shuffled[-dev_idx:]
+
     feat_train_dict = {}
     feat_train_dict['Len Answer'] = len_answer_train
     feat_train_dict['Len Ref Answer'] = len_ref_answer_train
     feat_train_dict['Len Ref By Ans'] = len_ref_by_len_ans_train
     feat_train_dict['Words Ans'] = words_ans_train
     feat_train_dict['Uniq Words Ans'] = uniq_words_ans_train
-    feat_train = pd.DataFrame(feat_train_dict, columns=['Len Answer', 'Len Ref Answer', 'Len Ref By Ans', 'Words Ans', 'Uniq Words Ans'])
+    feat_train = pd.DataFrame(feat_train_dict, columns=[
+                              'Len Answer', 'Len Ref Answer', 'Len Ref By Ans', 'Words Ans', 'Uniq Words Ans'])
 
     feat_val_dict = {}
     feat_val_dict['Len Answer'] = len_answer_val
@@ -617,22 +646,27 @@ def create_train_dev_set(tokenizer, answers_pair, feat, ans_grade, max_sequence_
     feat_val_dict['Len Ref By Ans'] = len_ref_by_len_ans_val
     feat_val_dict['Words Ans'] = words_ans_val
     feat_val_dict['Uniq Words Ans'] = uniq_words_ans_val
-    feat_val = pd.DataFrame(feat_val_dict, columns=['Len Answer', 'Len Ref Answer', 'Len Ref By Ans', 'Words Ans', 'Uniq Words Ans'])
-    
+    feat_val = pd.DataFrame(feat_val_dict, columns=[
+                            'Len Answer', 'Len Ref Answer', 'Len Ref By Ans', 'Words Ans', 'Uniq Words Ans'])
+
     return train_data_1, train_data_2, scores_train, leaks_train, feat_train, val_data_1, val_data_2, scores_val, leaks_val, feat_val
 
-## Create the test data
+# Create the test data
+
+
 def create_test_data(tokenizer, test_answers_pair, feat, max_sequence_length):
-   
+
     test_answers1 = [x[0] for x in test_answers_pair]
     test_answers2 = [x[1] for x in test_answers_pair]
-    
+
     test_answers_1 = tokenizer.texts_to_sequences(test_answers1)
     test_answers_2 = tokenizer.texts_to_sequences(test_answers2)
     leaks_test = [[len(set(x1)), len(set(x2)), len(set(x1).intersection(x2))]
                   for x1, x2 in zip(test_answers_1, test_answers_2)]
     leaks_test = np.array(leaks_test)
-    test_data_1 = pad_sequences(test_answers_1, maxlen=max_sequence_length, padding='post')
-    test_data_2 = pad_sequences(test_answers_2, maxlen=max_sequence_length, padding='post')
-   
+    test_data_1 = pad_sequences(
+        test_answers_1, maxlen=max_sequence_length, padding='post')
+    test_data_2 = pad_sequences(
+        test_answers_2, maxlen=max_sequence_length, padding='post')
+
     return test_data_1, test_data_2, feat, leaks_test

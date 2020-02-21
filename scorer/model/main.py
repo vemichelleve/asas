@@ -4,16 +4,11 @@ from .model import *
 
 
 def buildmodel(questions, answers):
-    print('======= BUILD =======')
-
-    print('===== PREPROCESS =====')
     data = preprocess(questions, answers)
     data = clean(data)
     # df = trial()
     X, y, scaler_y = scale(data)
     df, df_test, y_test = split(X, y)
-
-    print('===== PREPROCESS DONE =====')
 
     test, train_model, tokenizer = train(df)
     test_results = predict(df_test, train_model, tokenizer)
@@ -25,8 +20,6 @@ def buildmodel(questions, answers):
     metric.append({'metric': 'Pearson', 'value': pearson})
     metric.append({'metric': 'RMS', 'value': rms})
     metric.append({'metric': 'MAE', 'value': mae})
-
-    print('======= BUILD DONE =======')
 
     return metric, train_model, tokenizer, data
 

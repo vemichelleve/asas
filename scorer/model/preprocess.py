@@ -48,17 +48,11 @@ def preprocess(questions, answers):
         df.at[index, 'Len Ref By Ans'] = refans['Length Ref Ans'] / lenans
         words = wordcount(answer)
         df.at[index, 'Words Answer'] = words
-        # df.at[index, 'Words Ref Answer'] = refans['Words Ref Answer']
-        # df.at[index, 'Words Ref By Ans'] = refans['Words Ref Answer'] / words
         unique = uniquecount(answer)
         df.at[index, 'Unique Words Answer'] = unique
-        # df.at[index, 'Unique Words Ref'] = refans['Unique Words Ref']
-        # df.at[index, 'Unique Words Ref / Unique Words Answer'] = refans['Unique Words Ref'] / unique
-        # df.at[index, 'Unique / Words Answer'] = unique / words
-        # df.at[index, 'Unique / Words Ref Answer'] = refans['Unique Words Ref'] / \
-        #     refans['Words Ref Answer']
 
     return df
+
 
 def clean(df):
     df = df.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
@@ -68,17 +62,20 @@ def clean(df):
 
     df['Ref Answer'] = df['Ref Answer'].apply(lambda answer1: answer1.lower())
     df['Answer'] = df['Answer'].apply(lambda answer2: answer2.lower())
-   
-    df['Ref Answer'] = df['Ref Answer'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
-    df['Answer'] = df['Answer'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
 
-    return df.iloc[:2500, :] #Limit to onlly 2500 datasets
+    df['Ref Answer'] = df['Ref Answer'].apply(
+        lambda x: " ".join(x for x in x.split() if x not in stop))
+    df['Answer'] = df['Answer'].apply(
+        lambda x: " ".join(x for x in x.split() if x not in stop))
+
+    return df.iloc[:2500, :]  # Limit to onlly 2500 datasets
+
 
 def scale(df):
     X = df[['Ref Answer', 'Answer']]
     y = pd.DataFrame(df['ans_grade'])
 
-    ## Min Max Scaling of the features used for feature engineering
+    # Min Max Scaling of the features used for feature engineering
     x = pd.DataFrame(df['Length Answer'])
     scaler_x = MinMaxScaler()
     scaler_x.fit(x)
@@ -109,15 +106,16 @@ def scale(df):
     x = scaler_x5.transform(x)
     X['Unique Words Answer'] = x
 
-
     scaler_y = MinMaxScaler()
     scaler_y.fit(y)
     y = scaler_y.transform(y)
 
     return X, y, scaler_y
 
+
 def split(X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=101)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.10, random_state=101)
 
     df = X_train
     df['ans_grade'] = y_train
@@ -127,23 +125,25 @@ def split(X, y):
 
     return df, df_test, y_test
 
+
 def cleaning_dataset(input_file):
-    df_train = pd.read_csv(input_file, encoding = 'unicode escape')
-    
-    #Pre-Processing...
-    #convert all answers to string format...
+    df_train = pd.read_csv(input_file, encoding='unicode escape')
+
+    # Pre-Processing...
+    # convert all answers to string format...
     df_train['Ref Answer'] = df_train['Ref Answer'].astype(str)
     df_train['Answer'] = df_train['Answer'].astype(str)
-    
-    #convert all answers to lower case...
-    df_train['Ref Answer'] = df_train['Ref Answer'].apply(lambda answer1: answer1.lower())
-    df_train['Answer'] = df_train['Answer'].apply(lambda answer2: answer2.lower())
-   
-    #Remove of Stop Words from answers...
-    df_train['Ref Answer'] = df_train['Ref Answer'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
-    df_train['Answer'] = df_train['Answer'].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
-   
-    
+
+    # convert all answers to lower case...
+    df_train['Ref Answer'] = df_train['Ref Answer'].apply(
+        lambda answer1: answer1.lower())
+    df_train['Answer'] = df_train['Answer'].apply(
+        lambda answer2: answer2.lower())
+
+    # Remove of Stop Words from answers...
+    df_train['Ref Answer'] = df_train['Ref Answer'].apply(
+        lambda x: " ".join(x for x in x.split() if x not in stop))
+    df_train['Answer'] = df_train['Answer'].apply(
+        lambda x: " ".join(x for x in x.split() if x not in stop))
+
     return df_train
-
-

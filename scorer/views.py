@@ -437,6 +437,12 @@ class TrainModel(APIView):
         except:
             return None
 
+    def get_all_answers(self):
+        try:
+            return Answer.objects.all()
+        except:
+            return None
+
     def get_metrics(self):
         try:
             return Metrics.objects.all()
@@ -445,9 +451,12 @@ class TrainModel(APIView):
 
     def put(self, request, format=None):
         questions = self.get_question()  # TODO: change question pk!
-        answers = self.get_answers(11)  # TODO: change question pk!
+        # answers = self.get_answers(11)  # TODO: change question pk!
+        answers = self.get_all_answers()
 
+        print('===== BUilding model =====')
         metrics, model, tokenizer, df_test = buildmodel(questions, answers)
+        print('===== Building done =====')
 
         for metric in metrics:
             name = metric['metric']
@@ -463,8 +472,10 @@ class TrainModel(APIView):
                 if serializer.is_valid():
                     serializer.save()
 
+        print('===== Predicting =====')
         result = score(df_test, model, tokenizer)
         result = [x * 5 for x in result]
+        print('===== Predicting done =====')
         print(result)
 
         index = 0
