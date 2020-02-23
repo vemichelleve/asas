@@ -396,7 +396,8 @@ class AddAutoQuestionView(APIView):
             try:
                 refans = arr[1].replace('"', '')
             except IndexError:
-                msg = 'Error! No reference answer. ' + str(count) + ' questions added.'
+                msg = 'Error! No reference answer. ' + \
+                    str(count) + ' questions added.'
                 return Response({'message': msg, 'status': 0})
             if not Question.objects.filter(question=question, refans=refans, post=post).exists() and question != 'Question' and refans != 'Ref Ans':
                 Question(
@@ -511,3 +512,35 @@ class TrainModel(APIView):
             return Response({'message': 'Metrics retrieved', 'status': 1, 'data': serializer.data})
         else:
             return Response({'message': 'No metrics found', 'status': 0})
+
+
+class AddAutoAnswers(APIView):
+    def post(self, request, pk, format=None):
+        # TODO: Logged in user!
+        user = User.objects.get(username='auto')
+        student = Student.objects.get(user=user)
+        question = Question.objects.get(pk=pk)
+        fileobj = request.data['file']
+        count = 0
+        for line in fileobj:
+            arr = re.compile(
+                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
+            arr = list(filter(None, arr))
+            answer = arr[0].replace('"', '')
+            # answer.replace
+            if len(arr) > 2 and arr[2] != '':
+                score1 = float(arr[1])
+                score2 = float(arr[2])
+            else:
+                score1 = float(arr[1])
+                score2 = float(arr[1])
+            
+            student.questions.add(question)
+            student.save()
+            ans = Answer.objects.create(
+                question=question, answer=answer, score1=score1, score2=score2)
+            ans.save()
+            StudentAnswer.objects.create(student=student, answer=ans).save()
+            count += 1
+        msg = str(count) + ' answers added.'
+        return Response({'message': msg, 'status': 1})

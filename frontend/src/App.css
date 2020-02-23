@@ -143,3 +143,12 @@
 .content {
   padding-top: 64px;
 }
+
+.Two-Buttons {
+  min-width: 142px;
+}
+
+.Button-Bottom {
+  margin-top: 10px;
+  max-width: 142px;
+}

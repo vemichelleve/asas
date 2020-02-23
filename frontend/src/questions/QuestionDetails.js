@@ -19,8 +19,11 @@ class QuestionDetails extends Component {
             score1: [],
             score2: [],
             changed: false,
+            file: null,
+            uploaded: false,
         }
         this.handleEdit = this.handleEdit.bind(this)
+        this.handleAdd = this.handleAdd.bind(this)
     }
 
     componentDidMount() {
@@ -90,6 +93,20 @@ class QuestionDetails extends Component {
         }
     }
 
+    handleAdd() {
+        const data = new FormData()
+        data.append('file', this.state.file)
+        const { match: { params } } = this.props;
+        if (params && params.pk) {
+            answerService.addAnswer(params.pk, data).then((result) => {
+                alert(result.message)
+                this.retrieveData()
+            }).catch((result) => {
+                alert(result.message)
+            })
+        }
+    }
+
     render() {
         switch (this.state.status) {
             case 0:
@@ -111,12 +128,14 @@ class QuestionDetails extends Component {
                                 <div className='Header-Text'>{this.state.refans}</div>
                             </div>
                             <div className='Button-Group'>
-                                <div>
+                                <div className='Two-Buttons'>
                                     <button className='btn btn-secondary Button-Left' onClick={(e) => window.history.back()}>Back</button>
                                     <button className='btn btn-primary Button-Width' onClick={this.handleEdit}>
                                         {this.state.edit ? 'Save' : 'Score'}
                                     </button>
                                 </div>
+                                <button disabled={!this.state.uploaded} className='btn btn-primary Button-Bottom' onClick={this.handleAdd}>Add from CSV</button>
+                                <input className='Button-Bottom' type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
                             </div>
                         </div>
                         <table className='table Table-Below'>
