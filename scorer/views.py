@@ -381,6 +381,7 @@ class AddAutoQuestionView(APIView):
         admin = Admin.objects.get(user=user)
         name = request.data['post']
         alluploaded = True
+        count = 0
         if not Post.objects.filter(name=name).exists():
             post = Post(admin=admin, name=name)
             post.save()
@@ -392,11 +393,23 @@ class AddAutoQuestionView(APIView):
                 '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
             arr = list(filter(None, arr))
             question = arr[0].replace('"', '')
-            refans = arr[1].replace('"', '')
-            if not Question.objects.filter(question=question).exists():
-                question = Question(
+            try:
+                refans = arr[1].replace('"', '')
+            except IndexError:
+                msg = 'Error! No reference answer. ' + str(count) + ' questions added.'
+                return Response({'message': msg, 'status': 0})
+            if not Question.objects.filter(question=question, refans=refans, post=post).exists() and question != 'Question' and refans != 'Ref Ans':
+                Question(
                     post=post, question=question, refans=refans).save()
-        return Response({'message': 'Questions added', 'status': 1})
+                count += 1
+            else:
+                alluploaded = False
+            msg = str(count) + ' questions added'
+        if alluploaded:
+            msg = 'All questions uploaded. ' + msg
+        else:
+            msg = 'Not all questions uploaded. ' + msg
+        return Response({'message': msg, 'status': 1})
 
 
 class QuestionbyUserView(APIView):

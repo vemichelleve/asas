@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
+import csv from './sample.csv'
 
 const questionService = new QuestionService();
 
@@ -75,7 +76,8 @@ class AddQuestion extends Component {
                     <form className='card' onSubmit={this.handleUpload}>
                         <div className='card-body'>
                             <h5 className='card-title'>Automated</h5>
-                            <p className='card-text'>Add multiple questions simultaneously from .xls file.</p>
+                            <p className='card-text'>Add multiple questions simultaneously from .csv file. First row must be titled "Question" row, and second row must be "Ref Ans".</p>
+                            <p className='card-text'>Click <a href={csv} target='__blank'>here</a> for sample file.</p>
                             <div className='form-group'>
                                 <label><b>Post name</b></label>
                                 <input className='form-control' type='text' onChange={(e) => this.setState({ post: e.target.value })} />
