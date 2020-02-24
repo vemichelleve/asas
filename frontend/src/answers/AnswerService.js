@@ -15,7 +15,10 @@ export default class AnswerService {
     }
 
     addAnswer(pk, data) {
-        console.log(pk)
         return axios.post(`${API_URL}/addanswer/${pk}`, data).then(response => response.data);
+    }
+
+    addAnyAnswers(data) {
+        return axios.post(`${API_URL}/addanswer/`, data).then(response => response.data);
     }
 }

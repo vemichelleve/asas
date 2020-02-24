@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max
+from django.core.exceptions import MultipleObjectsReturned
 
 from .models import *
 from .serializers import *
@@ -399,7 +400,7 @@ class AddAutoQuestionView(APIView):
                 msg = 'Error! No reference answer. ' + \
                     str(count) + ' questions added.'
                 return Response({'message': msg, 'status': 0})
-            if not Question.objects.filter(question=question, refans=refans, post=post).exists() and question != 'Question' and refans != 'Ref Ans':
+            if not Question.objects.filter(question=question, refans=refans, post=post).exists():
                 Question(
                     post=post, question=question, refans=refans).save()
                 count += 1
@@ -516,7 +517,6 @@ class TrainModel(APIView):
 
 class AddAutoAnswers(APIView):
     def post(self, request, pk, format=None):
-        # TODO: Logged in user!
         user = User.objects.get(username='auto')
         student = Student.objects.get(user=user)
         question = Question.objects.get(pk=pk)
@@ -527,20 +527,52 @@ class AddAutoAnswers(APIView):
                 '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
             arr = list(filter(None, arr))
             answer = arr[0].replace('"', '')
-            # answer.replace
+            # TODO: fix below
             if len(arr) > 2 and arr[2] != '':
                 score1 = float(arr[1])
                 score2 = float(arr[2])
             else:
                 score1 = float(arr[1])
                 score2 = float(arr[1])
-            
-            student.questions.add(question)
-            student.save()
-            ans = Answer.objects.create(
-                question=question, answer=answer, score1=score1, score2=score2)
-            ans.save()
-            StudentAnswer.objects.create(student=student, answer=ans).save()
+            if not Answer.objects.filter(question=question, answer=answer).exists():
+                student.questions.add(question)
+                student.save()
+                ans = Answer.objects.create(
+                    question=question, answer=answer, score1=score1, score2=score2)
+                ans.save()
+                StudentAnswer.objects.create(
+                    student=student, answer=ans).save()
+                count += 1
+        msg = str(count) + ' answers added.'
+        return Response({'message': msg, 'status': 1})
+
+
+class AddAnyAnswers(APIView):
+    def post(self, request, format=None):
+        user = User.objects.get(username='auto')
+        student = Student.objects.get(user=user)
+        fileobj = request.data['file']
+        count = 0
+        for line in fileobj:
+            arr = re.compile(
+                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
+            arr = list(filter(None, arr))
+            qn = arr[0].replace('"', '')
+            answer = arr[1].replace('"', '')
+            # TODO: accept more than one score
+            score1 = float(arr[2])
+            score2 = float(arr[2])
+            questions = Question.objects.filter(question=qn)
+            for question in questions:
+                print('ADD ' + answer + ' TO ' + str(question))
+                if not Answer.objects.filter(question=question, answer=answer).exists():
+                    student.questions.add(question)
+                    student.save()
+                    ans = Answer.objects.create(
+                        question=question, answer=answer, score1=score1, score2=score2)
+                    ans.save()
+                    StudentAnswer.objects.create(
+                        student=student, answer=ans).save()
             count += 1
         msg = str(count) + ' answers added.'
         return Response({'message': msg, 'status': 1})
