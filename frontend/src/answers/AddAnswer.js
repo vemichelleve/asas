@@ -10,6 +10,7 @@ class AddAnswer extends Component {
         this.state = {
             file: null,
             uploaded: false,
+            hide: true,
         }
         this.handleUpload = this.handleUpload.bind(this)
     }
@@ -18,10 +19,14 @@ class AddAnswer extends Component {
         event.preventDefault();
         const data = new FormData()
         data.append('file', this.state.file)
+        this.setState({ hide: false })
+        var self = this;
         answerService.addAnyAnswers(data).then(result => {
             alert(result.message)
+            self.setState({ hide: true })
         }).catch(result => {
             alert(result.message)
+            self.setState({ hide: true })
         })
     }
 
@@ -36,7 +41,10 @@ class AddAnswer extends Component {
                         <form onSubmit={this.handleUpload}>
                             <div className='Table-Top'>
                                 <input type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
-                                <button type='submit' className='btn btn-primary' disabled={!this.state.uploaded}>Add answers</button>
+                                <button type='submit' className='btn btn-primary' disabled={!this.state.uploaded}>
+                                    Add answers
+                                    <div hidden={this.state.hide} className='spinner-border Loader' role='status' />
+                                </button>
                             </div>
                         </form>
                     </div>

@@ -1,7 +1,9 @@
+create csv containing all mohler dataset
+add all answers from mohler
 upload all dataset
+test on mohler dataset
 check why scores all similar -> wrong put to database? put answer pk in df_test
-save model
-choose which posts to train
+choose which posts to train before training
 scores:
     score 0 vs unscored
     check if answer is manually scored
