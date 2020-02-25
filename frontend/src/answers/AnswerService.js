@@ -21,4 +21,8 @@ export default class AnswerService {
     addAnyAnswers(data) {
         return axios.post(`${API_URL}/addanswer/`, data).then(response => response.data);
     }
+
+    getAllAnswers() {
+        return axios.get(`${API_URL}/allanswers/`).then(response => response.data);
+    }
 }

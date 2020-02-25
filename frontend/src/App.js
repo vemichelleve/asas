@@ -21,6 +21,7 @@ import AccountEdit from './account/AccountEdit'
 import PasswordChange from './account/PasswordChange'
 import Model from './model/Model'
 import AddAnswer from './answers/AddAnswer'
+import AnswerList from './answers/AnswerList'
 
 const BaseLayout = () => (
   <div className='container-fluid'>
@@ -52,6 +53,7 @@ const BaseLayout = () => (
       <Route path='/student/account/password' exact component={PasswordChange} />
       <Route path='/admin/model' exact component={Model} />
       <Route path='/admin/addanswer' exact component={AddAnswer} />
+      <Route path='/admin/answers' exact component={AnswerList} />
     </div>
 
   </div>

@@ -587,3 +587,20 @@ class AddAnyAnswers(APIView):
         else:
             msg = msg + ' Answers already added.'
             return Response({'message': msg, 'status': 1})
+
+
+class AllAnswersView(APIView):
+    def get_answers(self):
+        try:
+            return Answer.objects.all()
+        except:
+            return None
+
+    def get(self, request, format=None):
+        answers = self.get_answers()
+        if answers is not None:
+            serializer = AnswerSerializer(
+                answers, context={'request': request}, many=True)
+            return Response({'message': 'All answers retrieved', 'status': 1, 'data': serializer.data})
+        else:
+            return Response({'message': 'No answers found', 'status': 0})

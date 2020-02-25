@@ -11,6 +11,7 @@ class AdminNavBar extends Component {
         return (
             <div className='navbar-nav'>
                 <a className={this.active('/admin/')} href='/admin/'>QUESTIONS</a>
+                <a className={this.active('/admin/answers/')} href='/admin/answers/'>ANSWERS</a>
                 <a className={this.active('/admin/addquestion/')} href='/admin/addquestion/'>ADD QUESTIONS</a>
                 <a className={this.active('/admin/addanswer/')} href='/admin/addanswer/'>ADD ANSWERS</a>
                 <a className={this.active('/admin/posts/')} href='/admin/posts/'>POSTS</a>
