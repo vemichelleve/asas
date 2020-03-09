@@ -40,5 +40,5 @@ urlpatterns = [
     url(r'^model/$', views.TrainModel.as_view()),
     url(r'^addanswer/(?P<pk>[0-9]+)$', views.AddAutoAnswers.as_view()),
     url(r'^addanswer/$', views.AddAnyAnswers.as_view()),
-    url(r'^allanswers/$', views.AllAnswersView.as_view()),
+    url(r'^allanswers/$', views.AnswerListView.as_view()),
 ]

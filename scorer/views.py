@@ -465,7 +465,7 @@ class TrainModel(APIView):
 
     def put(self, request, format=None):
         questions = self.get_question()  # TODO: change question pk!
-        # answers = self.get_answers(11)  # TODO: change question pk!
+        # answers = self.get_answers(44)  # TODO: change question pk!
         answers = self.get_all_answers()
 
         print('===== BUilding model =====')
@@ -589,7 +589,7 @@ class AddAnyAnswers(APIView):
             return Response({'message': msg, 'status': 1})
 
 
-class AllAnswersView(APIView):
+class AnswerListView(APIView):
     def get_answers(self):
         try:
             return Answer.objects.all()

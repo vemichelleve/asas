@@ -25,3 +25,10 @@ optimise:
     student answers
 optimise answer in student page using search algo
 dependencies on readme.md
+
+cyberduck
+secure
+checkpoint -> visualize
+need to increase epoch, adjust hyperparameter
+stop in the middle, see if it performs well
+if not, need to fix the model
