@@ -54,8 +54,13 @@ def preprocess(questions, answers):
     return df
 
 
-def clean(df):
-    df = df.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
+def clean(df1, input_file):
+    print('cleaning')
+    df1 = df1.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
+    df2 = pd.read_csv(input_file, encoding='unicode escape')  # TODO: Try change to utf
+    df = pd.concat([df1, dr2], axis=1, join='inner')
+    df = df.iloc[:10, :] #TODO CHANGE
+    print('clean done')
 
     df['Ref Answer'] = df['Ref Answer'].astype(str)
     df['Answer'] = df['Answer'].astype(str)
@@ -68,7 +73,7 @@ def clean(df):
     df['Answer'] = df['Answer'].apply(
         lambda x: " ".join(x for x in x.split() if x not in stop))
 
-    return df.iloc[:2500, :]  # Limit to onlly 2500 datasets
+    return df
 
 
 def scale(df):
@@ -117,13 +122,15 @@ def split(X, y):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.10, random_state=101)
 
-    df = X_train
-    df['ans_grade'] = y_train
+    # df = X_train
+    # df['ans_grade'] = y_train
 
-    df_test = X_test
-    df_test['ans_grade'] = y_test
+    # df_test = X_test
+    # df_test['ans_grade'] = y_test
 
-    return df, df_test, y_test
+    # return df, df_test, y_test
+    return X_train, X_test, y_train, y_test
+
 
 
 def cleaning_dataset(input_file):

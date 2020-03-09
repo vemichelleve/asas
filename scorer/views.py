@@ -468,7 +468,7 @@ class TrainModel(APIView):
         # answers = self.get_answers(44)  # TODO: change question pk!
         answers = self.get_all_answers()
 
-        print('===== BUilding model =====')
+        print('===== Building model =====')
         metrics, model, tokenizer, df_test = buildmodel(questions, answers)
         print('===== Building done =====')
 
