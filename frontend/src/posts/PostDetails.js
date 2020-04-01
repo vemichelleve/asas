@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import PostService from './PostService'
+import AnswerService from '../answers/AnswerService';
 
 const postService = new PostService();
+const answerService = new AnswerService();
 
 class PostDetails extends Component {
     constructor(props) {
@@ -11,12 +13,16 @@ class PostDetails extends Component {
             poster: '',
             questions: [],
             status: 0,
+            ans: [],
         }
     }
 
     componentDidMount() {
         var self = this;
         const { match: { params } } = this.props;
+        answerService.getAnswers().then((result) => {
+            self.setState({ ans: result.data })
+        });
         if (params && params.pk) {
             postService.getPost(params.pk).then(function (result) {
                 self.setState({
@@ -31,6 +37,7 @@ class PostDetails extends Component {
     }
 
     render() {
+        var answered = []
         switch (this.state.status) {
             case 2:
                 return (
@@ -53,8 +60,13 @@ class PostDetails extends Component {
                                 <tr>
                                     <th>ID</th>
                                     <th>Question</th>
-                                    <th>Reference Answer</th>
+                                    {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                        <th>Reference Answer</th>}
+                                    {window.location.pathname.substring(0, 14) === '/student/posts' &&
+                                        <th>Answer</th>}
                                     <th>Action</th>
+                                    {window.location.pathname.substring(0, 14) === '/student/posts' &&
+                                        <th>Score</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,10 +74,28 @@ class PostDetails extends Component {
                                     <tr key={question.pk}>
                                         <td>{question.pk}</td>
                                         <td>{question.question}</td>
-                                        <td>{question.refans}</td>
-                                        <td>
-                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
-                                        </td>
+                                        {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                            <td>{question.refans}</td>}
+                                        {window.location.pathname.substring(0, 14) === '/student/posts' &&
+                                            <td>
+                                                {this.state.ans.map(answer => {
+                                                    if (answer.question === question.pk) {
+                                                        answered[question.pk] = true;
+                                                        return answer.answer
+                                                    }
+                                                    else return ''
+                                                })}
+                                            </td>}
+                                        {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                            <td>
+                                                <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
+                                            </td>}
+                                        {window.location.pathname.substring(0, 14) === '/student/posts' &&
+                                            <td>
+                                                <button className='btn btn-primary' disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
+                                            </td>}
+                                        {window.location.pathname.substring(0, 14) === '/student/posts' &&
+                                            <td></td>}
                                     </tr>
                                 )}
                             </tbody>

@@ -54,6 +54,8 @@ const BaseLayout = () => (
       <Route path='/admin/model' exact component={Model} />
       <Route path='/admin/addanswer' exact component={AddAnswer} />
       <Route path='/admin/answers' exact component={AnswerList} />
+      <Route path='/student/posts' exact component={PostList} />
+      <Route path='/student/posts/:pk' component={PostDetails} />
     </div>
 
   </div>

@@ -57,7 +57,12 @@ class PostList extends Component {
                                             })}
                                         </td>
                                         <td>
-                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/posts/' + post.pk}>Details</button>
+                                            {window.location.pathname === '/admin/posts/' &&
+                                                <button className='btn btn-primary' onClick={(e) => window.location = '/admin/posts/' + post.pk}>Details</button>
+                                            }
+                                            {window.location.pathname === '/student/posts/' &&
+                                                <button className='btn btn-primary' onClick={(e) => window.location = '/student/posts/' + post.pk}>Details</button>
+                                            }
                                         </td>
                                     </tr>
                                 )}

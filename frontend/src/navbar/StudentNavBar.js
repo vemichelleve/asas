@@ -12,6 +12,7 @@ class StudentNavBar extends Component {
             <div className='navbar-nav'>
                 <a className={active('/student/')} href='/student/'>QUESTIONS</a>
                 <a className={active('/student/account/')} href='/student/account/'>ACCOUNT</a >
+                <a className={active('/student/posts/')}  href='/student/posts/'>POSTS</a>
                 <a className='nav-item nav-link' href='/'>LOGOUT</a>
             </div >
         );
