@@ -65,7 +65,7 @@ class StudentAnswer extends Component {
                                     <input className='form-control' type='text' onChange={(e) => this.setState({ answer: e.target.value, answered: true })} />
                                 </div>
                                 <button className='btn btn-primary Button-Left' disabled={!this.state.answered} type='submit'>Submit</button>
-                                <button className='btn btn-secondary' onClick={() => window.history.back()}>Back</button>
+                                <button className='btn btn-secondary' type='button' onClick={() => window.history.back()}>Back</button>
                             </form>
                         </div>
                     </div>
