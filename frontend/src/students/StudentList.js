@@ -24,7 +24,6 @@ class StudentList extends Component {
     }
 
     approveStudent(pk) {
-        console.log(pk)
         studentService.approveStudent({ data: pk }).then((result) => {
             window.location.reload();
             alert(result.message)

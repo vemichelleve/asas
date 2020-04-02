@@ -40,6 +40,10 @@ class PostDetails extends Component {
         var answered = []
         switch (this.state.status) {
             case 2:
+                var answer = []
+                this.state.ans.map(x => {
+                    answer[x.question] = x.answer
+                });
                 return (
                     <div>
                         <div className='Table-Top'>
@@ -60,7 +64,7 @@ class PostDetails extends Component {
                                 <tr>
                                     <th>ID</th>
                                     <th>Question</th>
-                                    {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                    {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                         <th>Reference Answer</th>}
                                     {window.location.pathname.substring(0, 14) === '/student/posts' &&
                                         <th>Answer</th>}
@@ -74,19 +78,11 @@ class PostDetails extends Component {
                                     <tr key={question.pk}>
                                         <td>{question.pk}</td>
                                         <td>{question.question}</td>
-                                        {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                        {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                             <td>{question.refans}</td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
-                                            <td>
-                                                {this.state.ans.map(answer => {
-                                                    if (answer.question === question.pk) {
-                                                        answered[question.pk] = true;
-                                                        return answer.answer
-                                                    }
-                                                    else return ''
-                                                })}
-                                            </td>}
-                                        {window.location.pathname.substring(0, 11) === '/admin/posts' &&
+                                            <td>{answer[question.pk]}</td>}
+                                        {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                             <td>
                                                 <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
                                             </td>}

@@ -33,6 +33,10 @@ class PostList extends Component {
                     </div>
                 )
             case 1:
+                var user = []
+                this.state.users.map(x => {
+                    user[x.pk] = x.first_name + ' ' + x.last_name
+                });
                 return (
                     <div>
                         <table className='table'>
@@ -49,13 +53,7 @@ class PostList extends Component {
                                     <tr key={post.pk}>
                                         <td>{post.pk}</td>
                                         <td>{post.name}</td>
-                                        <td>
-                                            {this.state.users.map(user => {
-                                                if (user.pk === post.admin)
-                                                    return user.first_name + ' ' + user.last_name
-                                                else return ''
-                                            })}
-                                        </td>
+                                        <td>{user[post.admin]}</td>
                                         <td>
                                             {window.location.pathname === '/admin/posts/' &&
                                                 <button className='btn btn-primary' onClick={(e) => window.location = '/admin/posts/' + post.pk}>Details</button>

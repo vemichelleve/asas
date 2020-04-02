@@ -50,6 +50,12 @@ class StudentDetails extends Component {
                     </div>
                 );
             case 1:
+                var qnarr = []
+                var ansarr = []
+                this.state.questionlist.map(x => {
+                    qnarr[x.pk] = x.question
+                    ansarr[x.pk] = x.refans
+                });
                 return (
                     <div>
                         <div className='Table-Top'>
@@ -78,16 +84,8 @@ class StudentDetails extends Component {
                                 {this.state.questions.map(question =>
                                     <tr key={question}>
                                         <td>{question}</td>
-                                        {this.state.questionlist.map(qn => {
-                                            if (qn.pk === question)
-                                                return <td key={qn.pk}>{qn.question}</td>
-                                            else return null
-                                        })}
-                                        {this.state.questionlist.map(qn => {
-                                            if (qn.pk === question)
-                                                return <td key={qn.pk}>{qn.refans}</td>
-                                            else return null
-                                        })}
+                                        <td>{qnarr[question]}</td>
+                                        <td>{ansarr[question]}</td>
                                         <td>-</td>
                                     </tr>
                                 )}
