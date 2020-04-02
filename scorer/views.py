@@ -44,6 +44,12 @@ class UserLoginView(APIView):
         except:
             return None
 
+    def get_student(self, user):
+        try:
+            return Student.objects.get(user=user)
+        except:
+            return None
+
     def post(self, request, format=None):
         data = request.data
         generaluser = self.get_object(data['username'])
@@ -57,9 +63,13 @@ class UserLoginView(APIView):
                 else:
                     return Response({'message': 'You are not registered as admin', 'status': 0})
             elif data['is_student']:
-                if Student.objects.filter(user=generaluser).exists():
-                    user = authenticate(
-                        username=data['username'], password=data['password'])
+                student = self.get_student(generaluser)
+                if student is not None:
+                    if student.get_approved():
+                        user = authenticate(
+                            username=data['username'], password=data['password'])
+                    else:
+                        return Response({'message': 'Sorry, your account is not yet approved'})
                 else:
                     return Response({'message': 'You are not registered as student', 'status': 0})
             # If user is authenticated (i.e. password is correct)
@@ -627,7 +637,7 @@ class StudentApprovedView(APIView):
             student, context={'request': request}, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Student approved'})
+            return Response({'message': 'Student successfully approved'})
         else:
             return Response({'message': 'Failed to approve student'})
 

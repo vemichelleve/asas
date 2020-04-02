@@ -54,6 +54,9 @@ class Student(models.Model):
     questions = models.ManyToManyField(Question, through='AnsweredQuestions')
     approved = models.BooleanField(default=False)
 
+    def get_approved(self):
+        return self.approved
+
     def __str__(self):
         return self.user.username
 
