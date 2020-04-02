@@ -34,7 +34,7 @@ class PostList extends Component {
                 )
             case 1:
                 var user = []
-                this.state.users.map(x => {
+                this.state.users.forEach(x => {
                     user[x.pk] = x.first_name + ' ' + x.last_name
                 });
                 return (

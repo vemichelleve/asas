@@ -41,7 +41,7 @@ class PostDetails extends Component {
         switch (this.state.status) {
             case 2:
                 var answer = []
-                this.state.ans.map(x => {
+                this.state.ans.forEach(x => {
                     answer[x.question] = x.answer
                 });
                 return (

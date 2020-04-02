@@ -52,7 +52,7 @@ class StudentDetails extends Component {
             case 1:
                 var qnarr = []
                 var ansarr = []
-                this.state.questionlist.map(x => {
+                this.state.questionlist.forEach(x => {
                     qnarr[x.pk] = x.question
                     ansarr[x.pk] = x.refans
                 });

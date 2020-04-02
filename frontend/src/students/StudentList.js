@@ -42,7 +42,7 @@ class StudentList extends Component {
                 );
             case 1:
                 var approved = [];
-                this.state.approved.map(x => {
+                this.state.approved.forEach(x => {
                     approved[x.pk] = x.approved;
                 });
                 return (

@@ -28,7 +28,7 @@ class StudentQuestionList extends Component {
     render() {
         var answered = []
         var answer = []
-        this.state.ans.map((x) => {
+        this.state.ans.forEach((x) => {
             answer[x.question] = x.answer;
             answered[x.question] = true;
         });

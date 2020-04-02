@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AccountService from './AccountService'
+// import AccountService from './AccountService'
 
 class PasswordChange extends Component {
     constructor(props) {
