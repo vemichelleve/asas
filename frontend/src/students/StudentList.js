@@ -26,7 +26,10 @@ class StudentList extends Component {
     approveStudent(pk) {
         console.log(pk)
         studentService.approveStudent({ data: pk }).then((result) => {
-            console.log(result)
+            window.location.reload();
+            alert(result.message)
+        }).catch((result) => {
+            alert(result.message)
         });
     }
 
