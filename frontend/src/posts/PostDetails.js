@@ -37,12 +37,13 @@ class PostDetails extends Component {
     }
 
     render() {
-        var answered = []
         switch (this.state.status) {
             case 2:
                 var answer = []
+                var score = []
                 this.state.ans.forEach(x => {
                     answer[x.question] = x.answer
+                    score[x.question] = x.systemscore
                 });
                 return (
                     <div>
@@ -66,9 +67,10 @@ class PostDetails extends Component {
                                     <th>Question</th>
                                     {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                         <th>Reference Answer</th>}
+                                    {window.location.pathname.substring(0, 12) === '/admin/posts' &&
+                                        <th>Action</th>}
                                     {window.location.pathname.substring(0, 14) === '/student/posts' &&
                                         <th>Answer</th>}
-                                    <th>Action</th>
                                     {window.location.pathname.substring(0, 14) === '/student/posts' &&
                                         <th>Score</th>}
                                 </tr>
@@ -80,18 +82,17 @@ class PostDetails extends Component {
                                         <td>{question.question}</td>
                                         {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                             <td>{question.refans}</td>}
-                                        {window.location.pathname.substring(0, 14) === '/student/posts' &&
-                                            <td>{answer[question.pk]}</td>}
                                         {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                             <td>
                                                 <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
                                             </td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
-                                            <td>
-                                                <button className='btn btn-primary' disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
-                                            </td>}
+                                            <td>{answer[question.pk] == undefined ?
+                                                <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
+                                                answer[question.pk]
+                                            }</td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
-                                            <td></td>}
+                                            <td>{score[question.pk] == null ? 'N.A.' : score[question.pk]}</td>}
                                     </tr>
                                 )}
                             </tbody>

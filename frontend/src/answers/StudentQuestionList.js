@@ -26,11 +26,9 @@ class StudentQuestionList extends Component {
     }
 
     render() {
-        var answered = []
         var answer = []
         this.state.ans.forEach((x) => {
             answer[x.question] = x.answer;
-            answered[x.question] = true;
         });
         return (
             <div>
@@ -40,7 +38,6 @@ class StudentQuestionList extends Component {
                             <th>ID</th>
                             <th>Question</th>
                             <th>Answer</th>
-                            <th>Action</th>
                             <th>Score</th>
                         </tr>
                     </thead>
@@ -49,11 +46,11 @@ class StudentQuestionList extends Component {
                             <tr key={question.pk}>
                                 <td>{question.pk}</td>
                                 <td>{question.question}</td>
-                                <td>{answer[question.pk]}</td>
-                                <td>
-                                    <button className='btn btn-primary' disabled={answered[question.pk]} onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button>
-                                </td>
-                                <td></td>
+                                <td>{answer[question.pk] == undefined ?
+                                    <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
+                                    answer[question.pk]
+                                }</td>
+                                <td>{question.systemscore == null ? 'N.A.' : question.systemscore}</td>
                             </tr>)}
                     </tbody>
                 </table>
