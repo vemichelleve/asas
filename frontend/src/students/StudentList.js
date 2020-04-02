@@ -9,6 +9,7 @@ class StudentList extends Component {
         this.state = {
             students: [],
             status: 0,
+            approved: [],
         }
     }
 
@@ -16,6 +17,16 @@ class StudentList extends Component {
         var self = this;
         studentService.getStudents().then(function (result) {
             self.setState({ students: result.data, status: result.status })
+        });
+        studentService.getApproved().then((result) => {
+            self.setState({ approved: result.data })
+        });
+    }
+
+    approveStudent(pk) {
+        console.log(pk)
+        studentService.approveStudent({ data: pk }).then((result) => {
+            console.log(result)
         });
     }
 
@@ -28,6 +39,10 @@ class StudentList extends Component {
                     </div>
                 );
             case 1:
+                var approved = [];
+                this.state.approved.map(x => {
+                    approved[x.pk] = x.approved;
+                });
                 return (
                     <div>
                         <table className='table'>
@@ -38,6 +53,7 @@ class StudentList extends Component {
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Action</th>
+                                    <th>Approved</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,7 +64,10 @@ class StudentList extends Component {
                                         <td>{user.username}</td>
                                         <td>{user.email}</td>
                                         <td>
-                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/students/' + user.pk}>Details</button>
+                                            <button className='btn btn-primary' onClick={() => window.location = '/admin/students/' + user.pk}>Details</button>
+                                        </td>
+                                        <td>
+                                            <button className='btn btn-primary' onClick={() => this.approveStudent(user.pk)} disabled={approved[user.pk]}>Approve</button>
                                         </td>
                                     </tr>)}
                             </tbody>

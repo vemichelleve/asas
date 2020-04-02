@@ -9,4 +9,12 @@ export default class StudentService {
     getStudent(pk) {
         return axios.get(`${API_URL}/students/${pk}`).then(response => response.data);
     }
+
+    getApproved() {
+        return axios.get(`${API_URL}/approved/`).then(response => response.data);
+    }
+
+    approveStudent(pk) {
+        return axios.put(`${API_URL}/approved/`, pk).then(response => response.data);
+    }
 }

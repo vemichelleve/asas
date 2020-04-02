@@ -41,4 +41,6 @@ urlpatterns = [
     url(r'^addanswer/(?P<pk>[0-9]+)$', views.AddAutoAnswers.as_view()),
     url(r'^addanswer/$', views.AddAnyAnswers.as_view()),
     url(r'^allanswers/$', views.AnswerListView.as_view()),
+    url(r'^approved/$', views.StudentApprovedView.as_view()),
+    url(r'^manual/$', views.Manual.as_view()),
 ]

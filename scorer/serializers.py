@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('pk', 'questions')
+        fields = ('pk', 'questions', 'approved')
 
 
 class QuestionSerializer(serializers.ModelSerializer):

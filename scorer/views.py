@@ -604,3 +604,43 @@ class AnswerListView(APIView):
             return Response({'message': 'All answers retrieved', 'status': 1, 'data': serializer.data})
         else:
             return Response({'message': 'No answers found', 'status': 0})
+
+
+class StudentApprovedView(APIView):
+    def get_students(self):
+        try:
+            return Student.objects.all()
+        except:
+            return None
+
+    def get_student(self, pk):
+        try:
+            return Student.objects.get(user=pk)
+        except:
+            return None
+
+    def put(self, request, format=None):
+        pk = request.data['data']
+        student = self.get_student(pk)
+        data = {'approved': True}
+        serializer = StudentSerializer(
+            student, context={'request': request}, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Student approved'})
+        else:
+            return Response({'message': 'Failed to approve student'})
+
+    def get(self, request, format=None):
+        students = self.get_students()
+        serializer = StudentSerializer(
+            students, context={'request': request}, many=True)
+        return Response({'message': 'Approved list retrieved', 'data': serializer.data})
+
+
+class Manual(APIView):
+    def get(self, request, format=None):
+        student = Student.objects.get(user=13)
+        serializer = StudentSerializer(
+            student, context={'request': request})
+        return Response({'msg': 'done', 'student': serializer.data})
