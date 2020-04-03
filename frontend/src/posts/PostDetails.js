@@ -87,7 +87,7 @@ class PostDetails extends Component {
                                                 <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
                                             </td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
-                                            <td>{answer[question.pk] == undefined ?
+                                            <td>{answer[question.pk] === undefined ?
                                                 <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
                                                 answer[question.pk]
                                             }</td>}

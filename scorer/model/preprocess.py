@@ -54,13 +54,9 @@ def preprocess(questions, answers):
     return df
 
 
-def clean(df1, input_file):
-    print('cleaning')
-    df1 = df1.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
-    df2 = pd.read_csv(input_file, encoding='unicode escape')  # TODO: Try change to utf
-    df = pd.concat([df1, dr2], axis=1, join='inner')
-    df = df.iloc[:10, :] #TODO CHANGE
-    print('clean done')
+def clean(df, input_file):
+    df = df.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
+    # df = df.iloc[:10, :] #TODO CHANGE
 
     df['Ref Answer'] = df['Ref Answer'].astype(str)
     df['Answer'] = df['Answer'].astype(str)
@@ -118,9 +114,9 @@ def scale(df):
     return X, y, scaler_y
 
 
-def split(X, y):
+def splittest(X, y, split):
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.10, random_state=101)
+        X, y, test_size=split, random_state=101)
 
     # df = X_train
     # df['ans_grade'] = y_train
@@ -130,7 +126,6 @@ def split(X, y):
 
     # return df, df_test, y_test
     return X_train, X_test, y_train, y_test
-
 
 
 def cleaning_dataset(input_file):

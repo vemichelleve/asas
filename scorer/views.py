@@ -482,35 +482,35 @@ class TrainModel(APIView):
         metrics, model, tokenizer, df_test = buildmodel(questions, answers)
         print('===== Building done =====')
 
-        for metric in metrics:
-            name = metric['metric']
-            value = metric['value']
-            if not Metrics.objects.filter(name=name).exists():
-                metricobj = Metrics.objects.create(name=name, value=value)
-                metricobj.save()
-            else:
-                metric = Metrics.objects.get(name=name)
-                data = {'value': value}
-                serializer = MetricsSerializer(metric, data=data, context={
-                                               'request': request}, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
+        # for metric in metrics:
+        #     name = metric['metric']
+        #     value = metric['value']
+        #     if not Metrics.objects.filter(name=name).exists():
+        #         metricobj = Metrics.objects.create(name=name, value=value)
+        #         metricobj.save()
+        #     else:
+        #         metric = Metrics.objects.get(name=name)
+        #         data = {'value': value}
+        #         serializer = MetricsSerializer(metric, data=data, context={
+        #                                        'request': request}, partial=True)
+        #         if serializer.is_valid():
+        #             serializer.save()
 
-        print('===== Predicting =====')
-        result = score(df_test, model, tokenizer)
-        result = [x * 5 for x in result]
-        print('===== Predicting done =====')
-        print(result)
+        # print('===== Predicting =====')
+        # result = score(df_test, model, tokenizer)
+        # result = [x * 5 for x in result]
+        # print('===== Predicting done =====')
+        # print(result)
 
-        index = 0
-        if len(result) == len(answers):
-            for ans in answers:
-                data = {'systemscore': result[index]}
-                serializer = AnswerSerializer(ans, data=data, context={
-                                              'request': request}, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                index += 1
+        # index = 0
+        # if len(result) == len(answers):
+        #     for ans in answers:
+        #         data = {'systemscore': result[index]}
+        #         serializer = AnswerSerializer(ans, data=data, context={
+        #                                       'request': request}, partial=True)
+        #         if serializer.is_valid():
+        #             serializer.save()
+        #         index += 1
 
         return Response({'message': 'Model successfully trained'})
 
@@ -650,7 +650,5 @@ class StudentApprovedView(APIView):
 
 class Manual(APIView):
     def get(self, request, format=None):
-        student = Student.objects.get(user=13)
-        serializer = StudentSerializer(
-            student, context={'request': request})
-        return Response({'msg': 'done', 'student': serializer.data})
+        
+        return Response({'msg': 'done'})

@@ -46,7 +46,7 @@ class StudentQuestionList extends Component {
                             <tr key={question.pk}>
                                 <td>{question.pk}</td>
                                 <td>{question.question}</td>
-                                <td>{answer[question.pk] == undefined ?
+                                <td>{answer[question.pk] === undefined ?
                                     <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
                                     answer[question.pk]
                                 }</td>
