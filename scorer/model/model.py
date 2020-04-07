@@ -1,6 +1,7 @@
 import pandas as pd
 from .embedding import *
 from .lstm import *
+from keras.models import load_model
 from scipy.stats import spearmanr
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -17,7 +18,7 @@ NUMBER_DENSE_UNITS = 50
 ACTIVATION_FUNCTION = 'sigmoid'
 
 
-def train(df, y, model):
+def train_lstm(df, y, model):
     df['Ref Answer'] = df['Ref Answer'].astype(str)
     df['Answer'] = df['Answer'].astype(str)
 
@@ -26,34 +27,37 @@ def train(df, y, model):
     scores = y.tolist()
 
     # creating answers pairs
+    print('===== Creating answers pairs =====')
     answers_pair = [(x1, x2) for x1, x2 in zip(answer1, answer2)]
-    print("----------created answers pairs-----------")
 
     # add features for feature engineering
     feat = pd.DataFrame(df[['Length Answer', 'Length Ref Answer',
                             'Len Ref By Ans', 'Words Answer', 'Unique Words Answer']])
 
     # creating word embedding meta data for word embedding
+    print('===== Creating word embedding meta data =====')
     tokenizer, embedding_matrix = word_embed_meta_data(
-        answer1 + answer2,  EMBEDDING_DIM)
+        answer1 + answer2,  EMBEDDING_DIM, model)
     embedding_meta_data = {'tokenizer': tokenizer,
                            'embedding_matrix': embedding_matrix}
-    print("----------created word embedding meta data-----------")
 
     # SiameneBiLSTM is a class for  Long short Term Memory networks
+    print('===== Building model =====')
     siamese = SiameneLSTM(EMBEDDING_DIM, MAX_SEQUENCE_LENGTH, NUMBER_LSTM, NUMBER_DENSE_UNITS,
                           RATE_DROP_LSTM, RATE_DROP_DENSE, ACTIVATION_FUNCTION, VALIDATION_SPLIT)
+    
+    print('===== Training model =====')
     model_path = siamese.train_model(
         answers_pair, feat, scores, embedding_meta_data, model_save_directory='./')
-    #preds, model_path = siamese.train_model(answers_pair, scores, embedding_meta_data, model_save_directory='./')
 
     # load the train data in model...
     model = load_model(model_path)
-    print("----------model trained-----------")
+
     return model, tokenizer
 
 
 def predict(df_test, model, tokenizer):
+    print('===== Predicting =====')
     df_test['Ref Answer'] = df_test['Ref Answer'].astype(str)
     df_test['Answer'] = df_test['Answer'].astype(str)
 
@@ -61,9 +65,9 @@ def predict(df_test, model, tokenizer):
     answer2_test = df_test['Answer'].values.tolist()
 
     # creating answers pairs
+    print('===== Creating test dataset =====')
     answers_test_pair = [(x1, x2)
                          for x1, x2 in zip(answer1_test, answer2_test)]
-    print("----------created test dataset-----------")
 
     # features input
     feat = pd.DataFrame(df_test[['Length Answer', 'Length Ref Answer',
@@ -73,14 +77,15 @@ def predict(df_test, model, tokenizer):
         tokenizer, answers_test_pair, feat, MAX_SEQUENCE_LENGTH)
 
     # predict the results
+    print('===== Predicting test results =====')
     preds = list(model.predict(
         [test_data_x1, test_data_x2, feat, leaks_test], verbose=1).ravel())
-    print("----------predicted test results-----------")
 
     return preds
 
 
 def processresult(test_results,  y_test, scaler_y):
+    print('===== Processing result =====')
     y_true = y_test.tolist()
     y_true = scaler_y.inverse_transform(y_true)
     y_t = []
@@ -107,11 +112,7 @@ def processresult(test_results,  y_test, scaler_y):
 
 
 def evaluate(test_results, y_true):
-    print('test results')
-    print(test_results)
-    print('y_true')
-    print(y_true)
-
+    print('===== Calculating metrics =====')
     pearson, _ = pearsonr(test_results, y_true)
     rms = sqrt(mean_squared_error(test_results, y_true))
     mae = mean_absolute_error(test_results, y_true)

@@ -24,6 +24,7 @@ def uniquecount(sentence):
 
 
 def preprocess(questions, answers):
+    print('===== Preprocessing =====')
     qns = pd.DataFrame(
         columns=['Ref Answer', 'Length Ref Ans', 'Words Ref Answer', 'Unique Words Ref'])
     for x in questions:
@@ -50,13 +51,14 @@ def preprocess(questions, answers):
         df.at[index, 'Words Answer'] = words
         unique = uniquecount(answer)
         df.at[index, 'Unique Words Answer'] = unique
-
+    
     return df
 
 
-def clean(df, input_file):
+def cleaning_dataset(df, input_file):
+    print('===== Cleaning =====')
+    # TODO: add data from csv
     df = df.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
-    # df = df.iloc[:10, :] #TODO CHANGE
 
     df['Ref Answer'] = df['Ref Answer'].astype(str)
     df['Answer'] = df['Answer'].astype(str)
@@ -73,6 +75,7 @@ def clean(df, input_file):
 
 
 def scale(df):
+    print('===== Scaling =====')
     X = df[['Ref Answer', 'Answer']]
     y = pd.DataFrame(df['ans_grade'])
 
@@ -115,37 +118,31 @@ def scale(df):
 
 
 def splittest(X, y, split):
+    print('===== Splitting dataset =====')
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=split, random_state=101)
 
-    # df = X_train
-    # df['ans_grade'] = y_train
-
-    # df_test = X_test
-    # df_test['ans_grade'] = y_test
-
-    # return df, df_test, y_test
     return X_train, X_test, y_train, y_test
 
 
-def cleaning_dataset(input_file):
-    df_train = pd.read_csv(input_file, encoding='unicode escape')
+# def cleaning_dataset(input_file):
+#     df_train = pd.read_csv(input_file, encoding='unicode escape')
 
-    # Pre-Processing...
-    # convert all answers to string format...
-    df_train['Ref Answer'] = df_train['Ref Answer'].astype(str)
-    df_train['Answer'] = df_train['Answer'].astype(str)
+#     # Pre-Processing...
+#     # convert all answers to string format...
+#     df_train['Ref Answer'] = df_train['Ref Answer'].astype(str)
+#     df_train['Answer'] = df_train['Answer'].astype(str)
 
-    # convert all answers to lower case...
-    df_train['Ref Answer'] = df_train['Ref Answer'].apply(
-        lambda answer1: answer1.lower())
-    df_train['Answer'] = df_train['Answer'].apply(
-        lambda answer2: answer2.lower())
+#     # convert all answers to lower case...
+#     df_train['Ref Answer'] = df_train['Ref Answer'].apply(
+#         lambda answer1: answer1.lower())
+#     df_train['Answer'] = df_train['Answer'].apply(
+#         lambda answer2: answer2.lower())
 
-    # Remove of Stop Words from answers...
-    df_train['Ref Answer'] = df_train['Ref Answer'].apply(
-        lambda x: " ".join(x for x in x.split() if x not in stop))
-    df_train['Answer'] = df_train['Answer'].apply(
-        lambda x: " ".join(x for x in x.split() if x not in stop))
+#     # Remove of Stop Words from answers...
+#     df_train['Ref Answer'] = df_train['Ref Answer'].apply(
+#         lambda x: " ".join(x for x in x.split() if x not in stop))
+#     df_train['Answer'] = df_train['Answer'].apply(
+#         lambda x: " ".join(x for x in x.split() if x not in stop))
 
-    return df_train
+    # return df_train

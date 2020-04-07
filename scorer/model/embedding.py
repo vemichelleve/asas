@@ -164,12 +164,12 @@ def create_embedding_matrix(tokenizer, word_vectors, embedding_dim):
 # creating word vector with GloVe model
 
 
-def word_embed_meta_data(documents, embedding_dim):
+def word_embed_meta_data(documents, embedding_dim, model):
     vocabulary_size = 20000
     tokenizer = Tokenizer(num_words=vocabulary_size, filters='')
     tokenizer.fit_on_texts(documents)
-    gloveFile = "/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt"
-    model = train_word2vec(gloveFile)
+    # gloveFile = "/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt"
+    # model = train_word2vec(gloveFile)
 
     # Handling the exception cases where the word in dataset is not present in the GloVe embeddings vocabulary
     model['dereferencing'] = (model['not'] + model['reference'])/2
@@ -544,6 +544,15 @@ def word_embed_meta_data(documents, embedding_dim):
     model['stackpop'] = (model['stack'] + model['pop'])/2
     model['ptnode'] = (model['pointer'] + model['node'])/2
     model['containersdivides'] = (model['container'] + model['divides'])/2
+    model['defintion'] = model['definition']
+    model['userwritten'] = (model['user'] + model['written'])/2
+    model['declaredlimited'] = (model['declared'] + model['limited'])
+    model['conditon'] = model['condition']
+    model['tpes'] = model['types']
+    model['linkded'] = model['linked']
+    model['parameterless'] = (model['no'] + model['parameter'])/2
+    model['autocreate'] = (model['auto'] + model['create'])/2
+    model['pointer1'] = model['pointer']
     word_vector = {}
     word_vector['while'] = model['while']
     word_vector['does'] = model['does']
@@ -564,6 +573,8 @@ def word_embed_meta_data(documents, embedding_dim):
         # remove remaining tokens that are not alphanumeric
         words = [word for word in stripped if word.isalnum()]
         for word in words:
+            # TODO: check if answer is misspelled
+            # print(word)
             word_vector[word] = model[word]
     embedding_matrix = create_embedding_matrix(
         tokenizer, word_vector, embedding_dim)

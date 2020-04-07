@@ -2,14 +2,13 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import keras
-from keras.layers import Dense, Input, LSTM, Dropout, Bidirectional, Dot, GRU, Conv1D, MaxPooling1D, Flatten
-from keras.layers.normalization import BatchNormalization
+from keras.callbacks import TensorBoard, ModelCheckpoint
+from keras.layers import Dense, Input, LSTM, Dropout, Bidirectional, Subtract
 from keras.layers.embeddings import Embedding
-from keras.layers.merge import concatenate, dot, subtract
-from keras.optimizers import Adam
-from keras import backend
-from keras.models import load_model, Model
-from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
+from keras.layers.merge import concatenate
+from keras.layers.normalization import BatchNormalization
+from keras.models import Model
+from keras.regularizers import l2
 from .embedding import *
 import time
 import os
@@ -27,9 +26,9 @@ class SiameneLSTM:
         self.rate_drop_dense = rate_drop_dense
         self.validation_split_ratio = validation_split_ratio
 
-    def train_model(self, sentences_pair, feat, scores, embedding_meta_data, model_save_directory='./'):
-        tokenizer, embedding_matrix = embedding_meta_data[
-            'tokenizer'], embedding_meta_data['embedding_matrix']
+    def train_model(self, sentences_pair, feat, scores, embedding_meta_data2, model_save_directory='./'):
+        tokenizer, embedding_matrix = embedding_meta_data2[
+            'tokenizer'], embedding_meta_data2['embedding_matrix']
 
         train_data_x1, train_data_x2, train_scores, leaks_train, feat_train,\
             val_data_x1, val_data_x2, val_scores, leaks_val, feat_val = create_train_dev_set(
@@ -50,8 +49,6 @@ class SiameneLSTM:
                                          kernel_regularizer=l2(0.001), recurrent_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         lstm_layer2 = Bidirectional(LSTM(150, kernel_initializer='random_uniform', bias_initializer='zeros', activation='sigmoid',
                                          kernel_regularizer=l2(0.001), recurrent_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
-        # lstm_layer1 = Bidirectional(LSTM(150, kernel_initializer='random_uniform', bias_initializer='zeros', activation='sigmoid'))
-        # lstm_layer2 = Bidirectional(LSTM(150, kernel_initializer='random_uniform', bias_initializer='zeros', activation='sigmoid'))
 
         # Setting LSTM Encoder layer for Second Sentence
         sequence_2_input = Input(
@@ -79,8 +76,6 @@ class SiameneLSTM:
             0.01), bias_regularizer=l2(0.01))(feat_dense)
         feat_dense = Dense(125, activation='sigmoid', kernel_regularizer=l2(
             0.01), bias_regularizer=l2(0.01))(feat_dense)
-        # feat_dense = Dense(125, activation = 'sigmoid')(feat_dense)
-        # feat_dense = Dense(125, activation = 'sigmoid')(feat_dense)
 
         # Creating leaks input
         leaks_input = Input(shape=(leaks_train.shape[1],))  # Input 4
@@ -93,8 +88,6 @@ class SiameneLSTM:
         # pass it to dense layer applying dropout and batch normalisation
         merged = concatenate([x1, x2, feat_dense, leaks_dense])
         merged = Dense(125, activation='sigmoid')(merged)
-        # merged = Dense(125, activation='sigmoid')(merged)
-        # merged = Dense(125, activation='sigmoid')(merged)
         merged = Dense(125, activation='sigmoid', kernel_regularizer=l2(
             0.01), bias_regularizer=l2(0.01))(merged)
         merged = Dense(125, activation='sigmoid', kernel_regularizer=l2(

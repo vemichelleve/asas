@@ -461,9 +461,11 @@ class TrainModel(APIView):
         except:
             return None
 
-    def get_all_answers(self):
+    def get_scored_answers(self):
         try:
-            return Answer.objects.all()
+            ans = Answer.objects.filter(score1__isnull=False)
+            ans = ans.filter(score2__isnull=False)
+            return ans
         except:
             return None
 
@@ -476,43 +478,43 @@ class TrainModel(APIView):
     def put(self, request, format=None):
         questions = self.get_question()  # TODO: change question pk!
         # answers = self.get_answers(44)  # TODO: change question pk!
-        answers = self.get_all_answers()
+        answers = self.get_scored_answers()
 
-        print('===== Building model =====')
-        metrics, model, tokenizer, df_test = buildmodel(questions, answers)
-        print('===== Building done =====')
+        metrics, model, tokenizer, df_test, scaler = buildmodel(
+            questions, answers)
 
-        # for metric in metrics:
-        #     name = metric['metric']
-        #     value = metric['value']
-        #     if not Metrics.objects.filter(name=name).exists():
-        #         metricobj = Metrics.objects.create(name=name, value=value)
-        #         metricobj.save()
-        #     else:
-        #         metric = Metrics.objects.get(name=name)
-        #         data = {'value': value}
-        #         serializer = MetricsSerializer(metric, data=data, context={
-        #                                        'request': request}, partial=True)
-        #         if serializer.is_valid():
-        #             serializer.save()
+        for metric in metrics:
+            name = metric['metric']
+            value = metric['value']
+            if not Metrics.objects.filter(name=name).exists():
+                metricobj = Metrics.objects.create(name=name, value=value)
+                metricobj.save()
+            else:
+                metric = Metrics.objects.get(name=name)
+                data = {'value': value}
+                serializer = MetricsSerializer(metric, data=data, context={
+                                               'request': request}, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
 
-        # print('===== Predicting =====')
-        # result = score(df_test, model, tokenizer)
-        # result = [x * 5 for x in result]
-        # print('===== Predicting done =====')
-        # print(result)
+        result = score(df_test, model, tokenizer, scaler)
+        print(result)
 
-        # index = 0
-        # if len(result) == len(answers):
-        #     for ans in answers:
-        #         data = {'systemscore': result[index]}
-        #         serializer = AnswerSerializer(ans, data=data, context={
-        #                                       'request': request}, partial=True)
-        #         if serializer.is_valid():
-        #             serializer.save()
-        #         index += 1
-
-        return Response({'message': 'Model successfully trained'})
+        index = 0
+        if len(result) == len(answers):
+            print('========== Uploading scores ==========')
+            for ans in answers:
+                print(str(round(index/len(result)*100), 1) + '%')
+                data = {'systemscore': result[index]}
+                serializer = AnswerSerializer(ans, data=data, context={
+                                              'request': request}, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                index += 1
+            print('========== Upload done ==========')
+            return Response({'message': 'Model successfully trained'})
+        else:
+            return Response({'message': 'Result not uploaded'})
 
     def get(self, request, format=None):
         metrics = self.get_metrics()
@@ -650,5 +652,8 @@ class StudentApprovedView(APIView):
 
 class Manual(APIView):
     def get(self, request, format=None):
-        
-        return Response({'msg': 'done'})
+        ans = Answer.objects.all()
+        serializer = AnswerSerializer(
+            ans, context={'request': request}, many=True)
+        count = ans.filter(score1__isnull=False).count()
+        return Response({'msg': 'done', 'count': count, 'data': serializer.data})
