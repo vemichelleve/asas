@@ -27,8 +27,10 @@ class StudentQuestionList extends Component {
 
     render() {
         var answer = []
+        var score = []
         this.state.ans.forEach((x) => {
             answer[x.question] = x.answer;
+            score[x.question] = x.systemscore;
         });
         return (
             <div>
@@ -50,7 +52,7 @@ class StudentQuestionList extends Component {
                                     <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
                                     answer[question.pk]
                                 }</td>
-                                <td>{question.systemscore == null ? 'N.A.' : question.systemscore}</td>
+                                <td>{score[question.pk] == null ? 'N.A.' : score[question.pk].toFixed(2)}</td>
                             </tr>)}
                     </tbody>
                 </table>

@@ -52,7 +52,7 @@ class AnswerList extends Component {
                                         <td>{answer.pk}</td>
                                         <td>{answer.question}</td>
                                         <td>{answer.answer}</td>
-                                        <td>{answer.systemscore ? answer.systemscore : '-'}</td>
+                                        <td>{answer.systemscore ? answer.systemscore.toFixed(2) : '-'}</td>
                                         <td>{answer.score1 ? answer.score1 : '-'}</td>
                                         <td>{answer.score2 ? answer.score2 : '-'}</td>
                                     </tr>
