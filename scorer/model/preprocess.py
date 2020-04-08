@@ -51,14 +51,20 @@ def preprocess(questions, answers):
         df.at[index, 'Words Answer'] = words
         unique = uniquecount(answer)
         df.at[index, 'Unique Words Answer'] = unique
-    
+
     return df
 
 
 def cleaning_dataset(df, input_file):
     print('===== Cleaning =====')
-    # TODO: add data from csv
-    df = df.drop(['id', 'score1', 'score2', 'question_id'], axis=1)
+    df_train = pd.read_csv(input_file, encoding='utf-8')
+    df_train = df_train.filter(['Answer', 'ans_grade', 'Ref Answer', 'Length Answer',
+                                'Length Ref Answer', 'Len Ref By Ans', 'Words Answer',
+                                'Unique Words Answer'])
+
+    df = df.drop(['id', 'score1', 'score2', 'question_id', 'systemscore'], axis=1) # TODO: Check!
+
+    df = df.append(df_train)
 
     df['Ref Answer'] = df['Ref Answer'].astype(str)
     df['Answer'] = df['Answer'].astype(str)

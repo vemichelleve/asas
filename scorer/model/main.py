@@ -17,8 +17,8 @@ def buildmodel(questions, answers):
     # embedmodel = train_word2vec('/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt')
     # question = '/Users/michellevanessa/Desktop/automatic-text-scoring-master/Final Code and Data/questions.csv'
 
-    df = preprocess(questions, answers)
-    df = cleaning_dataset(df, input_dataset)
+    data = preprocess(questions, answers)
+    df = cleaning_dataset(data, input_dataset)
 
     X, y, scaler_y = scale(df)
 
@@ -35,7 +35,7 @@ def buildmodel(questions, answers):
     print('==================== Training ====================')
     for train, test in kfold.split(X_train, y_train):
         print('========== Fold #', index+1, '==========')
-        train_model[index], tokenizer[index], model_path = train_lstm(
+        train_model[index], tokenizer[index] = train_lstm(
             X_train.iloc[train], y_train[train], embedmodel)
         test_results = predict(
             X_train.iloc[test], train_model[index], tokenizer[index])
@@ -66,7 +66,7 @@ def buildmodel(questions, answers):
     metric.append({'metric': 'RMSE', 'value': rmse})
     metric.append({'metric': 'MAE', 'value': mae})
 
-    return metric, train_model[index], tokenizer[index], df, scaler_y
+    return metric, train_model[index], tokenizer[index], data, scaler_y
 
 
 def score(df_test, model, tokenizer, scaler_y):

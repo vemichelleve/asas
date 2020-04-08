@@ -123,6 +123,6 @@ class SiameneLSTM:
                   validation_data=(
                       [val_data_x1, val_data_x2, feat_val, leaks_val], val_scores),
                   epochs=1, batch_size=128, shuffle=True,
-                  callbacks=[model_checkpoint, tensorboard])  # TODO CHANGE
+                  callbacks=[model_checkpoint, tensorboard])
 
         return bst_model_path

@@ -504,7 +504,7 @@ class TrainModel(APIView):
         if len(result) == len(answers):
             print('========== Uploading scores ==========')
             for ans in answers:
-                print(str(round(index/len(result)*100), 1) + '%')
+                print(str(round(index/len(result)*100, 1)) + '%')
                 data = {'systemscore': result[index]}
                 serializer = AnswerSerializer(ans, data=data, context={
                                               'request': request}, partial=True)
