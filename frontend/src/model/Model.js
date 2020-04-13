@@ -61,6 +61,8 @@ class Model extends Component {
                                     )}
                                 </tbody>
                             </table>
+                            <p className='card-text'>Click the button below to re-train the model using the latest database. The model will be trained using all the data in the database and the data from Mohler dataset.</p>
+                            <p className='card-text'>This may take up to 15 minutes.</p>
                             <div className='Center-Item'>
                                 <button className='btn btn-primary' onClick={this.trainModel}>
                                     Train model

@@ -35,7 +35,7 @@ class AnswerList extends Component {
             case 1:
                 return (
                     <div>
-                        <table className='table'>
+                        <table className='table' class='table'>
                             <thead key='thead'>
                                 <tr>
                                     <th>ID</th>
@@ -50,7 +50,7 @@ class AnswerList extends Component {
                                 {this.state.answers.map(answer =>
                                     <tr key={answer.pk}>
                                         <td>{answer.pk}</td>
-                                        <td>{answer.question}</td>
+                                        <td><a href={'/admin/questions/' + answer.question}>{answer.question}</a></td>
                                         <td>{answer.answer}</td>
                                         <td>{answer.systemscore ? answer.systemscore.toFixed(2) : '-'}</td>
                                         <td>{answer.score1 ? answer.score1 : '-'}</td>

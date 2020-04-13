@@ -57,7 +57,6 @@ const BaseLayout = () => (
       <Route path='/student/posts' exact component={PostList} />
       <Route path='/student/posts/:pk' component={PostDetails} />
     </div>
-
   </div>
 )
 
