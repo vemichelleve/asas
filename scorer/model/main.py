@@ -13,12 +13,10 @@ def buildmodel(questions, answers):
     embedmodel = train_word2vec(
         '/home/mvanessa/pastprojects/glove.6B.300d.txt')
     question = '/home/mvanessa/pastprojects/finalcode/questions.csv'
-    # input_dataset = '/Users/michellevanessa/Desktop/automatic-text-scoring-master/Final Code and Data/Augmented_Feat.csv'
-    # embedmodel = train_word2vec('/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt')
-    # question = '/Users/michellevanessa/Desktop/automatic-text-scoring-master/Final Code and Data/questions.csv'
 
     data = preprocess(questions, answers)
     df = cleaning_dataset(data, input_dataset)
+    df = question_demoting(df, question, questions)
 
     X, y, scaler_y = scale(df)
 

@@ -476,8 +476,7 @@ class TrainModel(APIView):
             return None
 
     def put(self, request, format=None):
-        questions = self.get_question()  # TODO: change question pk!
-        # answers = self.get_answers(44)  # TODO: change question pk!
+        questions = self.get_question()
         answers = self.get_scored_answers()
 
         metrics, model, tokenizer, df_test, scaler = buildmodel(
@@ -498,7 +497,6 @@ class TrainModel(APIView):
                     serializer.save()
 
         result = score(df_test, model, tokenizer, scaler)
-        print(result)
 
         index = 0
         if len(result) == len(answers):

@@ -60,9 +60,10 @@ def cleaning_dataset(df, input_file):
     df_train = pd.read_csv(input_file, encoding='utf-8')
     df_train = df_train.filter(['Answer', 'ans_grade', 'Ref Answer', 'Length Answer',
                                 'Length Ref Answer', 'Len Ref By Ans', 'Words Answer',
-                                'Unique Words Answer'])
+                                'Unique Words Answer', 'Q_ID'])
 
-    df = df.drop(['id', 'score1', 'score2', 'question_id', 'systemscore'], axis=1) # TODO: Check!
+    df = df.drop(['id', 'score1', 'score2',
+                  'systemscore'], axis=1)  # TODO: Check!
 
     df = df.append(df_train)
 
@@ -131,24 +132,65 @@ def splittest(X, y, split):
     return X_train, X_test, y_train, y_test
 
 
-# def cleaning_dataset(input_file):
-#     df_train = pd.read_csv(input_file, encoding='unicode escape')
+def get_questions_csv(file):
+    df = pd.read_csv(file, encoding='utf-8')
+    df = split_questions(df)
+    return df
 
-#     # Pre-Processing...
-#     # convert all answers to string format...
-#     df_train['Ref Answer'] = df_train['Ref Answer'].astype(str)
-#     df_train['Answer'] = df_train['Answer'].astype(str)
 
-#     # convert all answers to lower case...
-#     df_train['Ref Answer'] = df_train['Ref Answer'].apply(
-#         lambda answer1: answer1.lower())
-#     df_train['Answer'] = df_train['Answer'].apply(
-#         lambda answer2: answer2.lower())
+def get_questions_db(dbase):
+    df = []
+    for x in dbase:
+        df.append({'Q_ID': x.get_pk(), 'Question': x.get_question()})
+    df = pd.DataFrame(df)
+    df = split_questions(df)
+    return df
 
-#     # Remove of Stop Words from answers...
-#     df_train['Ref Answer'] = df_train['Ref Answer'].apply(
-#         lambda x: " ".join(x for x in x.split() if x not in stop))
-#     df_train['Answer'] = df_train['Answer'].apply(
-#         lambda x: " ".join(x for x in x.split() if x not in stop))
 
-    # return df_train
+def split_questions(df):
+    df['Question'] = df['Question'].astype(str)
+    df['Question'] = df['Question'].apply(lambda question: question.lower())
+    df['Question'] = df['Question'].apply(
+        lambda x: ' '.join(x for x in x.split() if x not in stop))
+    df['Question'] = df['Question'].apply(lambda question: question.split())
+    return df
+
+
+def question_demoting(df, file, dbase):
+    print('===== Question Demoting =====')
+    questions_csv = get_questions_csv(file)
+    questions_db = get_questions_db(dbase)
+    for index, row in df.iterrows():
+        if not pd.isnull(row['Q_ID']):  # Questions from CSV
+            qn = questions_csv.loc[questions_csv['Q_ID'] == row['Q_ID']]
+        elif not pd.isnull(row['question_id']):  # Questions from database
+            qn = questions_db.loc[questions_db['Q_ID'] == row['question_id']]
+        ans = row['Answer']
+        ref = row['Ref Answer']
+        demoted_ans = row['Answer'].split(' ')
+        demoted_ref = row['Ref Answer'].split(' ')
+        qn = qn['Question'].values.tolist()[0]
+        for x in qn:
+            if x in demoted_ans:
+                demoted_ans.remove(x)
+                if len(demoted_ans) == 0:
+                    demoted_ans.append('null')
+            if x in demoted_ref:
+                demoted_ref.remove(x)
+        demoted_ans = ' '.join(demoted_ans)
+        demoted_ref = ' '.join(demoted_ref)
+        if len(row['Answer']) != len(demoted_ans):
+            df.at[index, 'Answer'] = demoted_ans
+            length = len(demoted_ans)
+            df.at[index, 'Length Answer'] = length
+            df.at[index, 'Len Ref By Ans'] = row['Length Ref Answer'] / length
+            words = len(demoted_ans.split())
+            df.at[index, 'Words Answer'] = words
+            unique = uniquecount(demoted_ans)
+            df.at[index, 'Unique Words Answer'] = unique
+        if len(row['Ref Answer']) != len(demoted_ref):
+            df.at[index, 'Ref Answer'] = demoted_ref
+            length = len(demoted_ref)
+            df.at[index, 'Length Ref Answer'] = length
+            df.at[index, 'Len Ref By Ans'] = length / row['Length Answer']
+    return df

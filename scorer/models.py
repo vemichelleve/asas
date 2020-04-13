@@ -44,6 +44,9 @@ class Question(models.Model):
     def get_pk(self):
         return self.pk
 
+    def get_question(self):
+        return self.question
+
     def __str__(self):
         return self.question
 
