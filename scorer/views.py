@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max
+from django.db import transaction
 
 from .models import *
 from .serializers import *
@@ -501,14 +502,15 @@ class TrainModel(APIView):
         index = 0
         if len(result) == len(answers):
             print('========== Uploading scores ==========')
-            for ans in answers:
-                print(str(round(index/len(result)*100, 1)) + '%')
-                data = {'systemscore': result[index]}
-                serializer = AnswerSerializer(ans, data=data, context={
-                                              'request': request}, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                index += 1
+            with transaction.atomic():
+                for ans in answers:
+                    print(str(round(index/len(result)*100, 1)) + '%')
+                    data = {'systemscore': result[index]}
+                    serializer = AnswerSerializer(ans, data=data, context={
+                        'request': request}, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                    index += 1
             print('========== Upload done ==========')
             return Response({'message': 'Model successfully trained'})
         else:

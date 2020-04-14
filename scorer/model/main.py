@@ -1,7 +1,6 @@
 import pandas as pd
 from .preprocess import *
 from .model import *
-from sklearn.model_selection import KFold
 
 
 def avg(rms, mae):
@@ -22,49 +21,26 @@ def buildmodel(questions, answers):
 
     X_train, X_test, y_train, y_test = splittest(X, y, 0.2)
 
-    split = 2  # TODO CHANGE
-    index = 0
-    train_model = [None] * split
-    tokenizer = [None] * split
-    rms = [None] * split
-    mae = [None] * split
-    kfold = KFold(n_splits=split, shuffle=True, random_state=101)
-
     print('==================== Training ====================')
-    for train, test in kfold.split(X_train, y_train):
-        print('========== Fold #', index+1, '==========')
-        train_model[index], tokenizer[index] = train_lstm(
-            X_train.iloc[train], y_train[train], embedmodel)
-        test_results = predict(
-            X_train.iloc[test], train_model[index], tokenizer[index])
-        test_results, y_true = processresult(
-            test_results, y_train[test], scaler_y)
-        _, rms[index], mae[index] = evaluate(test_results, y_true)
-        index += 1
+    train_model, tokenizer = train_lstm(
+        X_train, y_train, embedmodel)
     print('==================== Training done ====================')
 
-    index = 0
-    max = avg(rms[0], mae[0])
-    for i in range(1, split):
-        if avg(rms[i], mae[i]) < max:
-            index = i
-            max = avg(rms[i], mae[i])
-
     print('==================== Validation metrics ====================')
-    test_results = predict(X_test, train_model[index], tokenizer[index])
+    test_results = predict(X_test, train_model, tokenizer)
     test_results, y_true = processresult(test_results, y_test, scaler_y)
-    pearson, rmse, maerror = evaluate(test_results, y_true)
+    pearson, rmse, mae = evaluate(test_results, y_true)
 
     print("Pearson", round(pearson, 4))
     print("RMS", round(rmse, 4))
-    print("MAE", round(maerror, 4))
+    print("MAE", round(mae, 4))
 
     metric = []
     metric.append({'metric': 'Pearson', 'value': pearson})
     metric.append({'metric': 'RMSE', 'value': rmse})
     metric.append({'metric': 'MAE', 'value': mae})
 
-    return metric, train_model[index], tokenizer[index], data, scaler_y
+    return metric, train_model, tokenizer, data, scaler_y
 
 
 def score(df_test, model, tokenizer, scaler_y):
