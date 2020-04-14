@@ -650,8 +650,12 @@ class StudentApprovedView(APIView):
 
 class Manual(APIView):
     def get(self, request, format=None):
-        ans = Answer.objects.all()
+        ans = Answer.objects.get(pk=2879)
+        data = {'score1': 0, 'score2': 0}
         serializer = AnswerSerializer(
-            ans, context={'request': request}, many=True)
-        count = ans.filter(score1__isnull=False).count()
-        return Response({'msg': 'done', 'count': count, 'data': serializer.data})
+            ans, context={'request': request}, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'done'})
+        else:
+            return Response({'msg': 'failed'})
