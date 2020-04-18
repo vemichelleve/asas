@@ -136,18 +136,23 @@ class QuestionListView(APIView):
 
 # Add question manually
 class AddManualQuestionView(APIView):
+    def get_post(self, name):
+        try:
+            return Post.objects.get(name=name)
+        except:
+            return None
+
     def post(self, request, format=None):
         user = User.objects.get(username='admin')  # TODO: Logged in user!
         admin = Admin.objects.get(user=user)
-        # Add question to 'Manually added' post
-        if not Post.objects.filter(name='Manually added').exists():
-            post = Post(admin=admin, name='Manually added').save()
-        else:
-            post = Post.objects.get(name='Manually added')
-        # Check if question already exists
+        post = self.get_post(request.data['post'])
+        if post is None:
+            post = Post(admin=admin, name=request.data['post'])
+            post.save()
         if not Question.objects.filter(question=request.data['question']).exists():
             question = Question(
-                post=post, question=request.data['question'], refans=request.data['refans']).save()
+                post=post, question=request.data['question'], refans=request.data['refans'])
+            question.save()
             return Response({'message': 'Question added', 'status': 1})
         else:
             return Response({'message': 'Question already exists', 'status': 0})
@@ -651,13 +656,14 @@ class StudentApprovedView(APIView):
 
 
 class Manual(APIView):
+    def get_posts(self):
+        try:
+            return Post.objects.all()
+        except:
+            return None
+
     def get(self, request, format=None):
-        ans = Answer.objects.get(pk=2879)
-        data = {'score1': 0, 'score2': 0}
-        serializer = AnswerSerializer(
-            ans, context={'request': request}, data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'done'})
-        else:
-            return Response({'msg': 'failed'})
+        posts = self.get_posts()
+        serializer = PostSerializer(
+            posts, context={'request': request}, many=True)
+        return Response({'msg': 'done', 'data': serializer.data})
