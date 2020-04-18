@@ -25,4 +25,12 @@ export default class AnswerService {
     getAllAnswers() {
         return axios.get(`${API_URL}/allanswers/`).then(response => response.data);
     }
+
+    getAnswersByURL(url) {
+        return axios.get(`${url}`).then(response => response.data);
+    }
+
+    getAnswersPage(page) {
+        return axios.get(`${API_URL}/allanswers/?page=${page}`).then(response => response.data);
+    }
 }

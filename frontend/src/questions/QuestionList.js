@@ -9,7 +9,7 @@ class QuestionList extends Component {
         this.state = {
             questions: [],
             status: 0,
-            pages: 0,
+            total: 0,
             page: 0,
             next: '',
             previous: '',
@@ -22,11 +22,11 @@ class QuestionList extends Component {
     componentDidMount() {
         var self = this;
         questionService.getQuestions().then(function (result) {
-            var pages = Math.ceil(result.data.total / result.data.page_size)
+            var total = Math.ceil(result.data.total / result.data.page_size)
             self.setState({
                 questions: result.data.results,
                 status: result.status,
-                pages: pages,
+                total: total,
                 page: result.data.page,
                 next: result.data.links.next,
                 previous: result.data.links.previous,
@@ -45,11 +45,11 @@ class QuestionList extends Component {
     getByURL(url) {
         var self = this;
         questionService.getQuestionsURL(url).then(function (result) {
-            var pages = Math.ceil(result.data.total / result.data.page_size)
+            var total = Math.ceil(result.data.total / result.data.page_size)
             self.setState({
                 questions: result.data.results,
                 status: result.status,
-                pages: pages,
+                total: total,
                 page: result.data.page,
                 next: result.data.links.next,
                 previous: result.data.links.previous,
@@ -60,11 +60,11 @@ class QuestionList extends Component {
     goToPage(page) {
         var self = this;
         questionService.getQuestionsPage(page).then(function (result) {
-            var pages = Math.ceil(result.data.total / result.data.page_size)
+            var total = Math.ceil(result.data.total / result.data.page_size)
             self.setState({
                 questions: result.data.results,
                 status: result.status,
-                pages: pages,
+                total: total,
                 page: result.data.page,
                 next: result.data.links.next,
                 previous: result.data.links.previous,
@@ -77,21 +77,21 @@ class QuestionList extends Component {
         var min = this.state.page - 5;
         var max = this.state.page + 5;
         var diff;
-        if (this.state.pages > 11) {
+        if (this.state.total > 11) {
             if (min < 1) {
                 diff = min
                 min = min - diff + 1
                 max = max - diff + 1
             }
-            if (max > this.state.pages) {
-                diff = max - this.state.pages
+            if (max > this.state.total) {
+                diff = max - this.state.total
                 min = min - diff + 1
                 max = max - diff + 1
             }
         }
         else {
             min = 1
-            max = this.state.pages + 1
+            max = this.state.total + 1
         }
         result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(1)}>&laquo;</div></li>)
         result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='prev'><div className='page-link' tabIndex='-1' onClick={this.previousPage}>Previous</div></li>)
@@ -101,8 +101,8 @@ class QuestionList extends Component {
             else
                 result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
         }
-        result.push(<li className={'page-item' + (this.state.page === this.state.pages ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
-        result.push(<li className={'page-item' + (this.state.page === this.state.pages ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.pages)}>&raquo;</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.total)}>&raquo;</div></li>)
         return result;
     }
 

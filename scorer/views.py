@@ -615,21 +615,30 @@ class AddAnyAnswers(APIView):
             return Response({'message': msg, 'status': 1})
 
 
-class AnswerListView(APIView):
-    def get_answers(self):
-        try:
-            return Answer.objects.all()
-        except:
-            return None
+class AnswerListView(GenericAPIView):
+    serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
-        answers = self.get_answers()
-        if answers is not None:
-            serializer = AnswerSerializer(
-                answers, context={'request': request}, many=True)
-            return Response({'message': 'All answers retrieved', 'status': 1, 'data': serializer.data})
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+            data = result.data
         else:
-            return Response({'message': 'No answers found', 'status': 0})
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+        payload = {
+            'return_code': '0000',
+            'return_message': 'Success',
+            'data': data
+        }
+
+        return Response({'status': 1, 'data': data, 'message': 'Answers retrieved'})
 
 
 class StudentApprovedView(APIView):
