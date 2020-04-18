@@ -6,6 +6,14 @@ export default class QuestionService {
         return axios.get(`${API_URL}/questions/`).then(response => response.data);
     }
 
+    getQuestionsPage(page) {
+        return axios.get(`${API_URL}/questions/?page=${page}`).then(response => response.data);
+    }
+
+    getQuestionsURL(url) {
+        return axios.get(`${url}`).then(response => response.data);
+    }
+
     addQuestion(data) {
         return axios.post(`${API_URL}/addquestion/manual/`, data).then(response => response.data)
     }

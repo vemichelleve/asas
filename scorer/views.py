@@ -3,17 +3,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.generics import GenericAPIView
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max
 from django.db import transaction
 
 from .models import *
 from .serializers import *
 from .model.main import *
+from asas.pagination import CustomPagination
 
 import csv
 import re
@@ -116,22 +117,30 @@ class StudentDetailsView(APIView):
 
 
 # Question list in admin and student page
-class QuestionListView(APIView):
-    def get_object(self):
-        try:
-            return Question.objects.all()
-        except:
-            return None
+class QuestionListView(GenericAPIView):
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
-        # Retrieve all questions
-        questions = self.get_object()
-        if questions is not None:
-            serializer = QuestionSerializer(
-                questions, context={'request': request}, many=True)
-            return Response({'message': 'Questions retrieved', 'status': 1, 'data': serializer.data})
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+            data = result.data
         else:
-            return Response({'message': 'No questions available', 'status': 0})
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+        payload = {
+            'return_code': '0000',
+            'return_message': 'Success',
+            'data': data
+        }
+
+        return Response({'status': 1, 'data': data, 'message': 'Questions retrieved'})
 
 
 # Add question manually
@@ -655,15 +664,27 @@ class StudentApprovedView(APIView):
         return Response({'message': 'Approved list retrieved', 'data': serializer.data})
 
 
-class Manual(APIView):
-    def get_posts(self):
-        try:
-            return Post.objects.all()
-        except:
-            return None
+class Manual(GenericAPIView):
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
-        posts = self.get_posts()
-        serializer = PostSerializer(
-            posts, context={'request': request}, many=True)
-        return Response({'msg': 'done', 'data': serializer.data})
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+            data = result.data
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+        payload = {
+            'return_code': '0000',
+            'return_message': 'Success',
+            'data': data
+        }
+
+        return Response(data)

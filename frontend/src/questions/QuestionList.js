@@ -9,17 +9,101 @@ class QuestionList extends Component {
         this.state = {
             questions: [],
             status: 0,
+            pages: 0,
+            page: 0,
+            next: '',
+            previous: '',
         }
+        this.nextPage = this.nextPage.bind(this)
+        this.previousPage = this.previousPage.bind(this)
+        this.goToPage = this.goToPage.bind(this)
     }
 
     componentDidMount() {
         var self = this;
         questionService.getQuestions().then(function (result) {
+            var pages = Math.ceil(result.data.total / result.data.page_size)
             self.setState({
-                questions: result.data,
-                status: result.status
+                questions: result.data.results,
+                status: result.status,
+                pages: pages,
+                page: result.data.page,
+                next: result.data.links.next,
+                previous: result.data.links.previous,
             })
         });
+    }
+
+    nextPage() {
+        this.getByURL(this.state.next)
+    }
+
+    previousPage() {
+        this.getByURL(this.state.previous)
+    }
+
+    getByURL(url) {
+        var self = this;
+        questionService.getQuestionsURL(url).then(function (result) {
+            var pages = Math.ceil(result.data.total / result.data.page_size)
+            self.setState({
+                questions: result.data.results,
+                status: result.status,
+                pages: pages,
+                page: result.data.page,
+                next: result.data.links.next,
+                previous: result.data.links.previous,
+            })
+        });
+    }
+
+    goToPage(page) {
+        var self = this;
+        questionService.getQuestionsPage(page).then(function (result) {
+            var pages = Math.ceil(result.data.total / result.data.page_size)
+            self.setState({
+                questions: result.data.results,
+                status: result.status,
+                pages: pages,
+                page: result.data.page,
+                next: result.data.links.next,
+                previous: result.data.links.previous,
+            })
+        });
+    }
+
+    createPaginator() {
+        var result = [];
+        var min = this.state.page - 5;
+        var max = this.state.page + 5;
+        var diff;
+        if (this.state.pages > 11) {
+            if (min < 1) {
+                diff = min
+                min = min - diff + 1
+                max = max - diff + 1
+            }
+            if (max > this.state.pages) {
+                diff = max - this.state.pages
+                min = min - diff + 1
+                max = max - diff + 1
+            }
+        }
+        else {
+            min = 1
+            max = this.state.pages + 1
+        }
+        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(1)}>&laquo;</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='prev'><div className='page-link' tabIndex='-1' onClick={this.previousPage}>Previous</div></li>)
+        for (var x = min; x < max; x++) {
+            if (x !== this.state.page)
+                result.push(<li className='page-item' key={x}><div className='page-link' id={x} onClick={(e) => this.goToPage(e.target.id)}>{x}</div></li>)
+            else
+                result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
+        }
+        result.push(<li className={'page-item' + (this.state.page === this.state.pages ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === this.state.pages ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.pages)}>&raquo;</div></li>)
+        return result;
     }
 
     render() {
@@ -55,6 +139,13 @@ class QuestionList extends Component {
                                 )}
                             </tbody>
                         </table>
+                        <div className='Paginator'>
+                            <nav>
+                                <ul className='pagination'>
+                                    {this.createPaginator()}
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 );
             default:
