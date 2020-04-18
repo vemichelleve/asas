@@ -52,7 +52,7 @@ class StudentQuestionList extends Component {
                                     <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
                                     answer[question.pk]
                                 }</td>
-                                <td>{score[question.pk] == null ? 'N.A.' : score[question.pk].toFixed(2)}</td>
+                                <td>{score[question.pk] == null ? '-' : score[question.pk].toFixed(2)}</td>
                             </tr>)}
                     </tbody>
                 </table>

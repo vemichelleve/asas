@@ -52,9 +52,9 @@ class AnswerList extends Component {
                                         <td>{answer.pk}</td>
                                         <td><a href={'/admin/questions/' + answer.question}>{answer.question}</a></td>
                                         <td>{answer.answer}</td>
-                                        <td>{answer.systemscore ? answer.systemscore.toFixed(2) : '-'}</td>
-                                        <td>{answer.score1 ? answer.score1 : '-'}</td>
-                                        <td>{answer.score2 ? answer.score2 : '-'}</td>
+                                        <td>{answer.systemscore == null ? '-' : answer.systemscore.toFixed(2)}</td>
+                                        <td>{answer.score1 == null ? '-' : answer.score1}</td>
+                                        <td>{answer.score2 == null ? '-' : answer.score2}</td>
                                     </tr>
                                 )}
                             </tbody>

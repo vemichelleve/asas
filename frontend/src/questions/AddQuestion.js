@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
+import PostService from '../posts/PostService'
 import csv from './sample.csv'
 
 const questionService = new QuestionService();
+const postService = new PostService();
 
 class AddQuestion extends Component {
     constructor(props) {
@@ -13,6 +15,7 @@ class AddQuestion extends Component {
             file: null,
             uploaded: false,
             post: '',
+            posts: [],
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleUpload = this.handleUpload.bind(this)
@@ -22,6 +25,7 @@ class AddQuestion extends Component {
         questionService.addQuestion({
             'question': this.state.question,
             'refans': this.state.refans,
+            'post': this.state.post,
         }).then((response) => {
             if (!response.status) {
                 alert(response.message)
@@ -37,7 +41,7 @@ class AddQuestion extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.handleAdd();
-        window.location = '/admin/';
+        // window.location = '/admin/';
     }
 
     handleUpload(event) {
@@ -50,15 +54,30 @@ class AddQuestion extends Component {
         event.preventDefault()
     }
 
+    componentDidMount() {
+        var self = this;
+        postService.getPosts().then((response) => {
+            self.setState({ posts: response.data })
+        });
+    }
+
     render() {
+        var postList = [];
+        this.state.posts.forEach(p => {
+            postList.push(p.name)
+        })
         return (
             <div className='row Table-Below'>
                 <div className='col-sm-6'>
                     <div className='card'>
                         <div className='card-body'>
                             <h5 className='card-title'>Manual</h5>
-                            <p className='card-text'>Add question to the database manually.</p>
+                            <p className='card-text'>Add question to the database manually. If post already exists, the questions will be added to the existing post.</p>
                             <form onSubmit={this.handleSubmit}>
+                                <div className='form-group'>
+                                    <label><b>Post</b></label>
+                                    <input className='form-control' type='text' onChange={(e) => this.setState({ post: e.target.value })} />
+                                </div>
                                 <div className='form-group'>
                                     <label><b>Question</b></label>
                                     <input type='text' className='form-control' onChange={(e) => this.setState({ question: e.target.value })} />
@@ -76,7 +95,7 @@ class AddQuestion extends Component {
                     <form className='card' onSubmit={this.handleUpload}>
                         <div className='card-body'>
                             <h5 className='card-title'>Automated</h5>
-                            <p className='card-text'>Add questions from CSV file containing question and reference answer columns.</p>
+                            <p className='card-text'>Add questions from CSV file containing question and reference answer columns. If post already exists, the questions will be added to the existing post.</p>
                             <p className='card-text'>Click <a href={csv} target='__blank'>here</a> for sample file.</p>
                             <div className='form-group'>
                                 <label><b>Post name</b></label>
