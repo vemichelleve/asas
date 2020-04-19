@@ -188,24 +188,34 @@ class QuestionDetailsView(APIView):
 
 
 # Post list in admin page
-class PostListView(APIView):
-    def get_posts(self):
-        try:
-            return Post.objects.all()
-        except:
-            return None
+class PostListView(GenericAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
-        # Retrieve all posts
-        posts = self.get_posts()
-        # Check if posts exist
-        if posts is not None:
-            serializer = PostSerializer(
-                posts, context={'request': request}, many=True)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+            data = result.data
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+        payload = {
+            'return_code': '0000',
+            'return_message': 'Success',
+            'data': data
+        }
+        
+        if queryset is not None:
             users = User.objects.all()
             userSerializer = UserSerializer(
                 users, context={'request': request}, many=True)
-            return Response({'message': 'Posts retrieved', 'status': 1, 'data': serializer.data, 'users': userSerializer.data})
+            return Response({'message': 'Posts retrieved', 'status': 1, 'data': data, 'users': userSerializer.data})
         else:
             return Response({'message': 'No posts found', 'status': 0})
 

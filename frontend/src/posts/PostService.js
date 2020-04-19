@@ -9,4 +9,12 @@ export default class PostService {
     getPost(pk) {
         return axios.get(`${API_URL}/posts/${pk}`).then(response => response.data);
     }
+
+    getPostsURL(url) {
+        return axios.get(url).then(response => response.data);
+    }
+
+    getPostsPage(page) {
+        return axios.get(`${API_URL}/posts/?page=${page}`).then(response => response.data);
+    }
 }
