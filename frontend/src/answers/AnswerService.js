@@ -33,4 +33,8 @@ export default class AnswerService {
     getAnswersPage(page) {
         return axios.get(`${API_URL}/allanswers/?page=${page}`).then(response => response.data);
     }
+
+    getAnswerPage(pk, page) {
+        return axios.get(`${API_URL}/answers/${pk}?page=${page}`).then(response => response.data);
+    }
 }

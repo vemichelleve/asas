@@ -256,7 +256,11 @@ class PostDetailsView(APIView):
 
 
 # Answer action in student page
-class AnswerView(APIView):
+class AnswerView(GenericAPIView):
+    serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
+    pagination_class = CustomPagination
+
     def post(self, request, pk, format=None):
         answer = request.data['answer']
         # TODO: Logged in user!
@@ -286,25 +290,34 @@ class AnswerView(APIView):
         except:
             return None
 
-    def get_answers(self, question):
-        try:
-            return Answer.objects.filter(question=question)
-        except:
-            return None
-
     def get(self, request, pk, format=None):
         question = self.get_question(pk)
         if question is not None:
-            answers = self.get_answers(question)
-            if answers is not None:
-                answerSerializer = AnswerSerializer(
-                    answers, context={'request': request}, many=True)
+            queryset = self.filter_queryset(self.get_queryset())
+            queryset = queryset.filter(question=question)
+            page = self.paginate_queryset(queryset)
+
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                result = self.get_paginated_response(serializer.data)
+                data = result.data
+            else:
+                serializer = self.get_serializer(queryset, many=True)
+                data = serializer.data
+                
+            payload = {
+                'return_code': '0000',
+                'return_message': 'Success',
+                'data': data
+            }
+
+            if queryset is not None:
                 studnetans = StudentAnswer.objects.none()
-                for x in answers:
+                for x in queryset:
                     studnetans |= StudentAnswer.objects.filter(answer=x)
                 studentansSerializer = StudentAnswerSerializer(
                     studnetans, context={'request': request}, many=True)
-                return Response({'message': 'Answers retrieved', 'status': 1, 'answers': answerSerializer.data, 'students': studentansSerializer.data, 'max': answers.aggregate(Max('pk'))})
+                return Response({'message': 'Answers retrieved', 'status': 1, 'data': data, 'students': studentansSerializer.data, 'max': queryset.aggregate(Max('pk'))})
             else:
                 return Response({'message': 'No answer for this question', 'status': 0})
         else:
