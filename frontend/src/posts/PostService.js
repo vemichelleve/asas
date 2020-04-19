@@ -17,4 +17,8 @@ export default class PostService {
     getPostsPage(page) {
         return axios.get(`${API_URL}/posts/?page=${page}`).then(response => response.data);
     }
+
+    getPostPage(pk, page) {
+        return axios.get(`${API_URL}/posts/${pk}?page=${page}`).then(response =>response.data);
+    }
 }

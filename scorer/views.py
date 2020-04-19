@@ -210,8 +210,8 @@ class PostListView(GenericAPIView):
             'return_message': 'Success',
             'data': data
         }
-        
-        if queryset is not None:
+
+        if len(queryset) > 0:
             users = User.objects.all()
             userSerializer = UserSerializer(
                 users, context={'request': request}, many=True)
@@ -221,12 +221,10 @@ class PostListView(GenericAPIView):
 
 
 # Post details in admin page
-class PostDetailsView(APIView):
-    def get_question(self, post):
-        try:
-            return Question.objects.filter(post=post)
-        except:
-            return None
+class PostDetailsView(GenericAPIView):
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+    pagination_class = CustomPagination
 
     def get_post(self, pk):
         try:
@@ -241,24 +239,34 @@ class PostDetailsView(APIView):
             return None
 
     def get(self, request, pk, format=None):
-        # Retrieve post
         post = self.get_post(pk)
-        # Check if post exists
         if post is not None:
-            # Retrieve admin who created the post
+            postSerializer = PostSerializer(post, context={'request': request})
             admin = self.get_admin(post)
-            # If admin is found
             if admin is not None:
                 adminSerializer = UserSerializer(
                     admin, context={'request': request})
-            # Retrieve questions belong to the post
-            questions = self.get_question(post)
-            postSerializer = PostSerializer(post, context={'request': request})
-            # Check if post contains questions
-            if questions is not None:
-                questionSerializer = QuestionSerializer(
-                    questions, context={'request': request}, many=True)
-                return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data, 'admin': adminSerializer.data, 'questions': questionSerializer.data})
+
+            queryset = self.filter_queryset(self.get_queryset())
+            queryset = queryset.filter(post=post)
+            page = self.paginate_queryset(queryset)
+
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                result = self.get_paginated_response(serializer.data)
+                data = result.data
+            else:
+                serializer = self.get_serializer(queryset, many=True)
+                data = serializer.data
+
+            payload = {
+                'return_code': '0000',
+                'return_message': 'Success',
+                'data': data
+            }
+
+            if len(queryset) > 0:
+                return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data, 'admin': adminSerializer.data, 'data': data})
             else:
                 return Response({'message': 'Post retrieved, no questions', 'status': 1, 'post': postSerializer.data, 'admin': adminSerializer.data})
         else:
@@ -314,7 +322,7 @@ class AnswerView(GenericAPIView):
             else:
                 serializer = self.get_serializer(queryset, many=True)
                 data = serializer.data
-                
+
             payload = {
                 'return_code': '0000',
                 'return_message': 'Success',

@@ -27,7 +27,7 @@ export default class AnswerService {
     }
 
     getAnswersByURL(url) {
-        return axios.get(`${url}`).then(response => response.data);
+        return axios.get(url).then(response => response.data);
     }
 
     getAnswersPage(page) {

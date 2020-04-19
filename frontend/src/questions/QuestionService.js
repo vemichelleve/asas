@@ -11,7 +11,7 @@ export default class QuestionService {
     }
 
     getQuestionsURL(url) {
-        return axios.get(`${url}`).then(response => response.data);
+        return axios.get(url).then(response => response.data);
     }
 
     addQuestion(data) {

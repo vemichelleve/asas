@@ -14,7 +14,14 @@ class PostDetails extends Component {
             questions: [],
             status: 0,
             ans: [],
+            total: 0,
+            page: 0,
+            next: '',
+            previous: '',
         }
+        this.nextPage = this.nextPage.bind(this)
+        this.previousPage = this.previousPage.bind(this)
+        this.goToPage = this.goToPage.bind(this)
     }
 
     componentDidMount() {
@@ -25,15 +32,99 @@ class PostDetails extends Component {
         });
         if (params && params.pk) {
             postService.getPost(params.pk).then(function (result) {
+                var total = Math.ceil(result.data.total / result.data.page_size)
                 self.setState({
                     post_name: result.post.name,
                     poster_first: result.admin.first_name,
                     poster_last: result.admin.last_name,
-                    questions: result.questions,
+                    questions: result.data.results,
                     status: result.status,
+                    total: total,
+                    page: result.data.page,
+                    next: result.data.links.next,
+                    previous: result.data.links.previous,
                 })
             });
         }
+    }
+
+    nextPage() {
+        this.getByURL(this.state.next)
+    }
+
+    previousPage() {
+        this.getByURL(this.state.previous)
+    }
+
+    getByURL(url) {
+        var self = this;
+        postService.getPostsURL(url).then(function (result) {
+            var total = Math.ceil(result.data.total / result.data.page_size)
+            self.setState({
+                post_name: result.post.name,
+                poster_first: result.admin.first_name,
+                poster_last: result.admin.last_name,
+                questions: result.data.results,
+                status: result.status,
+                total: total,
+                page: result.data.page,
+                next: result.data.links.next,
+                previous: result.data.links.previous,
+            })
+        });
+    }
+
+    goToPage(page) {
+        var self = this;
+        const { match: { params } } = this.props;
+        postService.getPostPage(params.pk, page).then(function (result) {
+            var total = Math.ceil(result.data.total / result.data.page_size)
+            self.setState({
+                post_name: result.post.name,
+                poster_first: result.admin.first_name,
+                poster_last: result.admin.last_name,
+                questions: result.data.results,
+                status: result.status,
+                total: total,
+                page: result.data.page,
+                next: result.data.links.next,
+                previous: result.data.links.previous,
+            })
+        });
+    }
+
+    createPaginator() {
+        var result = [];
+        var min = this.state.page - 5;
+        var max = this.state.page + 5;
+        var diff;
+        if (this.state.total > 11) {
+            if (min < 1) {
+                diff = min
+                min = min - diff + 1
+                max = max - diff + 1
+            }
+            if (max > this.state.total) {
+                diff = max - this.state.total
+                min = min - diff + 1
+                max = max - diff + 1
+            }
+        }
+        else {
+            min = 1
+            max = this.state.total + 1
+        }
+        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(1)}>&laquo;</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='prev'><div className='page-link' tabIndex='-1' onClick={this.previousPage}>Previous</div></li>)
+        for (var x = min; x < max; x++) {
+            if (x !== this.state.page)
+                result.push(<li className='page-item' key={x}><div className='page-link' id={x} onClick={(e) => this.goToPage(e.target.id)}>{x}</div></li>)
+            else
+                result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
+        }
+        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
+        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.total)}>&raquo;</div></li>)
+        return result;
     }
 
     render() {
@@ -97,6 +188,13 @@ class PostDetails extends Component {
                                 )}
                             </tbody>
                         </table>
+                        <div className='Paginator'>
+                            <nav>
+                                <ul className='pagination'>
+                                    {this.createPaginator()}
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 )
             default:
