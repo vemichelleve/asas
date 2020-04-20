@@ -42,7 +42,7 @@ class QuestionDetails extends Component {
         var self = this;
         const { match: { params } } = this.props;
         if (params && params.pk) {
-            questionService.getQuestion(params.pk).then(function (result) {
+            questionService.getQuestion(params.pk).then(result => {
                 self.setState({
                     question: result.data.question,
                     refans: result.data.refans,
@@ -52,7 +52,7 @@ class QuestionDetails extends Component {
                 alert('Please log in!')
                 window.location = '/'
             });
-            answerService.getAnswer(params.pk).then(function (result) {
+            answerService.getAnswer(params.pk).then(result => {
                 self.setStates(result)
                 var x = new Array(self.state.maxpk + 1);
                 self.setState({
@@ -124,7 +124,7 @@ class QuestionDetails extends Component {
 
     getByURL(url) {
         var self = this;
-        answerService.getAnswersByURL(url).then(function (result) {
+        answerService.getAnswersByURL(url).then(result => {
             self.setStates(result)
         });
     }
@@ -132,7 +132,7 @@ class QuestionDetails extends Component {
     goToPage(page) {
         var self = this;
         const { match: { params } } = this.props;
-        answerService.getAnswerPage(params.pk, page).then(function (result) {
+        answerService.getAnswerPage(params.pk, page).then(result => {
             self.setStates(result)
         });
     }
@@ -172,7 +172,7 @@ class QuestionDetails extends Component {
                             </div>
                             <div className='Button-Group'>
                                 <div className='Two-Buttons'>
-                                    <button className='btn btn-secondary Button-Left' onClick={(e) => window.history.back()}>Back</button>
+                                    <button className='btn btn-secondary Button-Left' onClick={() => window.history.back()}>Back</button>
                                     <button className='btn btn-primary Button-Width' onClick={this.handleEdit}>
                                         {this.state.edit ? 'Save' : 'Score'}
                                     </button>

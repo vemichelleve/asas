@@ -23,7 +23,7 @@ class StudentDetails extends Component {
         var self = this;
         const { match: { params } } = this.props
         if (params && params.pk) {
-            studentService.getStudent(params.pk).then(function (result) {
+            studentService.getStudent(params.pk).then(result => {
                 self.setState({
                     first_name: result.data.first_name,
                     last_name: result.data.last_name,
@@ -32,7 +32,7 @@ class StudentDetails extends Component {
                     id: result.data.pk,
                 })
             })
-            questionService.getQuestionbyUser(params.pk).then(function (result) {
+            questionService.getQuestionbyUser(params.pk).then(result => {
                 self.setState({
                     questions: result.data.questions,
                     questionlist: result.questionlist,

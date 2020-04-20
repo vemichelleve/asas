@@ -26,10 +26,10 @@ class StudentQuestionList extends Component {
 
     componentDidMount() {
         var self = this;
-        questionService.getQuestions().then(function (result) {
+        questionService.getQuestions().then(result => {
             self.setStates(result)
         });
-        answerService.getAnswers().then(function (result) {
+        answerService.getAnswers().then(result => {
             self.setState({
                 ans: result.data
             })
@@ -46,14 +46,14 @@ class StudentQuestionList extends Component {
 
     getByURL(url) {
         var self = this;
-        questionService.getQuestionsURL(url).then(function (result) {
+        questionService.getQuestionsURL(url).then(result => {
             self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
-        questionService.getQuestionsPage(page).then(function (result) {
+        questionService.getQuestionsPage(page).then(result => {
             self.setStates(result)
         });
     }

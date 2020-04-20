@@ -18,7 +18,7 @@ class Model extends Component {
     }
 
     retrieveData() {
-        modelService.getMetrics().then((result) => {
+        modelService.getMetrics().then(result => {
             this.setState({ metrics: result.data })
         }).catch((result) => {
             alert(result);
@@ -28,7 +28,7 @@ class Model extends Component {
     trainModel() {
         this.setState({ hide: false })
         var self = this;
-        modelService.trainModel().then((result) => {
+        modelService.trainModel().then(result => {
             alert(result.message)
             self.setState({ hide: true });
             this.retrieveData();

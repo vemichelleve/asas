@@ -30,14 +30,14 @@ class PostDetails extends Component {
         var self = this;
         const { match: { params } } = this.props;
         if (window.location === '/student/answer/') {
-            answerService.getAnswers().then((result) => {
+            answerService.getAnswers().then(result => {
                 self.setState({
                     ans: result.data
                 })
             });
         }
         if (params && params.pk) {
-            postService.getPost(params.pk).then(function (result) {
+            postService.getPost(params.pk).then(result => {
                 if (result.status === 2) self.setStates(result)
                 else if (result.status === 1) {
                     self.setState({
@@ -77,7 +77,7 @@ class PostDetails extends Component {
 
     getByURL(url) {
         var self = this;
-        postService.getPostsURL(url).then(function (result) {
+        postService.getPostsURL(url).then(result => {
             self.setStates(result)
         });
     }
@@ -85,7 +85,7 @@ class PostDetails extends Component {
     goToPage(page) {
         var self = this;
         const { match: { params } } = this.props;
-        postService.getPostPage(params.pk, page).then(function (result) {
+        postService.getPostPage(params.pk, page).then(result => {
             self.setStates(result)
         });
     }

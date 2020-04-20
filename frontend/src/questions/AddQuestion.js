@@ -50,8 +50,8 @@ class AddQuestion extends Component {
         const data = new FormData()
         data.append('file', this.state.file)
         data.append('post', this.state.post)
-        questionService.addQuestions(data).then((response) => {
-            alert(response.message)
+        questionService.addQuestions(data).then(result => {
+            alert(result.message)
         })
         event.preventDefault()
     }
@@ -59,8 +59,10 @@ class AddQuestion extends Component {
     componentDidMount() {
         c.checkLoggedIn()
         var self = this;
-        postService.getPosts().then((response) => {
-            self.setState({ posts: response.data.results })
+        postService.getPosts().then(result => {
+            self.setState({
+                posts: result.data.results
+            })
         });
     }
 

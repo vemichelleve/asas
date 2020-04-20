@@ -17,7 +17,7 @@ class AccountEdit extends Component {
 
     componentDidMount() {
         var self = this;
-        accountService.getAccount().then(function (result) {
+        accountService.getAccount().then(result => {
             self.setState({
                 first_name: result.first_name,
                 last_name: result.last_name,

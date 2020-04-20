@@ -22,7 +22,7 @@ class StudentAnswer extends Component {
         const { match: { params } } = this.props;
         if (params && params.pk) {
             this.setState({ pk: params.pk });
-            questionService.getQuestion(params.pk).then(function (result) {
+            questionService.getQuestion(params.pk).then(result => {
                 self.setState({
                     question: result.data.question,
                     qstatus: result.status,

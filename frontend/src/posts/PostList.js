@@ -24,7 +24,7 @@ class PostList extends Component {
 
     componentDidMount() {
         var self = this;
-        postService.getPosts().then(function (result) {
+        postService.getPosts().then(result => {
             self.setStates(result)
         })
     }
@@ -39,14 +39,14 @@ class PostList extends Component {
 
     getByURL(url) {
         var self = this;
-        postService.getPostsURL(url).then(function (result) {
+        postService.getPostsURL(url).then(result => {
             self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
-        postService.getPostsPage(page).then(function (result) {
+        postService.getPostsPage(page).then(result => {
             self.setStates(result)
         });
     }
@@ -97,10 +97,10 @@ class PostList extends Component {
                                         <td>{user[post.admin]}</td>
                                         <td>
                                             {window.location.pathname === '/admin/posts/' &&
-                                                <button className='btn btn-primary' onClick={(e) => window.location = '/admin/posts/' + post.pk}>Details</button>
+                                                <button className='btn btn-primary' onClick={() => window.location = '/admin/posts/' + post.pk}>Details</button>
                                             }
                                             {window.location.pathname === '/student/posts/' &&
-                                                <button className='btn btn-primary' onClick={(e) => window.location = '/student/posts/' + post.pk}>Details</button>
+                                                <button className='btn btn-primary' onClick={() => window.location = '/student/posts/' + post.pk}>Details</button>
                                             }
                                         </td>
                                     </tr>

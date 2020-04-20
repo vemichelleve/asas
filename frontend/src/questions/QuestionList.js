@@ -23,7 +23,7 @@ class QuestionList extends Component {
 
     componentDidMount() {
         var self = this;
-        questionService.getQuestions().then(function (result) {
+        questionService.getQuestions().then(result => {
             self.setStates(result)
         });
     }
@@ -38,14 +38,14 @@ class QuestionList extends Component {
 
     getByURL(url) {
         var self = this;
-        questionService.getQuestionsURL(url).then(function (result) {
+        questionService.getQuestionsURL(url).then(result => {
             self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
-        questionService.getQuestionsPage(page).then(function (result) {
+        questionService.getQuestionsPage(page).then(result => {
             self.setStates(result)
         });
     }
@@ -90,7 +90,7 @@ class QuestionList extends Component {
                                         <td>{question.question}</td>
                                         <td>{question.refans}</td>
                                         <td>
-                                            <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
+                                            <button className='btn btn-primary' onClick={() => window.location = '/admin/questions/' + question.pk}>Details</button>
                                         </td>
                                     </tr>
                                 )}

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookie from '../Cookie'
+
 const API_URL = 'http://127.0.0.1:8000'
 const c = new Cookie()
 

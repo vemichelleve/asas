@@ -40,14 +40,14 @@ class AnswerList extends Component {
 
     getByURL(url) {
         var self = this;
-        answerService.getAnswersByURL(url).then(function (result) {
+        answerService.getAnswersByURL(url).then(result => {
             self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
-        answerService.getAnswersPage(page).then(function (result) {
+        answerService.getAnswersPage(page).then(result => {
             self.setStates(result)
         });
     }

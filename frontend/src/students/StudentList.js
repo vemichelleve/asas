@@ -24,7 +24,7 @@ class StudentList extends Component {
 
     componentDidMount() {
         var self = this;
-        studentService.getStudents().then(function (result) {
+        studentService.getStudents().then(result => {
             self.setStates(result)
         })
         studentService.getApproved().then((result) => {
@@ -51,14 +51,14 @@ class StudentList extends Component {
 
     getByURL(url) {
         var self = this;
-        studentService.getStudentsURL(url).then(function (result) {
+        studentService.getStudentsURL(url).then(result => {
             self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
-        studentService.getStudentsPage(page).then(function (result) {
+        studentService.getStudentsPage(page).then(result => {
             self.setStates(result)
         });
     }
