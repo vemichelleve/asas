@@ -1,11 +1,14 @@
 import re
 
+
 from asas.pagination import CustomPagination
 from django.contrib.auth import login, authenticate
 from django.db import transaction
 from django.db.models import Max
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -51,33 +54,18 @@ class UserLoginView(APIView):
     def post(self, request, format=None):
         data = request.data
         generaluser = self.get_object(data['username'])
-        # If user is found
         if generaluser is not None:
-            # Check if user is registered as admin or student
             if data['is_admin']:
                 if Admin.objects.filter(user=generaluser).exists():
-                    user = authenticate(
-                        username=data['username'], password=data['password'])
-                else:
-                    return Response({'message': 'You are not registered as admin', 'status': 0})
+                    return Response({'message': 'User found!', 'status': 1})
             elif data['is_student']:
                 student = self.get_student(generaluser)
                 if student is not None:
                     if student.get_approved():
-                        user = authenticate(
-                            username=data['username'], password=data['password'])
+                        return Response({'message': 'User found!', 'status': 1})
                     else:
-                        return Response({'message': 'Sorry, your account is not yet approved'})
-                else:
-                    return Response({'message': 'You are not registered as student', 'status': 0})
-            # If user is authenticated (i.e. password is correct)
-            if user is not None:
-                login(request, user)
-                return Response({'message': 'Login successful', 'status': 1})
-            else:
-                return Response({'message': 'Wrong password', 'status': 0})
-        else:
-            return Response({'message': 'User not found', 'status': 0})
+                        return Response({'message': 'Not approved', 'status': 0})
+        return Response({'message': 'User not found', 'status': 0})
 
 
 # Student list in admin page
@@ -721,27 +709,11 @@ class StudentApprovedView(APIView):
         return Response({'message': 'Approved list retrieved', 'data': serializer.data})
 
 
-class Manual(GenericAPIView):
-    serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
-    pagination_class = CustomPagination
+class Manual(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            result = self.get_paginated_response(serializer.data)
-            data = result.data
-        else:
-            serializer = self.get_serializer(queryset, many=True)
-            data = serializer.data
-
-        payload = {
-            'return_code': '0000',
-            'return_message': 'Success',
-            'data': data
-        }
-
-        return Response(data)
+        content = {'message': 'Hello, World!'}
+        print(request.user)
+        return Response(content)

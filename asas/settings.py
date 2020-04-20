@@ -43,7 +43,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'scorer',
+    'rest_framework.authtoken',
 ]
+
+REST_FRAMEWORK = {
+    'DEFUAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

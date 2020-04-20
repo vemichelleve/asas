@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import LoginService from './LoginService'
+import Cookie from '../Cookie'
 
 const loginService = new LoginService()
+const c = new Cookie()
 
 class Login extends Component {
     constructor(props) {
@@ -18,33 +20,40 @@ class Login extends Component {
 
     handleStudentSubmit(event) {
         event.preventDefault();
-        loginService.authenticate({
-            'username': this.state.student_username,
-            'password': this.state.student_password,
-            'is_student': true,
-            'is_admin': false,
-        }).then((response) => {
-            if (response.status) {
-                window.location.href = '/student/';
-            }
-            else {
-                alert(response.message);
-            }
-        }).catch((response) => {
-            alert(response.message);
-        })
+        this.handleLogin(false);
     }
 
     handleAdminSubmit(event) {
         event.preventDefault();
+        this.handleLogin(true);
+    }
+
+    handleLogin(admin) {
+        var name;
+        var pass;
+        var path;
+        if (admin) {
+            name = this.state.admin_username
+            pass = this.state.admin_password
+            path = 'admin'
+        }
+        else {
+            name = this.state.student_username
+            pass = this.state.student_password
+            path = 'student'
+        }
         loginService.authenticate({
-            'username': this.state.admin_username,
-            'password': this.state.admin_password,
-            'is_student': false,
-            'is_admin': true,
+            'username': name,
+            'is_student': !admin,
+            'is_admin': admin,
         }).then((response) => {
             if (response.status) {
-                window.location.href = '/admin/';
+                loginService.login(name, pass).then(result => {
+                        window.location.href = '/' + path + '/';
+                        c.setCookie('token', result.token, path)
+                }).catch(result => {
+                    alert('Wrong password!')
+                })
             }
             else {
                 alert(response.message);

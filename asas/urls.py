@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 from scorer import views
 
 urlpatterns = [
@@ -43,4 +44,5 @@ urlpatterns = [
     url(r'^allanswers/$', views.AnswerListView.as_view()),
     url(r'^approved/$', views.StudentApprovedView.as_view()),
     url(r'^manual/$', views.Manual.as_view()),
+    url(r'^api-token-auth/', obtain_auth_token),
 ]
