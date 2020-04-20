@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-// import AccountService from './AccountService'
+import AccountService from './AccountService';
+
+const accountService = new AccountService();
 
 class PasswordChange extends Component {
     constructor(props) {
@@ -15,7 +17,14 @@ class PasswordChange extends Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.state.newpass === this.state.newpass2) {
-
+            accountService.updatePassword({
+                oldpass: this.state.oldpass,
+                newpass: this.state.newpass,
+            }).then(result => {
+                alert(result.message)
+            }).catch(result => {
+                alert(result.message)
+            })
         }
         else alert('Password does not match!');
     }
@@ -37,7 +46,10 @@ class PasswordChange extends Component {
                             <label>Retype new password</label>
                             <input type='password' className='form-control' onChange={(e) => this.setState({ newpass2: e.target.value })} />
                         </div>
-                        <button className='btn btn-primary' type='submit'>Save</button>
+                        <div className='form-group'>
+                            <button className='btn btn-primary Button-Left' type='submit'>Save</button>
+                            <button className='btn btn-secondary' type='button' onClick={() => window.history.back()}>Back</button>
+                        </div>
                     </div>
                 </form>
             </div>

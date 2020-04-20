@@ -105,6 +105,7 @@ class StudentListView(GenericAPIView):
 class StudentDetailsView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
+
     def get_student(self, pk):
         try:
             return User.objects.get(pk=pk)
@@ -154,6 +155,7 @@ class QuestionListView(GenericAPIView):
 class AddManualQuestionView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
+
     def get_post(self, name):
         try:
             return Post.objects.get(name=name)
@@ -161,8 +163,7 @@ class AddManualQuestionView(APIView):
             return None
 
     def post(self, request, format=None):
-        user = User.objects.get(username='admin')  # TODO: Logged in user!
-        admin = Admin.objects.get(user=user)
+        admin = Admin.objects.get(user=request.user)
         post = self.get_post(request.data['post'])
         if post is None:
             post = Post(admin=admin, name=request.data['post'])
@@ -301,10 +302,8 @@ class AnswerView(GenericAPIView):
 
     def post(self, request, pk, format=None):
         answer = request.data['answer']
-        # TODO: Logged in user!
-        user = User.objects.get(username='vemichelleve')
         # Retrieve student and question object
-        student = Student.objects.get(user=user)
+        student = Student.objects.get(user=request.user)
         question = Question.objects.get(pk=pk)
         # Check whether student has answered the question
         if not (AnsweredQuestions.objects.filter(student=student, question=question).exists()):
@@ -370,10 +369,8 @@ class AnswersView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        # TODO: Logged in user!
-        user = User.objects.get(username='vemichelleve')
         # Retrieve student and student answer
-        student = Student.objects.get(user=user)
+        student = Student.objects.get(user=request.user)
         studentans = StudentAnswer.objects.filter(student=student)
         # Create queryset of answers by logged in student
         answers = Answer.objects.none()
@@ -390,9 +387,7 @@ class StudentAccountView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        # TODO: Logged in user!
-        user = User.objects.get(username='vemichelleve')
-        serializer = UserSerializer(user, context={'request': request})
+        serializer = UserSerializer(request.user, context={'request': request})
         return Response({'message': 'Details retreived', 'data': serializer.data})
 
 
@@ -402,21 +397,13 @@ class StudentEditAccountView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, format=None):
-        # Retrieve student
-        student = User.objects.get(
-            username='vemichelleve')  # TODO: Logged in user!
-        # Check if student exists
-        if student is not None:
-            serializer = UserSerializer(
-                student, data=request.data, context={'request': request})
-            # If data is valid, make changes
-            if serializer.is_valid():
-                serializer.save()
-                return Response({'message': 'Changes successfully saved!', 'status': 1})
-            else:
-                return Response({'message': 'Data is not valid', 'status': 0})
+        serializer = UserSerializer(
+            user.request, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Changes successfully saved!', 'status': 1})
         else:
-            return Response({'message': 'Student not found', 'status': 0})
+            return Response({'message': 'Data is not valid', 'status': 0})
 
 
 class ScoreAnswerView(APIView):
@@ -469,8 +456,7 @@ class AddAutoQuestionView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
-        user = User.objects.get(username='admin')  # TODO: Logged in user!
-        admin = Admin.objects.get(user=user)
+        admin = Admin.objects.get(user=request.user)
         name = request.data['post']
         alluploaded = True
         count = 0
@@ -725,7 +711,7 @@ class AnswerListView(GenericAPIView):
 class StudentApprovedView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
-    
+
     def get_students(self):
         try:
             return Student.objects.all()
@@ -757,11 +743,24 @@ class StudentApprovedView(APIView):
         return Response({'message': 'Approved list retrieved', 'data': serializer.data})
 
 
-class Manual(APIView):
+class StudentUpdatePasswordView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
 
+    def put(self, request, format=None):
+        data = request.data
+        if authenticate(username=request.user, password=data['oldpass']) is not None:
+            user = request.user
+            user.set_password(request.data['newpass'])
+            user.save()
+            return Response({'message': 'Password successfully updated', 'status': 1})
+        else:
+            return Repsonse({'message': 'Failed to update password', 'status': 0})
+
+
+class Manual(APIView):
     def get(self, request, format=None):
-        content = {'message': 'Hello, World!'}
-        print(request.user)
-        return Response(content)
+        users = User.objects.all()
+        serializer = UserSerializer(
+            users, context={'request': request}, many=True)
+        return Response({'data': serializer.data})

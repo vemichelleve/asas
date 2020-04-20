@@ -52,8 +52,8 @@ class Account extends Component {
                             <div className='Header-Label'>{this.state.email}</div>
                         </div>
                         <div className='form-group'>
-                            <button className='btn btn-primary Button-Left' onClick={(e) => window.location = '/student/account/edit'}>Edit</button>
-                            <button className='btn btn-primary' onClick={(e) => window.location = '/student/account/password'}>Update password</button>
+                            <button className='btn btn-primary Button-Left' onClick={() => window.location = '/student/account/edit'}>Edit</button>
+                            <button className='btn btn-primary' onClick={() => window.location = '/student/account/password'}>Update password</button>
                         </div>
                     </div>
                 </div>
