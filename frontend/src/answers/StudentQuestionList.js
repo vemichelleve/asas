@@ -12,7 +12,7 @@ class StudentQuestionList extends Component {
         super(props);
         this.state = {
             questions: [],
-            status: '',
+            status: 0,
             ans: [],
             total: 0,
             page: 0,
@@ -78,33 +78,44 @@ class StudentQuestionList extends Component {
             answer[x.question] = x.answer;
             score[x.question] = x.systemscore;
         });
-        return (
-            <div>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Question</th>
-                            <th>Answer</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.questions.map(question =>
-                            <tr key={question.pk}>
-                                <td>{question.pk}</td>
-                                <td>{question.question}</td>
-                                <td>{answer[question.pk] === undefined ?
-                                    <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
-                                    answer[question.pk]
-                                }</td>
-                                <td>{score[question.pk] == null ? '-' : score[question.pk].toFixed(2)}</td>
-                            </tr>)}
-                    </tbody>
-                </table>
-                {paginator.createPaginator(this)}
-            </div>
-        )
+        switch (this.state.status) {
+            case 0:
+                return (
+                    <div>
+                        <h1 className='display-4 Error-Msg'>Data not found</h1>
+                    </div>
+                )
+            case 1:
+                return (
+                    <div>
+                        <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.questions.map(question =>
+                                    <tr key={question.pk}>
+                                        <td>{question.pk}</td>
+                                        <td>{question.question}</td>
+                                        <td>{answer[question.pk] === undefined ?
+                                            <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
+                                            answer[question.pk]
+                                        }</td>
+                                        <td>{score[question.pk] == null ? '-' : score[question.pk].toFixed(2)}</td>
+                                    </tr>)}
+                            </tbody>
+                        </table>
+                        {paginator.createPaginator(this)}
+                    </div>
+                )
+            default:
+                return <div>Error occured</div>;
+        }
     }
 }
 export default StudentQuestionList;

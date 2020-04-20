@@ -129,6 +129,12 @@ class PostDetails extends Component {
 
     render() {
         switch (this.state.status) {
+            case 0:
+                return (
+                    <div>
+                        <h1 className='display-4 Error-Msg'>Data not found</h1>
+                    </div>
+                )
             case 2:
                 var answer = []
                 var score = []

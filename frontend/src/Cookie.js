@@ -15,4 +15,12 @@ export default class Cookie {
     deleteCookie(name, path) {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/' + path + '/';
     }
+
+    getHeaders() {
+        return {
+            headers: {
+                Authorization: 'Token ' + this.getCookie('token')
+            }
+        }
+    }
 }

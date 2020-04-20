@@ -73,6 +73,8 @@ class StudentListView(GenericAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -101,6 +103,8 @@ class StudentListView(GenericAPIView):
 
 # Student details in admin page
 class StudentDetailsView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     def get_student(self, pk):
         try:
             return User.objects.get(pk=pk)
@@ -122,6 +126,8 @@ class QuestionListView(GenericAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -146,6 +152,8 @@ class QuestionListView(GenericAPIView):
 
 # Add question manually
 class AddManualQuestionView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     def get_post(self, name):
         try:
             return Post.objects.get(name=name)
@@ -170,6 +178,9 @@ class AddManualQuestionView(APIView):
 
 # Question details in admin and student page
 class QuestionDetailsView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get_question(self, pk):
         try:
             return Question.objects.get(pk=pk)
@@ -193,6 +204,8 @@ class PostListView(GenericAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -226,6 +239,8 @@ class PostDetailsView(GenericAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get_post(self, pk):
         try:
@@ -281,6 +296,8 @@ class AnswerView(GenericAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, pk, format=None):
         answer = request.data['answer']
@@ -349,6 +366,9 @@ class AnswerView(GenericAPIView):
 
 # Retrieve answers by student
 class AnswersView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, format=None):
         # TODO: Logged in user!
         user = User.objects.get(username='vemichelleve')
@@ -366,6 +386,9 @@ class AnswersView(APIView):
 
 # Student account details
 class StudentAccountView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, format=None):
         # TODO: Logged in user!
         user = User.objects.get(username='vemichelleve')
@@ -375,6 +398,9 @@ class StudentAccountView(APIView):
 
 # Edit student account
 class StudentEditAccountView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def put(self, request, format=None):
         # Retrieve student
         student = User.objects.get(
@@ -394,6 +420,9 @@ class StudentEditAccountView(APIView):
 
 
 class ScoreAnswerView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get_answer(self, pk):
         try:
             return Answer.objects.get(pk=pk)
@@ -436,6 +465,8 @@ class ScoreAnswerView(APIView):
 
 class AddAutoQuestionView(APIView):
     parser_classes = (MultiPartParser, FormParser)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
         user = User.objects.get(username='admin')  # TODO: Logged in user!
@@ -475,6 +506,9 @@ class AddAutoQuestionView(APIView):
 
 
 class QuestionbyUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get_student(self, pk):
         try:
             return Student.objects.get(user=pk)
@@ -500,6 +534,9 @@ class QuestionbyUserView(APIView):
 
 
 class TrainModel(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get_question(self):
         try:
             return Question.objects.all()
@@ -577,6 +614,9 @@ class TrainModel(APIView):
 
 
 class AddAutoAnswers(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, pk, format=None):
         user = User.objects.get(username='auto')
         student = Student.objects.get(user=user)
@@ -617,6 +657,9 @@ class AddAutoAnswers(APIView):
 
 
 class AddAnyAnswers(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, format=None):
         user = User.objects.get(username='auto')
         student = Student.objects.get(user=user)
@@ -655,6 +698,8 @@ class AnswerListView(GenericAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -678,6 +723,9 @@ class AnswerListView(GenericAPIView):
 
 
 class StudentApprovedView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+    
     def get_students(self):
         try:
             return Student.objects.all()
