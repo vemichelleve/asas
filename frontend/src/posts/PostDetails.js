@@ -29,12 +29,24 @@ class PostDetails extends Component {
     componentDidMount() {
         var self = this;
         const { match: { params } } = this.props;
-        answerService.getAnswers().then((result) => {
-            self.setState({ ans: result.data })
-        });
+        if (window.location === '/student/answer/') {
+            answerService.getAnswers().then((result) => {
+                self.setState({
+                    ans: result.data
+                })
+            });
+        }
         if (params && params.pk) {
             postService.getPost(params.pk).then(function (result) {
-                self.setStates(result)
+                if (result.status === 2) self.setStates(result)
+                else if (result.status === 1) {
+                    self.setState({
+                        post_name: result.post.name,
+                        poster_first: result.admin.first_name,
+                        poster_last: result.admin.last_name,
+                        status: result.status,
+                    })
+                }
             })
         }
     }
@@ -86,6 +98,27 @@ class PostDetails extends Component {
                         <h1 className='display-4 Error-Msg'>Data not found</h1>
                     </div>
                 )
+            case 1:
+                return (
+                    <div>
+                        <div className='Table-Top'>
+                            <div className='Header-Button'>
+                                <div>Post name</div>
+                                <div className='Header-Text'>{this.state.post_name}</div>
+                            </div>
+                            <div className='Header-Button'>
+                                <div>Poster</div>
+                                <div className='Header-Text'>{this.state.poster_first} {this.state.poster_last}</div>
+                            </div>
+                            <div className='Button-Group'>
+                                <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Back</button>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 className='display-4 Error-Msg'>Post is empty</h1>
+                        </div>
+                    </div>
+                )
             case 2:
                 var answer = []
                 var score = []
@@ -132,11 +165,11 @@ class PostDetails extends Component {
                                             <td>{question.refans}</td>}
                                         {window.location.pathname.substring(0, 12) === '/admin/posts' &&
                                             <td>
-                                                <button className='btn btn-primary' onClick={(e) => window.location = '/admin/questions/' + question.pk}>Details</button>
+                                                <button className='btn btn-primary' onClick={() => window.location = '/admin/questions/' + question.pk}>Details</button>
                                             </td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
                                             <td>{answer[question.pk] === undefined ?
-                                                <button className='btn btn-primary' onClick={(e) => { window.location = '/student/answer/' + question.pk }}>Answer</button> :
+                                                <button className='btn btn-primary' onClick={() => window.location = '/student/answer/' + question.pk}>Answer</button> :
                                                 answer[question.pk]
                                             }</td>}
                                         {window.location.pathname.substring(0, 14) === '/student/posts' &&
