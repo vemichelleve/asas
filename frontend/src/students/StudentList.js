@@ -26,7 +26,7 @@ class StudentList extends Component {
         var self = this;
         studentService.getStudents().then(function (result) {
             self.setStates(result)
-        });
+        })
         studentService.getApproved().then((result) => {
             self.setState({ approved: result.data })
         });

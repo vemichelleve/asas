@@ -31,7 +31,7 @@ class StudentDetails extends Component {
                     status: result.status,
                     id: result.data.pk,
                 })
-            });
+            })
             questionService.getQuestionbyUser(params.pk).then(function (result) {
                 self.setState({
                     questions: result.data.questions,

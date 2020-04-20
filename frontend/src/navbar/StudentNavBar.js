@@ -15,6 +15,7 @@ class StudentNavBar extends Component {
     }
 
     render() {
+        c.checkLoggedIn()
         return (
             <div className='navbar-nav'>
                 <a className={this.active('/student/')} href='/student/'>QUESTIONS</a>

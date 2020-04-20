@@ -15,6 +15,7 @@ class AdminNavBar extends Component {
     }
 
     render() {
+        c.checkLoggedIn()
         return (
             <div className='navbar-nav'>
                 <a className={this.active('/admin/')} href='/admin/'>QUESTIONS</a>

@@ -48,6 +48,9 @@ class QuestionDetails extends Component {
                     refans: result.data.refans,
                     status: result.status,
                 })
+            }).catch(result => {
+                alert('Please log in!')
+                window.location = '/'
             });
             answerService.getAnswer(params.pk).then(function (result) {
                 self.setStates(result)

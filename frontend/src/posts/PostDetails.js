@@ -32,20 +32,25 @@ class PostDetails extends Component {
         });
         if (params && params.pk) {
             postService.getPost(params.pk).then(function (result) {
-                var total = Math.ceil(result.data.total / result.data.page_size)
-                self.setState({
-                    post_name: result.post.name,
-                    poster_first: result.admin.first_name,
-                    poster_last: result.admin.last_name,
-                    questions: result.data.results,
-                    status: result.status,
-                    total: total,
-                    page: result.data.page,
-                    next: result.data.links.next,
-                    previous: result.data.links.previous,
-                })
-            });
+                self.setStates(result)
+            })
         }
+    }
+
+    setStates(result) {
+        var self = this;
+        var total = Math.ceil(result.data.total / result.data.page_size)
+        self.setState({
+            post_name: result.post.name,
+            poster_first: result.admin.first_name,
+            poster_last: result.admin.last_name,
+            questions: result.data.results,
+            status: result.status,
+            total: total,
+            page: result.data.page,
+            next: result.data.links.next,
+            previous: result.data.links.previous,
+        })
     }
 
     nextPage() {
@@ -59,18 +64,7 @@ class PostDetails extends Component {
     getByURL(url) {
         var self = this;
         postService.getPostsURL(url).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                post_name: result.post.name,
-                poster_first: result.admin.first_name,
-                poster_last: result.admin.last_name,
-                questions: result.data.results,
-                status: result.status,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
     }
 
@@ -78,18 +72,7 @@ class PostDetails extends Component {
         var self = this;
         const { match: { params } } = this.props;
         postService.getPostPage(params.pk, page).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                post_name: result.post.name,
-                poster_first: result.admin.first_name,
-                poster_last: result.admin.last_name,
-                questions: result.data.results,
-                status: result.status,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
     }
 

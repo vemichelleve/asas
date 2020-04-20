@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import QuestionService from './QuestionService'
 import PostService from '../posts/PostService'
 import csv from './sample.csv'
+import Cookie from '../Cookie'
 
 const questionService = new QuestionService();
 const postService = new PostService();
+const c = new Cookie()
 
 class AddQuestion extends Component {
     constructor(props) {
@@ -55,9 +57,10 @@ class AddQuestion extends Component {
     }
 
     componentDidMount() {
+        c.checkLoggedIn()
         var self = this;
         postService.getPosts().then((response) => {
-            self.setState({ posts: response.data })
+            self.setState({ posts: response.data.results })
         });
     }
 

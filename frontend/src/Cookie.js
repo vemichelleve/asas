@@ -23,4 +23,11 @@ export default class Cookie {
             }
         }
     }
+
+    checkLoggedIn() {
+        if (this.getCookie('token') === undefined) {
+            alert('Please log in!')
+            window.location = '/'
+        }
+    }
 }

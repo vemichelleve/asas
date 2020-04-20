@@ -23,17 +23,8 @@ class PostList extends Component {
     componentDidMount() {
         var self = this;
         postService.getPosts().then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                posts: result.data.results,
-                status: result.status,
-                users: result.users,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
-        });
+            self.setStates(result)
+        })
     }
 
     nextPage() {
@@ -47,33 +38,29 @@ class PostList extends Component {
     getByURL(url) {
         var self = this;
         postService.getPostsURL(url).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                posts: result.data.results,
-                status: result.status,
-                users: result.users,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
     }
 
     goToPage(page) {
         var self = this;
         postService.getPostsPage(page).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                posts: result.data.results,
-                status: result.status,
-                users: result.users,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
+    }
+
+    setStates(result) {
+        var self = this;
+        var total = Math.ceil(result.data.total / result.data.page_size)
+        self.setState({
+            posts: result.data.results,
+            status: result.status,
+            users: result.users,
+            total: total,
+            page: result.data.page,
+            next: result.data.links.next,
+            previous: result.data.links.previous,
+        })
     }
 
     createPaginator() {
