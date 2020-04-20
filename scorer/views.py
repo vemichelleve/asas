@@ -694,8 +694,8 @@ class StudentApprovedView(APIView):
             serializer = StudentSerializer(
                 students, context={'request': request}, many=True)
             return Response({'message': 'Approved list retrieved', 'data': serializer.data})
-        else
-        return Response({'message': 'Students not found'})
+        else:
+            return Response({'message': 'Students not found'})
 
 
 class StudentUpdatePasswordView(APIView):
