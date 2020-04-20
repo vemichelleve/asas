@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import StudentService from './StudentService'
+import Paginator from '../Paginator'
 
 const studentService = new StudentService();
+const paginator = new Paginator();
 
 class StudentList extends Component {
     constructor(props) {
@@ -10,13 +12,20 @@ class StudentList extends Component {
             students: [],
             status: 0,
             approved: [],
+            total: 0,
+            page: 0,
+            next: '',
+            previous: '',
         }
+        this.nextPage = this.nextPage.bind(this)
+        this.previousPage = this.previousPage.bind(this)
+        this.goToPage = this.goToPage.bind(this)
     }
 
     componentDidMount() {
         var self = this;
         studentService.getStudents().then(function (result) {
-            self.setState({ students: result.data, status: result.status })
+            self.setStates(result)
         });
         studentService.getApproved().then((result) => {
             self.setState({ approved: result.data })
@@ -30,6 +39,41 @@ class StudentList extends Component {
         }).catch((result) => {
             alert(result.message)
         });
+    }
+
+    nextPage() {
+        this.getByURL(this.state.next)
+    }
+
+    previousPage() {
+        this.getByURL(this.state.previous)
+    }
+
+    getByURL(url) {
+        var self = this;
+        studentService.getStudentsURL(url).then(function (result) {
+            self.setStates(result)
+        });
+    }
+
+    goToPage(page) {
+        var self = this;
+        studentService.getStudentsPage(page).then(function (result) {
+            self.setStates(result)
+        });
+    }
+
+    setStates(result) {
+        var self = this;
+        var total = Math.ceil(result.data.total / result.data.page_size)
+        self.setState({
+            students: result.data.results,
+            status: result.status,
+            total: total,
+            page: result.data.page,
+            next: result.data.links.next,
+            previous: result.data.links.previous,
+        })
     }
 
     render() {
@@ -74,6 +118,7 @@ class StudentList extends Component {
                                     </tr>)}
                             </tbody>
                         </table>
+                        {paginator.createPaginator(this)}
                     </div>
                 );
             default:

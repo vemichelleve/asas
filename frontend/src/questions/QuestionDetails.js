@@ -2,9 +2,11 @@ import update from 'react-addons-update'
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
 import AnswerService from '../answers/AnswerService'
+import Paginator from '../Paginator'
 
 const questionService = new QuestionService()
 const answerService = new AnswerService()
+const paginator = new Paginator()
 
 class QuestionDetails extends Component {
     constructor(props) {
@@ -48,15 +50,7 @@ class QuestionDetails extends Component {
                 })
             });
             answerService.getAnswer(params.pk).then(function (result) {
-                var total = Math.ceil(result.data.total / result.data.page_size)
-                self.setState({
-                    answers: result.data.results,
-                    maxpk: result.max.pk__max,
-                    total: total,
-                    page: result.data.page,
-                    next: result.data.links.next,
-                    previous: result.data.links.previous,
-                })
+                self.setStates(result)
                 var x = new Array(self.state.maxpk + 1);
                 self.setState({
                     score1: x,
@@ -128,15 +122,7 @@ class QuestionDetails extends Component {
     getByURL(url) {
         var self = this;
         answerService.getAnswersByURL(url).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                answers: result.data.results,
-                maxpk: result.max.pk__max,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
     }
 
@@ -144,50 +130,21 @@ class QuestionDetails extends Component {
         var self = this;
         const { match: { params } } = this.props;
         answerService.getAnswerPage(params.pk, page).then(function (result) {
-            var total = Math.ceil(result.data.total / result.data.page_size)
-            self.setState({
-                answers: result.data.results,
-                maxpk: result.max.pk__max,
-                total: total,
-                page: result.data.page,
-                next: result.data.links.next,
-                previous: result.data.links.previous,
-            })
+            self.setStates(result)
         });
     }
 
-    createPaginator() {
-        var result = [];
-        var min = this.state.page - 5;
-        var max = this.state.page + 5;
-        var diff;
-        if (this.state.total > 11) {
-            if (min < 1) {
-                diff = min
-                min = min - diff + 1
-                max = max - diff + 1
-            }
-            if (max > this.state.total) {
-                diff = max - this.state.total
-                min = min - diff + 1
-                max = max - diff + 1
-            }
-        }
-        else {
-            min = 1
-            max = this.state.total + 1
-        }
-        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(1)}>&laquo;</div></li>)
-        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='prev'><div className='page-link' tabIndex='-1' onClick={this.previousPage}>Previous</div></li>)
-        for (var x = min; x < max; x++) {
-            if (x !== this.state.page)
-                result.push(<li className='page-item' key={x}><div className='page-link' id={x} onClick={(e) => this.goToPage(e.target.id)}>{x}</div></li>)
-            else
-                result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
-        }
-        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
-        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.total)}>&raquo;</div></li>)
-        return result;
+    setStates(result) {
+        var self = this;
+        var total = Math.ceil(result.data.total / result.data.page_size)
+        self.setState({
+            answers: result.data.results,
+            maxpk: result.max.pk__max,
+            total: total,
+            page: result.data.page,
+            next: result.data.links.next,
+            previous: result.data.links.previous,
+        })
     }
 
     render() {
@@ -252,13 +209,7 @@ class QuestionDetails extends Component {
                                     </tr>)}
                             </tbody>
                         </table>
-                        <div className='Paginator'>
-                            <nav>
-                                <ul className='pagination'>
-                                    {this.createPaginator()}
-                                </ul>
-                            </nav>
-                        </div>
+                        {paginator.createPaginator(this)}
                     </div>
                 )
             default:

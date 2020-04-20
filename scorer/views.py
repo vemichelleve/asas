@@ -85,15 +85,32 @@ class UserLoginView(APIView):
 
 
 # Student list in admin page
-class StudentListView(APIView):
+class StudentListView(GenericAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    pagination_class = CustomPagination
+
     def get(self, request, format=None):
-        # Retrieve all students
-        students = User.objects.all().filter(is_student=True)
-        # Check if queryset empty
-        if students is not None:
-            serializer = UserSerializer(
-                students, context={'request': request}, many=True)
-            return Response({'message': 'Students retrieved', 'status': 1, 'data': serializer.data})
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter(is_student=True)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+            data = result.data
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+        payload = {
+            'return_code': '0000',
+            'return_message': 'Success',
+            'data': data
+        }
+
+        if len(queryset) > 0:
+            return Response({'message': 'Students retrieved', 'status': 1, 'data': data})
         else:
             return Response({'message': 'Students not found', 'status': 0})
 

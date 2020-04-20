@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API_URL = 'http://155.69.151.177:8000'
+const API_URL = 'http://127.0.0.1:8000'
 
 export default class StudentService {
     getStudents() {
@@ -16,5 +16,13 @@ export default class StudentService {
 
     approveStudent(pk) {
         return axios.put(`${API_URL}/approved/`, pk).then(response => response.data);
+    }
+
+    getStudentsURL(url) {
+        return axios.get(url).then(response => response.data);
+    }
+
+    getStudentsPage(page) {
+        return axios.get(`${API_URL}/students/?page=${page}`).then(response => response.data);
     }
 }
