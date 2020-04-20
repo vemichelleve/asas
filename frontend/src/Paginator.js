@@ -31,7 +31,7 @@ export default class Paginator {
                 result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
         }
         result.push(<li className={'page-item' + (self.state.page === self.state.total ? ' disabled' : '')} key='next'><div className='page-link' onClick={self.nextPage}>Next</div></li>)
-        result.push(<li className={'page-item' + (self.state.page === self.state.total ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => self.goToPage(self.state.total)}>&raquo;</div></li>)
+        result.push(<li className={'page-item' + (self.state.page === self.state.total ? ' disabled' : '')} key='last'><div className='page-link' tabIndex='-1' onClick={() => self.goToPage(self.state.total)}>&raquo;</div></li>)
         return <div className='Paginator'>
             <nav>
                 <ul className='pagination'>

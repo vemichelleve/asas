@@ -76,7 +76,7 @@ class AnswerList extends Component {
             case 1:
                 return (
                     <div>
-                        <table className='table' class='table'>
+                        <table className='table Paginator-Top' class='table'>
                             <thead key='thead'>
                                 <tr>
                                     <th>ID</th>

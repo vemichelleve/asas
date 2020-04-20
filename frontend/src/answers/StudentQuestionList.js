@@ -88,7 +88,7 @@ class StudentQuestionList extends Component {
             case 1:
                 return (
                     <div>
-                        <table className='table'>
+                        <table className='table Paginator-Top'>
                             <thead>
                                 <tr>
                                     <th>ID</th>

@@ -19,8 +19,8 @@ class StudentNavBar extends Component {
         return (
             <div className='navbar-nav'>
                 <a className={this.active('/student/')} href='/student/'>QUESTIONS</a>
-                <a className={this.active('/student/account/')} href='/student/account/'>ACCOUNT</a >
                 <a className={this.active('/student/posts/')} href='/student/posts/'>POSTS</a>
+                <a className={this.active('/student/account/')} href='/student/account/'>ACCOUNT</a >
                 <a className='nav-item nav-link' href='/' onClick={this.logout}>LOGOUT</a>
             </div >
         );

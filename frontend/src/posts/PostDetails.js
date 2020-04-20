@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import PostService from './PostService'
 import AnswerService from '../answers/AnswerService';
+import Paginator from '../Paginator';
 
 const postService = new PostService();
 const answerService = new AnswerService();
+const paginator = new Paginator();
 
 class PostDetails extends Component {
     constructor(props) {
@@ -76,40 +78,6 @@ class PostDetails extends Component {
         });
     }
 
-    createPaginator() {
-        var result = [];
-        var min = this.state.page - 5;
-        var max = this.state.page + 5;
-        var diff;
-        if (this.state.total > 11) {
-            if (min < 1) {
-                diff = min
-                min = min - diff + 1
-                max = max - diff + 1
-            }
-            if (max > this.state.total) {
-                diff = max - this.state.total
-                min = min - diff + 1
-                max = max - diff + 1
-            }
-        }
-        else {
-            min = 1
-            max = this.state.total + 1
-        }
-        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(1)}>&laquo;</div></li>)
-        result.push(<li className={'page-item' + (this.state.page === 1 ? ' disabled' : '')} key='prev'><div className='page-link' tabIndex='-1' onClick={this.previousPage}>Previous</div></li>)
-        for (var x = min; x < max; x++) {
-            if (x !== this.state.page)
-                result.push(<li className='page-item' key={x}><div className='page-link' id={x} onClick={(e) => this.goToPage(e.target.id)}>{x}</div></li>)
-            else
-                result.push(<li className='page-item active' key={x}><div className='page-link'>{x} <span className='sr-only'>(current)</span></div></li>)
-        }
-        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='next'><div className='page-link' onClick={this.nextPage}>Next</div></li>)
-        result.push(<li className={'page-item' + (this.state.page === this.state.total ? ' disabled' : '')} key='first'><div className='page-link' tabIndex='-1' onClick={() => this.goToPage(this.state.total)}>&raquo;</div></li>)
-        return result;
-    }
-
     render() {
         switch (this.state.status) {
             case 0:
@@ -128,11 +96,11 @@ class PostDetails extends Component {
                 return (
                     <div>
                         <div className='Table-Top'>
-                            <div className='Table-No-Button'>
+                            <div className='Header-Button'>
                                 <div>Post name</div>
                                 <div className='Header-Text'>{this.state.post_name}</div>
                             </div>
-                            <div className='Table-No-Button'>
+                            <div className='Header-Button'>
                                 <div>Poster</div>
                                 <div className='Header-Text'>{this.state.poster_first} {this.state.poster_last}</div>
                             </div>
@@ -140,7 +108,7 @@ class PostDetails extends Component {
                                 <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Back</button>
                             </div>
                         </div>
-                        <table className='table Table-Below'>
+                        <table className='table Table-Below Paginator-Top'>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -177,13 +145,7 @@ class PostDetails extends Component {
                                 )}
                             </tbody>
                         </table>
-                        <div className='Paginator'>
-                            <nav>
-                                <ul className='pagination'>
-                                    {this.createPaginator()}
-                                </ul>
-                            </nav>
-                        </div>
+                        {paginator.createPaginator(this)}
                     </div>
                 )
             default:
