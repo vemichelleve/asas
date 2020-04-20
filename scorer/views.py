@@ -1,23 +1,16 @@
-from rest_framework.decorators import api_view
+import re
+
+from asas.pagination import CustomPagination
+from django.contrib.auth import login, authenticate
+from django.db import transaction
+from django.db.models import Max
+from rest_framework.generics import GenericAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.generics import GenericAPIView
 
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.db.models import Max
-from django.db import transaction
-
-from .models import *
-from .serializers import *
 from .model.main import *
-from asas.pagination import CustomPagination
-
-import csv
-import re
+from .serializers import *
 
 
 # User sign up page
@@ -25,9 +18,12 @@ class UserSignUpView(APIView):
     def post(self, request, format=None):
         user = request.data
         # Account created only if email and username is not used
-        if not (User.objects.filter(email=user['email']).exists() or User.objects.filter(username=user['username']).exists()):
-            userobj = User.objects.create_user(user['username'], user['email'], user['password'], first_name=user['first_name'],
-                                               last_name=user['last_name'], is_student=user['is_student'], is_admin=user['is_admin'])
+        if not (User.objects.filter(email=user['email']).exists() or User.objects.filter(
+                username=user['username']).exists()):
+            userobj = User.objects.create_user(user['username'], user['email'], user['password'],
+                                               first_name=user['first_name'],
+                                               last_name=user['last_name'], is_student=user['is_student'],
+                                               is_admin=user['is_admin'])
             userobj.save()
             if user['is_admin']:
                 Admin.objects.create(user=userobj)
@@ -283,9 +279,11 @@ class PostDetailsView(GenericAPIView):
             }
 
             if len(queryset) > 0:
-                return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data, 'admin': adminSerializer.data, 'data': data})
+                return Response({'message': 'Post and questions retrieved', 'status': 2, 'post': postSerializer.data,
+                                 'admin': adminSerializer.data, 'data': data})
             else:
-                return Response({'message': 'Post retrieved, no questions', 'status': 1, 'post': postSerializer.data, 'admin': adminSerializer.data})
+                return Response({'message': 'Post retrieved, no questions', 'status': 1, 'post': postSerializer.data,
+                                 'admin': adminSerializer.data})
         else:
             return Response({'message': 'Post not found', 'status': 0})
 
@@ -352,7 +350,9 @@ class AnswerView(GenericAPIView):
                     studnetans |= StudentAnswer.objects.filter(answer=x)
                 studentansSerializer = StudentAnswerSerializer(
                     studnetans, context={'request': request}, many=True)
-                return Response({'message': 'Answers retrieved', 'status': 1, 'data': data, 'students': studentansSerializer.data, 'max': queryset.aggregate(Max('pk'))})
+                return Response(
+                    {'message': 'Answers retrieved', 'status': 1, 'data': data, 'students': studentansSerializer.data,
+                     'max': queryset.aggregate(Max('pk'))})
             else:
                 return Response({'message': 'No answer for this question', 'status': 0})
         else:
@@ -470,7 +470,7 @@ class AddAutoQuestionView(APIView):
                 refans = arr[1].replace('"', '')
             except IndexError:
                 msg = 'Error! No reference answer. ' + \
-                    str(count) + ' questions added.'
+                      str(count) + ' questions added.'
                 return Response({'message': msg, 'status': 0})
             if not Question.objects.filter(question=question, refans=refans, post=post).exists():
                 Question(
@@ -555,7 +555,7 @@ class TrainModel(APIView):
                 metric = Metrics.objects.get(name=name)
                 data = {'value': value}
                 serializer = MetricsSerializer(metric, data=data, context={
-                                               'request': request}, partial=True)
+                    'request': request}, partial=True)
                 if serializer.is_valid():
                     serializer.save()
 
@@ -566,7 +566,7 @@ class TrainModel(APIView):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
-                    print(str(round(index/len(result)*100, 1)) + '%')
+                    print(str(round(index / len(result) * 100, 1)) + '%')
                     data = {'systemscore': result[index]}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
