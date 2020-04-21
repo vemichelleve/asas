@@ -1,6 +1,5 @@
-import pandas as pd
-from .preprocess import *
 from .model import *
+from .preprocess import *
 
 
 def avg(rms, mae):
@@ -43,6 +42,41 @@ def buildmodel(questions, answers):
     return metric, train_model, tokenizer, data, scaler_y
 
 
+def buildmodel_c(questions, answers):
+    input_dataset = '/home/mvanessa/pastprojects/finalcode/Augmented_Feat.csv'
+    embedmodel = train_word2vec(
+        '/home/mvanessa/pastprojects/glove.6B.300d.txt')
+    question = '/home/mvanessa/pastprojects/finalcode/questions.csv'
+
+    data = preprocess(questions, answers)
+    data = data.iloc[:10, :]
+    df = cleaning_dataset(data, input_dataset)
+    df = question_demoting(df, question, questions)
+
+    X, y = scale_c(df)
+
+    X_train, X_test, y_train, y_test = splittest(X, y, 0.2)
+
+    print('==================== Training ====================')
+    train_model, tokenizer = train_lstm_c(
+        X_train, y_train, embedmodel)
+    print('==================== Training done ====================')
+
+    print('==================== Validation metrics ====================')
+    test_results = predict_c(X_test, train_model, tokenizer)
+    test_results, y_true = processresult_c(test_results, y_test, scaler_y)
+    acc, report = evaluate_c(test_results, y_true)
+
+    print('Accuracy', round(acc, 4))
+    print('Report')
+    print(report)
+
+    metric = []
+    metric.append({'metric': 'Accuracy', 'value': acc})
+
+    return metric, train_model, tokenizer, data
+
+
 def score(df_test, model, tokenizer, scaler_y):
     print('==================== Scoring ====================')
     test_results = predict(df_test, model, tokenizer)
@@ -59,6 +93,19 @@ def score(df_test, model, tokenizer, scaler_y):
     for i in range(len(test_results)):
         for x in test_results[i]:
             t.append(x)
+    test_results = t
+
+    print('==================== Scoring done ====================')
+    return test_results
+
+
+def score_c(df_test, model, tokenizer):
+    print('==================== Scoring ====================')
+    test_results = predict_c(df_test, model, tokenizer)
+
+    t = []
+    for x in test_results:
+        t.append(np.where(x == np.amax(x))[0][0])
     test_results = t
 
     print('==================== Scoring done ====================')

@@ -13,7 +13,7 @@ from keras.regularizers import l2
 from .embedding import *
 
 
-class SiameneLSTM:
+class SiameneLSTM_c:
     def __init__(self, embedding_dim, max_sequence_length, number_lstm, number_dense, rate_drop_lstm,
                  rate_drop_dense, hidden_activation, validation_split_ratio):
         self.embedding_dim = embedding_dim
@@ -27,11 +27,11 @@ class SiameneLSTM:
 
     def train_model(self, sentences_pair, feat, scores, embedding_meta_data2, model_save_directory='./'):
         tokenizer, embedding_matrix = embedding_meta_data2[
-                                          'tokenizer'], embedding_meta_data2['embedding_matrix']
+            'tokenizer'], embedding_meta_data2['embedding_matrix']
 
         train_data_x1, train_data_x2, train_scores, leaks_train, feat_train, \
-        val_data_x1, val_data_x2, val_scores, leaks_val, feat_val = create_train_dev_set(
-            tokenizer, sentences_pair, feat, scores, self.max_sequence_length, self.validation_split_ratio)
+            val_data_x1, val_data_x2, val_scores, leaks_val, feat_val = create_train_dev_set(
+                tokenizer, sentences_pair, feat, scores, self.max_sequence_length, self.validation_split_ratio)
 
         if train_data_x1 is None:
             print("-----Failure: Unable to train model-----")
@@ -96,18 +96,19 @@ class SiameneLSTM:
         merged = Dense(25, activation='sigmoid')(merged)
         merged = BatchNormalization()(merged)
         merged = Dropout(0.5)(merged)
-        preds = Dense(1, activation='linear')(merged)
+        preds = Dense(3, activation='softmax')(merged)
 
         model = Model(inputs=[sequence_2_input, sequence_1_input,
                               feat_input, leaks_input], outputs=preds)
         opt = keras.optimizers.Adagrad(lr=0.01)
-        model.compile(loss='mae', optimizer=opt, metrics=['mse', 'mae', 'acc'])
+        model.compile(loss='categorical_crossentropy',
+                      optimizer=opt, metrics=['acc'])
 
         STAMP = 'lstm_%d_%d_%.2f_%.2f' % (
             self.number_lstm_units, self.number_dense_units, self.rate_drop_lstm, self.rate_drop_dense)
 
         checkpoint_dir = model_save_directory + 'checkpoints/' + \
-                         str(int(time.time())) + '/'  # TODO: save checkpoints
+            str(int(time.time())) + '/'  # TODO: save checkpoints
 
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
