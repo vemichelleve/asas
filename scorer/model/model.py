@@ -5,7 +5,7 @@ from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 from .lstm import *
-from .lstm2 import *
+from .lstm_c import *
 
 # initialized required parameters for LSTM network...
 EMBEDDING_DIM = 300
