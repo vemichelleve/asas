@@ -64,15 +64,19 @@ def buildmodel_c(questions, answers):
 
     print('==================== Validation metrics ====================')
     test_results = predict_c(X_test, train_model, tokenizer)
-    test_results, y_true = processresult_c(test_results, y_test, scaler_y)
-    acc, report = evaluate_c(test_results, y_true)
+    test_results, y_true = processresult_c(test_results, y_test)
+    acc, report, f1 = evaluate_c(test_results, y_true)
 
     print('Accuracy', round(acc, 4))
+    if f1 is not None:
+        print('F1 score', round(f1, 4))
     print('Report')
     print(report)
 
     metric = []
     metric.append({'metric': 'Accuracy', 'value': acc})
+    if f1 is not None:
+        metric.append({'metric': 'F1 score', 'value': f1})
 
     return metric, train_model, tokenizer, data
 

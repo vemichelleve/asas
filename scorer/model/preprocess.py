@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from nltk.corpus import stopwords
@@ -123,10 +124,10 @@ def scale(df):
 def scale_c(df):
     print('===== Scaling =====')
     X = df[['Ref Answer', 'Answer']]
-    y = pd.DataFrame(df['ans_grade'])
-    
+    Y = pd.DataFrame(df['ans_grade'])
+
     Y_np = Y.to_numpy()
-    y = np.zeros((Y_np.shape[0], 3)) # 3 classes
+    y = np.zeros((Y_np.shape[0], 3))  # 3 classes
     for index, row in Y.iterrows():
         val = 1
         if row['ans_grade'] <= 1:
@@ -135,7 +136,7 @@ def scale_c(df):
             val = 2
 
         y[index, val] = 1
-
+    
     # Min Max Scaling of the features used for feature engineering
     x = pd.DataFrame(df['Length Answer'])
     scaler_x = MinMaxScaler()

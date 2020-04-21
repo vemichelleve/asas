@@ -1,8 +1,12 @@
+import numpy as np
+import pandas as pd
+
 from math import sqrt
 
 from keras.models import load_model
 from scipy.stats import pearsonr
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, accuracy_score, classification_report, f1_score
+
 
 from .lstm import *
 from .lstm_c import *
@@ -82,7 +86,7 @@ def train_lstm_c(df, y, model):
     # SiameneBiLSTM is a class for  Long short Term Memory networks
     print('===== Building model =====')
     siamese = SiameneLSTM_c(EMBEDDING_DIM, MAX_SEQUENCE_LENGTH, NUMBER_LSTM, NUMBER_DENSE_UNITS,
-                          RATE_DROP_LSTM, RATE_DROP_DENSE, ACTIVATION_FUNCTION, VALIDATION_SPLIT)
+                            RATE_DROP_LSTM, RATE_DROP_DENSE, ACTIVATION_FUNCTION, VALIDATION_SPLIT)
 
     print('===== Training model =====')
     model_path = siamese.train_model(
@@ -188,13 +192,8 @@ def processresult_c(test_results, y_test):
             y_t.append(1)
         elif x[2] == 1:
             y_t.append(2)
-        # 5 class
-        elif x[3] == 1:
-            y_t.append(3)
-        elif x[4] == 1:
-            y_t.append(4)
         else:
-            y_t.append(None)
+            y_t.append(0)
     y_true = y_t
 
     t = []
@@ -218,5 +217,9 @@ def evaluate_c(test_results, y_true):
     print('===== Calculating metrics =====')
     acc = accuracy_score(y_true, test_results)
     report = classification_report(y_true, test_results, digits=4)
+    try:
+        f1 = f1_score(y_true, test_results)
+    except:
+        f1 = None
 
-    return acc, report
+    return acc, report, f1
