@@ -485,8 +485,9 @@ class QuestionbyUserView(APIView):
 
 
 class TrainModel(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
+    # TODO: check!
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = (IsAuthenticated,)
 
     def put(self, request, format=None):
         questions = Question.objects.all()
