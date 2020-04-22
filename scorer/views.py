@@ -508,6 +508,7 @@ class TrainModel(APIView):
 
                 serializer = MetricsSerializer(metric, data=data, context={
                     'request': request}, partial=True)
+
                 if serializer.is_valid():
                     serializer.save()
 
@@ -518,11 +519,10 @@ class TrainModel(APIView):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
-                    print(str(round(index / len(result) * 100, 1)) + '%')
-
                     data = {'systemscore': result[index]}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
+
                     if serializer.is_valid():
                         serializer.save()
 
@@ -734,21 +734,22 @@ class TrainModelClassification(APIView):
 
                 serializer = MetricsSerializer(metric, data=data, context={
                     'request': request}, partial=True)
+                    
                 if serializer.is_valid():
                     serializer.save()
 
         result = score_c(df_test, model, tokenizer)
+        print(result)
 
         index = 0
         if len(result) == len(answers):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
-                    print(str(round(index / len(result) * 100, 1)) + '%')
-
-                    data = {'systemclass': result[index]}
+                    data = {'systemclass': int(result[index])}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
+                        
                     if serializer.is_valid():
                         serializer.save()
 

@@ -31,7 +31,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ('pk', 'question', 'answer',
-                  'score1', 'score2', 'systemscore')
+                  'score1', 'score2', 'systemscore', 'systemclass')
 
 
 class AnsweredQuestionsSerializer(serializers.ModelSerializer):
