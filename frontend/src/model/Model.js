@@ -29,13 +29,16 @@ class Model extends Component {
         this.setState({ hide: false })
         var self = this;
         modelService.trainModel().then(result => {
-            alert(result.message)
-            self.setState({ hide: true });
-            this.retrieveData();
+            modelService.trainModelClass().then(result => {
+                alert(result.message)
+                this.retrieveData();
+            }).catch((result) => {
+                alert(result.message)
+            })
         }).catch((result) => {
             alert(result.message)
-            self.setState({ hide: true });
         })
+        self.setState({ hide: true });
     }
 
     render() {

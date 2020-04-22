@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookie from '../Cookie'
 
-const API_URL = 'http://127.0.0.1:8000'
+const API_URL = 'http://155.69.151.177:8000'
 const c = new Cookie()
 
 export default class PostService {
