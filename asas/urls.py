@@ -47,4 +47,5 @@ urlpatterns = [
     url(r'^signup/$', views.UserSignUpView.as_view()),
     url(r'^students/$', views.StudentListView.as_view()),
     url(r'^students/(?P<pk>[0-9]+)$', views.StudentDetailsView.as_view()),
+    url(r'^manual/$', views.Manual.as_view()),
 ]

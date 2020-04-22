@@ -758,3 +758,40 @@ class TrainModelClassification(APIView):
             return Response({'message': 'Model successfully trained'})
         else:
             return Response({'message': 'Result not uploaded'})
+
+
+class Manual(APIView):
+    def discretize(self, arr):
+        for i in range(len(arr)):
+            if arr[i][0] >= 4:
+                arr[i] = 2
+            elif arr[i][0] <4 and arr[i][0] > 1:
+                arr[i] = 1
+            else:
+                arr[i] = 1
+        return arr
+
+    def get(self, request, format=None):
+        questions = Question.objects.all()
+        answers = Answer.objects.filter(score1__isnull=False)
+        answers = answers.filter(score2__isnull=False)
+        
+        import pandas as pd
+        df = pd.DataFrame(list(answers.values()))
+
+        systemscore = df[['systemscore']].copy().values.tolist()
+        systemscore = self.discretize(systemscore)
+
+        score = df[['score1']].copy().values.tolist()
+        score = self.discretize(score)
+
+        systemclass = df[['systemclass']].copy().values.tolist()
+
+        from sklearn.metrics import classification_report
+        print('Regression')
+        print(classification_report(score, systemscore))
+
+        print('Classification')
+        print(classification_report(score, systemclass))
+
+        return Response({'msg': 'done'})
