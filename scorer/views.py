@@ -739,26 +739,21 @@ class TrainModelClassification(APIView):
 
         result = score_c(df_test, model, tokenizer)
 
-        # index = 0
-        # if len(result) == len(answers):
-        #     print('========== Uploading scores ==========')
-        #     with transaction.atomic():
-        #         for ans in answers:
-        #             print(str(round(index / len(result) * 100, 1)) + '%')
+        index = 0
+        if len(result) == len(answers):
+            print('========== Uploading scores ==========')
+            with transaction.atomic():
+                for ans in answers:
+                    print(str(round(index / len(result) * 100, 1)) + '%')
 
-        #             data = {'systemscore': result[index]}
-        #             serializer = AnswerSerializer(ans, data=data, context={
-        #                 'request': request}, partial=True)
-        #             if serializer.is_valid():
-        #                 serializer.save()
+                    data = {'systemclass': result[index]}
+                    serializer = AnswerSerializer(ans, data=data, context={
+                        'request': request}, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
 
-        #             index += 1
-        #     print('========== Upload done ==========')
-        #     return Response({'message': 'Model successfully trained'})
-        # else:
-        #     return Response({'message': 'Result not uploaded'})
-
-        metrics = Metrics.objects.all()
-        serializer = MetricsSerializer(
-            metrics, context={'request': request}, many=True)
-        return Response({'message': 'done', 'data': serializer.data})
+                    index += 1
+            print('========== Upload done ==========')
+            return Response({'message': 'Model successfully trained'})
+        else:
+            return Response({'message': 'Result not uploaded'})

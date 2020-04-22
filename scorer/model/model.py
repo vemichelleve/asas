@@ -217,9 +217,16 @@ def evaluate_c(test_results, y_true):
     print('===== Calculating metrics =====')
     acc = accuracy_score(y_true, test_results)
     report = classification_report(y_true, test_results, digits=4)
-    try:
-        f1 = f1_score(y_true, test_results)
-    except:
-        f1 = None
+
+    result = report.split('\n')
+    index = findnth(result[7], '0.', 2)
+    f1 = float(result[7][index:(index + 6)])
 
     return acc, report, f1
+
+
+def findnth(str, substring, n):
+    parts = str.split(substring, n + 1)
+    if len(parts) <= n + 1:
+        return -1
+    return len(str) - len(parts[-1]) - len(substring)

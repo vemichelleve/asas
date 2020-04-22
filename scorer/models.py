@@ -72,6 +72,7 @@ class Answer(models.Model):
     score1 = models.FloatField('Score 1', null=True)
     score2 = models.FloatField('Score 2', null=True)
     systemscore = models.FloatField('System score', null=True)
+    systemclass= models.IntegerField('Score class', null=True)
 
     def __str__(self):
         return self.answer
