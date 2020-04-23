@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+../asas/__python__/
+../scorer/__python__/
+../scorer/migrations/__python__/
+../scorer/model/__python__/
