@@ -60,7 +60,7 @@ def cleaning_dataset(df, input_file):
                                 'Unique Words Answer', 'Q_ID'])
 
     df = df.drop(['id', 'score1', 'score2',
-                  'systemscore'], axis=1)  # TODO: Check!
+                  'systemscore'], axis=1)
 
     df = df.append(df_train)
 
@@ -119,55 +119,6 @@ def scale(df):
     y = scaler_y.transform(y)
 
     return X, y, scaler_y
-
-
-def scale_c(df):
-    print('===== Scaling =====')
-    X = df[['Ref Answer', 'Answer']]
-    Y = pd.DataFrame(df['ans_grade'])
-
-    Y_np = Y.to_numpy()
-    y = np.zeros((Y_np.shape[0], 3))  # 3 classes
-    for index, row in Y.iterrows():
-        val = 1
-        if row['ans_grade'] <= 1:
-            val = 0
-        elif row['ans_grade'] >= 4:
-            val = 2
-
-        y[index, val] = 1
-    
-    # Min Max Scaling of the features used for feature engineering
-    x = pd.DataFrame(df['Length Answer'])
-    scaler_x = MinMaxScaler()
-    scaler_x.fit(x)
-    x = scaler_x.transform(x)
-    X['Length Answer'] = x
-
-    x = pd.DataFrame(df['Len Ref By Ans'])
-    scaler_x2 = MinMaxScaler()
-    scaler_x2.fit(x)
-    x = scaler_x2.transform(x)
-    X['Len Ref By Ans'] = x
-
-    x = pd.DataFrame(df['Words Answer'])
-    scaler_x3 = MinMaxScaler()
-    scaler_x3.fit(x)
-    x = scaler_x3.transform(x)
-    X['Words Answer'] = x
-
-    x = pd.DataFrame(df['Length Ref Answer'])
-    scaler_x4 = MinMaxScaler()
-    scaler_x4.fit(x)
-    x = scaler_x4.transform(x)
-    X['Length Ref Answer'] = x
-
-    x = pd.DataFrame(df['Unique Words Answer'])
-    scaler_x5 = MinMaxScaler()
-    scaler_x5.fit(x)
-    x = scaler_x5.transform(x)
-    X['Unique Words Answer'] = x
-
     return X, y
 
 

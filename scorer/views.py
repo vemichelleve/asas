@@ -119,8 +119,8 @@ class QuestionListView(GenericAPIView):
     pagination_class = CustomPagination
 
     # TODO: check!
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = (IsAuthenticated,)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -489,10 +489,6 @@ class QuestionbyUserView(APIView):
 
 
 class TrainModel(APIView):
-    # TODO: check!
-    authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
-
     def put(self, request, format=None):
         questions = Question.objects.all()
         answers = Answer.objects.filter(score1__isnull=False)
@@ -536,6 +532,10 @@ class TrainModel(APIView):
             return Response({'message': 'Model successfully trained'})
         else:
             return Response({'message': 'Result not uploaded'})
+
+class MetricsView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         metrics = Metrics.objects.all()
@@ -703,53 +703,6 @@ class StudentUpdatePasswordView(APIView):
             return Response({'message': 'Password successfully updated', 'status': 1})
         else:
             return Repsonse({'message': 'Failed to update password', 'status': 0})
-
-
-class TrainModelClassification(APIView):
-    def get(self, request, format=None):
-        questions = Question.objects.all()
-        answers = Answer.objects.filter(score1__isnull=False)
-        answers = answers.filter(score2__isnull=False)
-
-        metrics, model, tokenizer, df_test = buildmodel_c(
-            questions, answers)
-
-        for metric in metrics:
-            name = metric['metric']
-            value = metric['value']
-            if not Metrics.objects.filter(name=name).exists():
-                metricobj = Metrics.objects.create(name=name, value=value)
-                metricobj.save()
-            else:
-                metric = Metrics.objects.get(name=name)
-                data = {'value': value}
-
-                serializer = MetricsSerializer(metric, data=data, context={
-                    'request': request}, partial=True)
-
-                if serializer.is_valid():
-                    serializer.save()
-
-        result = score_c(df_test, model, tokenizer)
-        print(result)
-
-        index = 0
-        if len(result) == len(answers):
-            print('========== Uploading scores ==========')
-            with transaction.atomic():
-                for ans in answers:
-                    data = {'systemclass': int(result[index])}
-                    serializer = AnswerSerializer(ans, data=data, context={
-                        'request': request}, partial=True)
-
-                    if serializer.is_valid():
-                        serializer.save()
-
-                    index += 1
-            print('========== Upload done ==========')
-            return Response({'message': 'Model successfully trained'})
-        else:
-            return Response({'message': 'Result not uploaded'})
 
 
 # class Manual(APIView):  # TODO: remove

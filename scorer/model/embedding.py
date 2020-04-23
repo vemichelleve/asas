@@ -169,8 +169,6 @@ def word_embed_meta_data(documents, embedding_dim, model):
     vocabulary_size = 20000
     tokenizer = Tokenizer(num_words=vocabulary_size, filters='')
     tokenizer.fit_on_texts(documents)
-    # gloveFile = "/Users/michellevanessa/Desktop/automatic-text-scoring-master/glove.6B.300d.txt"
-    # model = train_word2vec(gloveFile)
 
     # Handling the exception cases where the word in dataset is not present in the GloVe embeddings vocabulary
     model['dereferencing'] = (model['not'] + model['reference']) / 2
@@ -574,9 +572,10 @@ def word_embed_meta_data(documents, embedding_dim, model):
         # remove remaining tokens that are not alphanumeric
         words = [word for word in stripped if word.isalnum()]
         for word in words:
-            # TODO: check if answer is misspelled
-            # print(word)
-            word_vector[word] = model[word]
+            try:
+                word_vector[word] = model[word]
+            except:
+                word_vector[word] = model['none']
     embedding_matrix = create_embedding_matrix(
         tokenizer, word_vector, embedding_dim)
     del word_vector

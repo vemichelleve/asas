@@ -107,7 +107,7 @@ class SiameneLSTM:
             self.number_lstm_units, self.number_dense_units, self.rate_drop_lstm, self.rate_drop_dense)
 
         checkpoint_dir = model_save_directory + 'checkpoints/' + \
-                         str(int(time.time())) + '/'  # TODO: save checkpoints
+                         str(int(time.time())) + '/'
 
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)

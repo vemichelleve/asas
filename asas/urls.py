@@ -35,8 +35,8 @@ urlpatterns = [
     url(r'^answers/(?P<pk>[0-9]+)$', views.AnswerView.as_view()),
     url(r'^api-token-auth/', obtain_auth_token),
     url(r'^approved/$', views.StudentApprovedView.as_view()),
-    url(r'^model/$', views.TrainModel.as_view()),
-    url(r'^model/class/$', views.TrainModelClassification.as_view()),
+    url(r'^model/$', views.MetricsView.as_view()),
+    url(r'^model/train/$', views.TrainModel.as_view()),
     url(r'^posts/$', views.PostListView.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)$', views.PostDetailsView.as_view()),
     url(r'^questions/$', views.QuestionListView.as_view()),
@@ -47,5 +47,5 @@ urlpatterns = [
     url(r'^signup/$', views.UserSignUpView.as_view()),
     url(r'^students/$', views.StudentListView.as_view()),
     url(r'^students/(?P<pk>[0-9]+)$', views.StudentDetailsView.as_view()),
-    url(r'^manual/$', views.Manual.as_view()),
+    url(r'^manual/$', views.Manual.as_view()), # TODO: remove
 ]

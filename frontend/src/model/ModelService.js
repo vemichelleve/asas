@@ -10,10 +10,6 @@ export default class ModelService {
     }
 
     trainModel() {
-        return axios.put(`${API_URL}/model/`, c.getHeaders()).then(response => response.data);
-    }
-
-    trainModelClass() {
-        return axios.put(`${API_URL}/model/class`, c.getHeaders()).then(response => response.data);
+        return axios.put(`${API_URL}/model/train/`, c.getHeaders()).then(response => response.data);
     }
 }
