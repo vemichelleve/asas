@@ -516,7 +516,8 @@ class TrainModel(APIView):
                     serializer.save()
 
         result = score(df_test, model, tokenizer, scaler)
-        result_discretized = self.discretize(result)
+        result_discretized = result.copy()
+        result_discretized = self.discretize(result_discretized)
 
         index = 0
         if len(result) == len(answers):

@@ -74,14 +74,11 @@ def score(df_test, model, tokenizer, scaler_y):
     return test_results
 
 def discretize(arr):
-    print(arr)
     for i in range(len(arr)):
-        print(i)
         if arr[i] >= 4:
             arr[i] = 2
         elif arr[i] < 4 and arr[i] > 1:
             arr[i] = 1
         else:
             arr[i] = 1
-    print(arr)
     return arr
