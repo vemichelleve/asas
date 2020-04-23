@@ -1,6 +1,8 @@
 import axios from 'axios'
+import Cookie from '../Cookie'
 
-const API_URL = 'http://155.69.151.177:8000'
+const c = new Cookie()
+const API_URL = c.getCookie('url')
 
 export default class LoginService {
     authenticate(admin) {

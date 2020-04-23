@@ -9,6 +9,7 @@ import AddQuestion from './questions/AddQuestion'
 import AdminNavBar from './navbar/AdminNavBar'
 import Account from './account/Account'
 import AnswerList from './answers/AnswerList'
+import Cookie from './Cookie'
 import Login from './login/Login'
 import Model from './model/Model'
 import PasswordChange from './account/PasswordChange'
@@ -61,6 +62,11 @@ const BaseLayout = () => (
 )
 
 class App extends Component {
+  componentDidMount() {
+    var c = new Cookie()
+    c.setCookie('url', 'http://127.0.0.1:8000', '')
+  }
+
   render() {
     return (
       <BrowserRouter>

@@ -21,8 +21,10 @@ The code is written in [Python 3.7](https://www.python.org/), and it needs to be
 * [npm](https://www.npmjs.com/get-npm)
 * [React](https://reactjs.org/docs/getting-started.html)
 
-## Deployment
+### Required files
+Download [GloVe](https://www.kaggle.com/thanakomsn/glove6b300dtxt) and save it inside the directory.
 
+## Deployment
 Open [Installing Guide](https://github.com/vemichelleve/fypcode/blob/master/Guide.pdf) for more detailed guide on how to run on remote server.
 
 1. Activate virtual environment.

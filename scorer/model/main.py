@@ -7,10 +7,10 @@ def avg(rms, mae):
 
 
 def buildmodel(questions, answers):
-    input_dataset = '/home/mvanessa/pastprojects/finalcode/Augmented_Feat.csv'
+    input_dataset = './Augmented_Feat.csv'
     embedmodel = train_word2vec(
-        '/home/mvanessa/pastprojects/glove.6B.300d.txt')
-    question = '/home/mvanessa/pastprojects/finalcode/questions.csv'
+        './glove.6B.300d.txt')
+    question = './questions.csv'
 
     data = preprocess(questions, answers)
     df = cleaning_dataset(data, input_dataset)
@@ -43,10 +43,10 @@ def buildmodel(questions, answers):
 
 
 def buildmodel_c(questions, answers):
-    input_dataset = '/home/mvanessa/pastprojects/finalcode/Augmented_Feat.csv'
+    input_dataset = './Augmented_Feat.csv'
     embedmodel = train_word2vec(
-        '/home/mvanessa/pastprojects/glove.6B.300d.txt')
-    question = '/home/mvanessa/pastprojects/finalcode/questions.csv'
+        './glove.6B.300d.txt')
+    question = './questions.csv'
 
     data = preprocess(questions, answers)
     df = cleaning_dataset(data, input_dataset)

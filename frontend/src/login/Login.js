@@ -35,12 +35,12 @@ class Login extends Component {
         if (admin) {
             name = this.state.admin_username
             pass = this.state.admin_password
-            path = 'admin'
+            path = 'admin/'
         }
         else {
             name = this.state.student_username
             pass = this.state.student_password
-            path = 'student'
+            path = 'student/'
         }
         loginService.authenticate({
             'username': name,
@@ -49,7 +49,7 @@ class Login extends Component {
         }).then((response) => {
             if (response.status) {
                 loginService.login(name, pass).then(result => {
-                        window.location.href = '/' + path + '/';
+                        window.location.href = '/' + path;
                         c.setCookie('token', result.token, path)
                 }).catch(result => {
                     alert('Wrong password!')
