@@ -127,13 +127,15 @@ def evaluate_discretized(test_results, y_true):
     report = classification_report(y_true, test_results)
 
     result = report.split('\n')
+    f1 = None
+    prec = None
     for i in range(len(result)):
         if 'weighted' in result[i]:
             index = findnth(result[i], '0.', 2)
             f1 = float(result[i][index:(index + 6)])
 
             index = findnth(result[i], '0.', 0)
-            precision = float(result[i][index:(index + 6)])
+            prec = float(result[i][index:(index + 6)])
     
     return acc, f1, prec
 

@@ -539,9 +539,9 @@ class TrainModel(APIView):
 
     def discretize(self, arr):
         for i in range(len(arr)):
-            if arr[i][0] >= 4:
+            if arr[i] >= 4:
                 arr[i] = 2
-            elif arr[i][0] < 4 and arr[i][0] > 1:
+            elif arr[i] < 4 and arr[i] > 1:
                 arr[i] = 1
             else:
                 arr[i] = 1

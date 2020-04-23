@@ -75,7 +75,7 @@ def cleaning_dataset(df, input_file):
     df['Answer'] = df['Answer'].apply(
         lambda x: " ".join(x for x in x.split() if x not in stop))
 
-    return df.iloc[:10, :]
+    return df
 
 
 def scale(df):

@@ -31,8 +31,8 @@ def buildmodel(questions, answers):
     tr_discretized = discretize(test_results)
     y_discretized = discretize(y_true)
 
-    acc, f1, prec = evaluate_discretized(tr_discretized, y_discretized)
     pearson, rmse, mae = evaluate(test_results, y_true)
+    acc, f1, prec = evaluate_discretized(tr_discretized, y_discretized)
 
     print("Pearson", round(pearson, 4))
     print("RMS", round(rmse, 4))
@@ -46,8 +46,8 @@ def buildmodel(questions, answers):
     metric.append({'metric': 'RMSE', 'value': rmse})
     metric.append({'metric': 'MAE', 'value': mae})
     metric.append({'metric': 'Accuracy', 'value': acc})
-    metric.append({'metric': 'Precision', 'value': prec})
     metric.append({'metric': 'F1 score', 'value': f1})
+    metric.append({'metric': 'Precision', 'value': prec})
 
     return metric, train_model, tokenizer, data, scaler_y
 
@@ -74,11 +74,14 @@ def score(df_test, model, tokenizer, scaler_y):
     return test_results
 
 def discretize(arr):
+    print(arr)
     for i in range(len(arr)):
-        if arr[i][0] >= 4:
+        print(i)
+        if arr[i] >= 4:
             arr[i] = 2
-        elif arr[i][0] < 4 and arr[i][0] > 1:
+        elif arr[i] < 4 and arr[i] > 1:
             arr[i] = 1
         else:
             arr[i] = 1
+    print(arr)
     return arr
