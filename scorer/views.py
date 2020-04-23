@@ -721,11 +721,3 @@ class StudentUpdatePasswordView(APIView):
             return Response({'message': 'Password successfully updated', 'status': 1})
         else:
             return Repsonse({'message': 'Failed to update password', 'status': 0})
-
-
-class Manual(GenericAPIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request, format=None):
-        return Response({'msg': 'done', 'status': 1})
