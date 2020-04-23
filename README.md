@@ -17,6 +17,8 @@ The code is written in [Python 3.7](https://www.python.org/), and it needs to be
 * [scikit-learn](https://scikit-learn.org/stable/install.html)
 * [nltk](https://www.nltk.org/install.html)
 
+_Note: tensorflow-gpu should be installed for GPU usage. For further information, click [here](https://www.tensorflow.org/install/gpu)_
+
 ### Frontend dependencies
 * [npm](https://www.npmjs.com/get-npm)
 * [React](https://reactjs.org/docs/getting-started.html)
