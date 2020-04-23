@@ -9,7 +9,7 @@ The code is written in [Python](https://www.python.org/), and it needs to be run
 * [Django REST framework](https://www.django-rest-framework.org/#installation)
 * [django-cors-headers](https://pypi.org/project/django-cors-headers/)
 #### Machine learning libraries
-* [TensorFlow](https://www.tensorflow.org/install/pip?lang=python3)
+* [TensorFlow 1.15.0](https://www.tensorflow.org/install/pip?lang=python3)
 * [pandas](https://pandas.pydata.org/getting_started.html)
 * [NumPy](https://numpy.org/)
 * [Keras 2.2.2](https://keras.io/)
