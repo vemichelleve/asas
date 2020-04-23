@@ -54,12 +54,17 @@ class QuestionDetails extends Component {
                 window.location = '/'
             });
             answerService.getAnswer(params.pk).then(result => {
-                self.setStates(result)
-                var x = new Array(self.state.maxpk + 1);
-                self.setState({
-                    score1: x,
-                    score2: x,
-                })
+                if (result.status === 1) {
+                    self.setStates(result)
+                    var x = new Array(self.state.maxpk + 1);
+                    self.setState({
+                        score1: x,
+                        score2: x,
+                    })
+                }
+                else {
+                    self.setState({ status: result.status })
+                }
             });
         }
     }
@@ -148,6 +153,7 @@ class QuestionDetails extends Component {
             page: result.data.page,
             next: result.data.links.next,
             previous: result.data.links.previous,
+            status: result.status,
         })
     }
 
@@ -156,6 +162,27 @@ class QuestionDetails extends Component {
             case 0:
                 return (
                     <div>
+                        <div className='Table-Top'>
+                            <div className='Header-Button'>
+                                <div>Question</div>
+                                <div className='Header-Text'>{this.state.question}</div>
+                            </div>
+                            <div className='Header-Button'>
+                                <div>Reference answer</div>
+                                <div className='Header-Text'>{this.state.refans}</div>
+                            </div>
+                            <div className='Button-Group'>
+                                <div className='Two-Buttons'>
+                                    <button className='btn btn-secondary Button-Left' onClick={() => window.history.back()}>Back</button>
+                                    <button className='btn btn-primary Button-Width' onClick={this.handleEdit}>
+                                        {this.state.edit ? 'Save' : 'Score'}
+                                    </button>
+                                </div>
+                                <button disabled={!this.state.uploaded} className='btn btn-primary Button-Bottom' onClick={this.handleAdd}>Add from CSV</button>
+                                <input className='Button-Bottom' type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
+                                <p className='card-text'><a href={csv} target='__blank'>Sample file</a></p>
+                            </div>
+                        </div>
                         <h1 className='display-4 Error-Msg'>Data not found</h1>
                     </div>
                 )

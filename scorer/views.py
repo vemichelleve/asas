@@ -118,10 +118,6 @@ class QuestionListView(GenericAPIView):
     queryset = Question.objects.all()
     pagination_class = CustomPagination
 
-    # TODO: check!
-    authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
-
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
@@ -140,7 +136,10 @@ class QuestionListView(GenericAPIView):
             'data': data
         }
 
-        return Response({'status': 1, 'data': data, 'message': 'Questions retrieved'})
+        if len(queryset) > 0:
+            return Response({'status': 1, 'data': data, 'message': 'Questions retrieved'})
+        else:
+            return Response({'status': 0, 'message': 'No questions found'})
 
 
 class AddManualQuestionView(APIView):
@@ -319,7 +318,7 @@ class AnswerView(GenericAPIView):
                 'data': data
             }
 
-            if queryset is not None:
+            if len(queryset) > 0:
                 studnetans = StudentAnswer.objects.none()
                 for x in queryset:
                     studnetans |= StudentAnswer.objects.filter(answer=x)
@@ -533,6 +532,7 @@ class TrainModel(APIView):
         else:
             return Response({'message': 'Result not uploaded'})
 
+
 class MetricsView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
@@ -654,7 +654,10 @@ class AnswerListView(GenericAPIView):
             'data': data
         }
 
-        return Response({'status': 1, 'data': data, 'message': 'Answers retrieved'})
+        if len(queryset) > 0:
+            return Response({'status': 1, 'data': data, 'message': 'Answers retrieved'})
+        else:
+            return Response({'status': 0, 'message': 'No answers retrieved'})
 
 
 class StudentApprovedView(APIView):
