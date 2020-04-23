@@ -5,6 +5,10 @@ const c = new Cookie()
 const API_URL = c.getCookie('url')
 
 export default class AnswerService {
+    getURL() {
+        return API_URL;
+    }
+
     answerQuestion(pk, answer) {
         return axios.post(`${API_URL}/answers/${pk}`, answer, c.getHeaders()).then(response => response.data);
     }
@@ -31,13 +35,5 @@ export default class AnswerService {
 
     getAnswersByURL(url) {
         return axios.get(url, c.getHeaders()).then(response => response.data);
-    }
-
-    getAnswersPage(page) {
-        return axios.get(`${API_URL}/allanswers/?page=${page}`, c.getHeaders()).then(response => response.data);
-    }
-
-    getAnswerPage(pk, page) {
-        return axios.get(`${API_URL}/answers/${pk}?page=${page}`).then(response => response.data);
     }
 }

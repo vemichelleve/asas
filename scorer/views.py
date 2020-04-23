@@ -117,6 +117,9 @@ class QuestionListView(GenericAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     pagination_class = CustomPagination
+    
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -367,7 +370,7 @@ class StudentEditAccountView(APIView):
 
     def put(self, request, format=None):
         serializer = UserSerializer(
-            user.request, data=request.data, context={'request': request})
+            request.user, data=request.data, context={'request': request})
 
         if serializer.is_valid():
             serializer.save()

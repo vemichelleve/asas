@@ -5,12 +5,12 @@ const c = new Cookie()
 const API_URL = c.getCookie('url')
 
 export default class QuestionService {
+    getURL() {
+        return API_URL;
+    }
+    
     getQuestions() {
         return axios.get(`${API_URL}/questions/`, c.getHeaders()).then(response => response.data);
-    }
-
-    getQuestionsPage(page) {
-        return axios.get(`${API_URL}/questions/?page=${page}`, c.getHeaders).then(response => response.data);
     }
 
     getQuestionsURL(url) {

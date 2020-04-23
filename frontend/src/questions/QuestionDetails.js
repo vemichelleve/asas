@@ -136,11 +136,9 @@ class QuestionDetails extends Component {
     }
 
     goToPage(page) {
-        var self = this;
         const { match: { params } } = this.props;
-        answerService.getAnswerPage(params.pk, page).then(result => {
-            self.setStates(result)
-        });
+        var url = questionService.getURL() + '/answers/' + params.pk + '?page=' + page;
+        this.getByURL(url)
     }
 
     setStates(result) {

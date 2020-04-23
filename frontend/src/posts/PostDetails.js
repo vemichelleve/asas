@@ -83,11 +83,9 @@ class PostDetails extends Component {
     }
 
     goToPage(page) {
-        var self = this;
         const { match: { params } } = this.props;
-        postService.getPostPage(params.pk, page).then(result => {
-            self.setStates(result)
-        });
+        var url = postService.getURL() + '/posts/' + params.pk + '?page=' + page;
+        this.getByURL(url)
     }
 
     render() {

@@ -10,6 +10,7 @@ class PasswordChange extends Component {
             oldpass: '',
             newpass: '',
             newpass2: '',
+            disable: true,
         }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -22,6 +23,7 @@ class PasswordChange extends Component {
                 newpass: this.state.newpass,
             }).then(result => {
                 alert(result.message)
+                window.location.reload()
             }).catch(result => {
                 alert(result.message)
             })
@@ -37,17 +39,17 @@ class PasswordChange extends Component {
                         <h4 className='card-title'>Update password</h4>
                         <div className='form-group'>
                             <label>Old password</label>
-                            <input type='password' className='form-control' onChange={(e) => this.setState({ oldpass: e.target.value })} />
+                            <input type='password' className='form-control' onChange={(e) => this.setState({ oldpass: e.target.value, disable: false })} />
                         </div>
                         <div className='form-group'>
                             <label>New password</label>
-                            <input type='password' className='form-control' onChange={(e) => this.setState({ newpass: e.target.value })} />
+                            <input type='password' className='form-control' onChange={(e) => this.setState({ newpass: e.target.value, disable: false })} />
                         </div><div className='form-group'>
                             <label>Retype new password</label>
-                            <input type='password' className='form-control' onChange={(e) => this.setState({ newpass2: e.target.value })} />
+                            <input type='password' className='form-control' onChange={(e) => this.setState({ newpass2: e.target.value, disable: false })} />
                         </div>
                         <div className='form-group'>
-                            <button className='btn btn-primary Button-Left' type='submit'>Save</button>
+                            <button className='btn btn-primary Button-Left' disabled={this.state.disable} type='submit'>Save</button>
                             <button className='btn btn-secondary' type='button' onClick={() => window.history.back()}>Back</button>
                         </div>
                     </div>

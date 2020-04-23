@@ -5,6 +5,10 @@ const c = new Cookie()
 const API_URL = c.getCookie('url')
 
 export default class StudentService {
+    getURL() {
+        return API_URL;
+    }
+    
     getStudents() {
         return axios.get(`${API_URL}/students/`, c.getHeaders()).then(response => response.data);
     }
@@ -23,9 +27,5 @@ export default class StudentService {
 
     getStudentsURL(url) {
         return axios.get(url, c.getHeaders()).then(response => response.data);
-    }
-
-    getStudentsPage(page) {
-        return axios.get(`${API_URL}/students/?page=${page}`, c.getHeaders()).then(response => response.data);
     }
 }

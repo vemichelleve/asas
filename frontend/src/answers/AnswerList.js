@@ -46,10 +46,8 @@ class AnswerList extends Component {
     }
 
     goToPage(page) {
-        var self = this;
-        answerService.getAnswersPage(page).then(result => {
-            self.setStates(result)
-        });
+        var url = answerService.getURL() + '/allanswers/?page=' + page;
+        this.getByURL(url)
     }
 
     setStates(result) {

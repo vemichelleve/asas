@@ -57,10 +57,8 @@ class StudentList extends Component {
     }
 
     goToPage(page) {
-        var self = this;
-        studentService.getStudentsPage(page).then(result => {
-            self.setStates(result)
-        });
+        var url = studentService.getURL() + '/students/?page=' + page;
+        this.getByURL(url)
     }
 
     setStates(result) {

@@ -44,10 +44,8 @@ class QuestionList extends Component {
     }
 
     goToPage(page) {
-        var self = this;
-        questionService.getQuestionsPage(page).then(result => {
-            self.setStates(result)
-        });
+        var url = questionService.getURL() + '/questions/?page=' + page;
+        this.getByURL(url)
     }
 
     setStates(result) {

@@ -45,10 +45,8 @@ class PostList extends Component {
     }
 
     goToPage(page) {
-        var self = this;
-        postService.getPostsPage(page).then(result => {
-            self.setStates(result)
-        });
+        var url = postService.getURL() + '/posts/?page=' + page;
+        this.getByURL(url)
     }
 
     setStates(result) {
