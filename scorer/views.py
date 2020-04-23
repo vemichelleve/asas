@@ -48,7 +48,7 @@ class UserLoginView(APIView):
                     return Response({'message': 'User found!', 'status': 1})
             elif data['is_student']:
                 try:
-                    student = Student.objects.get(user=user)
+                    student = Student.objects.get(user=generaluser)
                 except:
                     student = None
 
@@ -57,7 +57,10 @@ class UserLoginView(APIView):
                         return Response({'message': 'User found!', 'status': 1})
                     else:
                         return Response({'message': 'Not approved', 'status': 0})
-        return Response({'message': 'User not found', 'status': 0})
+                else:
+                    return Response({'message': 'Student not found', 'status': 0})
+        else:
+            return Response({'message': 'User not found', 'status': 0})
 
 
 class StudentListView(GenericAPIView):
@@ -115,8 +118,9 @@ class QuestionListView(GenericAPIView):
     queryset = Question.objects.all()
     pagination_class = CustomPagination
 
-    authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
+    # TODO: check!
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = self.filter_queryset(self.get_queryset())
@@ -486,8 +490,8 @@ class QuestionbyUserView(APIView):
 
 class TrainModel(APIView):
     # TODO: check!
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = (IsAuthenticated,)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def put(self, request, format=None):
         questions = Question.objects.all()
@@ -556,27 +560,19 @@ class AddAutoAnswers(APIView):
 
         fileobj = request.data['file']
         count = 0
-        for line in fileobj:
-            arr = re.compile(
-                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
-            arr = list(filter(None, arr))
-            answer = arr[0].replace('"', '')
 
-            # TODO: fix below
-            if len(arr) > 2 and arr[2] != '':
-                score1 = float(arr[1])
-                score2 = float(arr[2])
-            else:
-                score1 = float(arr[1])
-                score2 = float(arr[1])
+        import pandas as pd
+        df = pd.read_csv(fileobj, error_bad_lines=False)
+        arr = df.values.tolist()
 
+        for x in arr:
             for question in questions:
-                if not Answer.objects.filter(question=question, answer=answer).exists():
+                if not Answer.objects.filter(question=question, answer=x[0]).exists():
                     student.questions.add(question)
                     student.save()
 
                     ans = Answer.objects.create(
-                        question=question, answer=answer, score1=score1, score2=score2)
+                        question=question, answer=x[0], score1=float(x[1]), score2=float(x[2]))
                     ans.save()
                     StudentAnswer.objects.create(
                         student=student, answer=ans).save()
@@ -603,25 +599,20 @@ class AddAnyAnswers(APIView):
         fileobj = request.data['file']
         count = 0
 
-        for line in fileobj:
-            arr = re.compile(
-                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
-            arr = list(filter(None, arr))
-            qn = arr[0].replace('"', '')
-            answer = arr[1].replace('"', '')
+        import pandas as pd
+        df = pd.read_csv(fileobj, error_bad_lines=False)
+        arr = df.values.tolist()
 
-            # TODO: accept more than one score
-            score1 = float(arr[2])
-            score2 = float(arr[2])
-            questions = Question.objects.filter(question=qn)
+        for x in arr:
+            questions = Question.objects.filter(question=x[0])
 
             for question in questions:
-                if not Answer.objects.filter(question=question, answer=answer).exists():
+                if not Answer.objects.filter(question=question, answer=x[1]).exists():
                     student.questions.add(question)
                     student.save()
 
                     ans = Answer.objects.create(
-                        question=question, answer=answer, score1=score1, score2=score2)
+                        question=question, answer=x[1], score1=float(x[2]), score2=float(x[3]))
                     ans.save()
                     StudentAnswer.objects.create(
                         student=student, answer=ans).save()
@@ -735,7 +726,7 @@ class TrainModelClassification(APIView):
 
                 serializer = MetricsSerializer(metric, data=data, context={
                     'request': request}, partial=True)
-                    
+
                 if serializer.is_valid():
                     serializer.save()
 
@@ -750,7 +741,7 @@ class TrainModelClassification(APIView):
                     data = {'systemclass': int(result[index])}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
-                        
+
                     if serializer.is_valid():
                         serializer.save()
 
@@ -761,38 +752,45 @@ class TrainModelClassification(APIView):
             return Response({'message': 'Result not uploaded'})
 
 
-class Manual(APIView):
-    def discretize(self, arr):
-        for i in range(len(arr)):
-            if arr[i][0] >= 4:
-                arr[i] = 2
-            elif arr[i][0] <4 and arr[i][0] > 1:
-                arr[i] = 1
-            else:
-                arr[i] = 1
-        return arr
+# class Manual(APIView):  # TODO: remove
+#     def discretize(self, arr):
+#         for i in range(len(arr)):
+#             if arr[i][0] >= 4:
+#                 arr[i] = 2
+#             elif arr[i][0] < 4 and arr[i][0] > 1:
+#                 arr[i] = 1
+#             else:
+#                 arr[i] = 1
+#         return arr
 
-    def get(self, request, format=None):
-        questions = Question.objects.all()
-        answers = Answer.objects.filter(score1__isnull=False)
-        answers = answers.filter(score2__isnull=False)
-        
-        import pandas as pd
-        df = pd.DataFrame(list(answers.values()))
+#     def get(self, request, format=None):
+#         questions = Question.objects.all()
+#         answers = Answer.objects.filter(score1__isnull=False)
+#         answers = answers.filter(score2__isnull=False)
 
-        systemscore = df[['systemscore']].copy().values.tolist()
-        systemscore = self.discretize(systemscore)
+#         import pandas as pd
+#         df = pd.DataFrame(list(answers.values()))
 
-        score = df[['score1']].copy().values.tolist()
-        score = self.discretize(score)
+#         systemscore = df[['systemscore']].copy().values.tolist()
+#         systemscore = self.discretize(systemscore)
 
-        systemclass = df[['systemclass']].copy().values.tolist()
+#         score = df[['score1']].copy().values.tolist()
+#         score = self.discretize(score)
 
-        from sklearn.metrics import classification_report
-        print('Regression')
-        print(classification_report(score, systemscore))
+#         systemclass = df[['systemclass']].copy().values.tolist()
 
-        print('Classification')
-        print(classification_report(score, systemclass))
+#         from sklearn.metrics import classification_report
+#         print('Regression')
+#         print(classification_report(score, systemscore))
 
-        return Response({'msg': 'done'})
+#         print('Classification')
+#         print(classification_report(score, systemclass))
+
+#         return Response({'msg': 'done'})
+
+class Manual(GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        return Response({'msg': 'done', 'status': 1})

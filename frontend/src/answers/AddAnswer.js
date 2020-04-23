@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import AnswerService from './AnswerService'
-import csv from './sample.csv'
+import csv from './answer any sample.csv'
 
 const answerService = new AnswerService();
 

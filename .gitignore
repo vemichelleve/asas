@@ -1,0 +1,6 @@
+scorer/__pycache__/
+scorer/migrations/__pycache__/
+scorer/model/__pycache__/
+checkpoints/
+glove.6B.300d.txt
+__pycache__/

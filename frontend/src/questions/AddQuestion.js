@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import QuestionService from './QuestionService'
 import PostService from '../posts/PostService'
-import csv from './sample.csv'
+import csv from './question sample.csv'
 import Cookie from '../Cookie'
 
 const questionService = new QuestionService();

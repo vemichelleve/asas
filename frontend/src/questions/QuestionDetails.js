@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import QuestionService from './QuestionService'
 import AnswerService from '../answers/AnswerService'
 import Paginator from '../Paginator'
+import csv from './answer sample.csv'
 
 const questionService = new QuestionService()
 const answerService = new AnswerService()
@@ -179,6 +180,7 @@ class QuestionDetails extends Component {
                                 </div>
                                 <button disabled={!this.state.uploaded} className='btn btn-primary Button-Bottom' onClick={this.handleAdd}>Add from CSV</button>
                                 <input className='Button-Bottom' type='file' accept='.csv' onChange={(e) => this.setState({ file: e.target.files[0], uploaded: true })} />
+                                <p className='card-text'><a href={csv} target='__blank'>Sample file</a></p>
                             </div>
                         </div>
                         <table className='table Table-Below'>
