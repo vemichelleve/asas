@@ -28,16 +28,26 @@ def buildmodel(questions, answers):
     print('==================== Validation metrics ====================')
     test_results = predict(X_test, train_model, tokenizer)
     test_results, y_true = processresult(test_results, y_test, scaler_y)
+    tr_discretized = discretize(test_results)
+    y_discretized = discretize(y_true)
+
+    acc, f1, prec = evaluate_discretized(tr_discretized, y_discretized)
     pearson, rmse, mae = evaluate(test_results, y_true)
 
     print("Pearson", round(pearson, 4))
     print("RMS", round(rmse, 4))
     print("MAE", round(mae, 4))
+    print("Accuracy", round(acc, 4))
+    print("F1 score", round(f1, 4))
+    print("Precision", round(prec, 4))
 
     metric = []
     metric.append({'metric': 'Pearson', 'value': pearson})
     metric.append({'metric': 'RMSE', 'value': rmse})
     metric.append({'metric': 'MAE', 'value': mae})
+    metric.append({'metric': 'Accuracy', 'value': acc})
+    metric.append({'metric': 'Precision', 'value': prec})
+    metric.append({'metric': 'F1 score', 'value': f1})
 
     return metric, train_model, tokenizer, data, scaler_y
 
@@ -62,3 +72,13 @@ def score(df_test, model, tokenizer, scaler_y):
 
     print('==================== Scoring done ====================')
     return test_results
+
+def discretize(arr):
+    for i in range(len(arr)):
+        if arr[i][0] >= 4:
+            arr[i] = 2
+        elif arr[i][0] < 4 and arr[i][0] > 1:
+            arr[i] = 1
+        else:
+            arr[i] = 1
+    return arr

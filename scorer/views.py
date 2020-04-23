@@ -117,7 +117,7 @@ class QuestionListView(GenericAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     pagination_class = CustomPagination
-    
+
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated,)
 
@@ -516,13 +516,15 @@ class TrainModel(APIView):
                     serializer.save()
 
         result = score(df_test, model, tokenizer, scaler)
+        result_discretized = self.discretize(result)
 
         index = 0
         if len(result) == len(answers):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
-                    data = {'systemscore': result[index]}
+                    data = {
+                        'systemscore': result[index], 'systemclass': result_discretized[index]}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
 
@@ -534,6 +536,16 @@ class TrainModel(APIView):
             return Response({'message': 'Model successfully trained'})
         else:
             return Response({'message': 'Result not uploaded'})
+
+    def discretize(self, arr):
+        for i in range(len(arr)):
+            if arr[i][0] >= 4:
+                arr[i] = 2
+            elif arr[i][0] < 4 and arr[i][0] > 1:
+                arr[i] = 1
+            else:
+                arr[i] = 1
+        return arr
 
 
 class MetricsView(APIView):
@@ -710,42 +722,6 @@ class StudentUpdatePasswordView(APIView):
         else:
             return Repsonse({'message': 'Failed to update password', 'status': 0})
 
-
-# class Manual(APIView):  # TODO: remove
-#     def discretize(self, arr):
-#         for i in range(len(arr)):
-#             if arr[i][0] >= 4:
-#                 arr[i] = 2
-#             elif arr[i][0] < 4 and arr[i][0] > 1:
-#                 arr[i] = 1
-#             else:
-#                 arr[i] = 1
-#         return arr
-
-#     def get(self, request, format=None):
-#         questions = Question.objects.all()
-#         answers = Answer.objects.filter(score1__isnull=False)
-#         answers = answers.filter(score2__isnull=False)
-
-#         import pandas as pd
-#         df = pd.DataFrame(list(answers.values()))
-
-#         systemscore = df[['systemscore']].copy().values.tolist()
-#         systemscore = self.discretize(systemscore)
-
-#         score = df[['score1']].copy().values.tolist()
-#         score = self.discretize(score)
-
-#         systemclass = df[['systemclass']].copy().values.tolist()
-
-#         from sklearn.metrics import classification_report
-#         print('Regression')
-#         print(classification_report(score, systemscore))
-
-#         print('Classification')
-#         print(classification_report(score, systemclass))
-
-#         return Response({'msg': 'done'})
 
 class Manual(GenericAPIView):
     authentication_classes = [TokenAuthentication]

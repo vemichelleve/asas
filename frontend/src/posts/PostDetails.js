@@ -93,6 +93,19 @@ class PostDetails extends Component {
             case 0:
                 return (
                     <div>
+                        <div className='Table-Top'>
+                            <div className='Header-Button'>
+                                <div>Post name</div>
+                                <div className='Header-Text'>{this.state.post_name}</div>
+                            </div>
+                            <div className='Header-Button'>
+                                <div>Poster</div>
+                                <div className='Header-Text'>{this.state.poster_first} {this.state.poster_last}</div>
+                            </div>
+                            <div className='Button-Group'>
+                                <button className='btn btn-secondary' onClick={(e) => window.history.back()}>Back</button>
+                            </div>
+                        </div>
                         <h1 className='display-4 Error-Msg'>Data not found</h1>
                     </div>
                 )

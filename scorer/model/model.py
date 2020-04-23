@@ -7,7 +7,6 @@ from keras.models import load_model
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, mean_absolute_error, accuracy_score, classification_report, f1_score
 
-
 from .lstm import *
 
 # initialized required parameters for LSTM network...
@@ -121,3 +120,26 @@ def evaluate(test_results, y_true):
     mae = mean_absolute_error(test_results, y_true)
 
     return pearson, rms, mae
+
+
+def evaluate_discretized(test_results, y_true):
+    acc = accuracy_score(y_true, test_results)
+    report = classification_report(y_true, test_results)
+
+    result = report.split('\n')
+    for i in range(len(result)):
+        if 'weighted' in result[i]:
+            index = findnth(result[i], '0.', 2)
+            f1 = float(result[i][index:(index + 6)])
+
+            index = findnth(result[i], '0.', 0)
+            precision = float(result[i][index:(index + 6)])
+    
+    return acc, f1, prec
+
+
+def findnth(str, substring, n):
+    parts = str.split(substring, n + 1)
+    if len(parts) <= n + 1:
+        return -1
+    return len(str) - len(parts[-1]) - len(substring)
