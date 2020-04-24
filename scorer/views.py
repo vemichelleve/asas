@@ -531,8 +531,8 @@ class TrainModel(APIView):
                 newmin = tmp
         
         for m in result:
-            tmp = ((x - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
-            x = tmp
+            tmp = ((m - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
+            m = tmp
 
         result_discretized = result.copy()
         result_discretized = self.discretize(result_discretized)
