@@ -28,11 +28,11 @@ def buildmodel(questions, answers):
     print('==================== Validation metrics ====================')
     test_results = predict(X_test, train_model, tokenizer)
     test_results, y_true = processresult(test_results, y_test, scaler_y)
-    tr_discretized = discretize(test_results)
-    y_discretized = discretize(y_true)
-
     pearson, rmse, mae = evaluate(test_results, y_true)
-    acc, f1, prec = evaluate_discretized(tr_discretized, y_discretized)
+
+    test_results = discretize(test_results)
+    y_true = discretize(y_true)
+    acc, f1, prec = evaluate_discretized(test_results, y_true)
 
     print("Pearson", round(pearson, 4))
     print("RMS", round(rmse, 4))

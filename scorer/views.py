@@ -516,6 +516,20 @@ class TrainModel(APIView):
                     serializer.save()
 
         result = score(df_test, model, tokenizer, scaler)
+        
+        oldmin = min(result)
+
+        indices = [i for i, x in enumerate(result) if x == oldmin]
+        x = []
+        for i in indices:
+            x.append(answers[i])
+
+        newmin = 5
+        for i in x:
+            tmp = (i.score1 + i.score2) / 2
+            if tmp < newmin:
+                newmin = tmp
+
         result_discretized = result.copy()
         result_discretized = self.discretize(result_discretized)
 
@@ -524,8 +538,9 @@ class TrainModel(APIView):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
+                    tmp = ((result[index] - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
                     data = {
-                        'systemscore': result[index], 'systemclass': result_discretized[index]}
+                        'systemscore': tmp, 'systemclass': result_discretized[index]}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
 

@@ -223,7 +223,19 @@ class QuestionDetails extends Component {
                                     <tr key={answer.pk}>
                                         <td>{answer.pk}</td>
                                         <td>{answer.answer}</td>
-                                        <td>{answer.systemscore ? answer.systemscore.toFixed(2) : '-'}</td>
+                                        <td>
+                                            {answer.systemscore === null ? '-' : answer.systemscore.toFixed(2)} &nbsp;
+                                            {answer.systemclass === 2 ? <svg className='bi bi-check-all' width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg' color='green'>
+                                                <path fill-rule='evenodd' d='M12.354 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L5 10.293l6.646-6.647a.5.5 0 01.708 0z' clip-rule='evenodd' />
+                                                <path d='M6.25 8.043l-.896-.897a.5.5 0 10-.708.708l.897.896.707-.707zm1 2.414l.896.897a.5.5 0 00.708 0l7-7a.5.5 0 00-.708-.708L8.5 10.293l-.543-.543-.707.707z' />
+                                            </svg> :
+                                                (answer.systemclass === 1 ? <svg className='bi bi-check' width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg' color='yellow'>
+                                                    <path fill-rule='evenodd' d='M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z' clip-rule='evenodd' />
+                                                </svg> :
+                                                    <svg className='bi bi-check' width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg' color='red'>
+                                                        <path fill-rule='evenodd' d='M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z' clip-rule='evenodd' />
+                                                    </svg>)}
+                                        </td>
                                         <td>
                                             {answer.score1 ? answer.score1 : (
                                                 this.state.edit ? <input type='number' min='0' max='5' className='form-control TextBox-Width'
