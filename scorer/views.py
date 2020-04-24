@@ -529,6 +529,10 @@ class TrainModel(APIView):
             tmp = (i.score1 + i.score2) / 2
             if tmp < newmin:
                 newmin = tmp
+        
+        for m in result:
+            tmp = ((x - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
+            x = tmp
 
         result_discretized = result.copy()
         result_discretized = self.discretize(result_discretized)
@@ -538,9 +542,8 @@ class TrainModel(APIView):
             print('========== Uploading scores ==========')
             with transaction.atomic():
                 for ans in answers:
-                    tmp = ((result[index] - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
                     data = {
-                        'systemscore': tmp, 'systemclass': result_discretized[index]}
+                        'systemscore': result[index], 'systemclass': result_discretized[index]}
                     serializer = AnswerSerializer(ans, data=data, context={
                         'request': request}, partial=True)
 

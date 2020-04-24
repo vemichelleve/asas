@@ -64,7 +64,7 @@ const BaseLayout = () => (
 class App extends Component {
   componentDidMount() {
     var c = new Cookie()
-    c.setCookie('url', 'http://127.0.0.1:8000', '')
+    c.setCookie('url', 'http://155.69.151.177:8000', '')
   }
 
   render() {
