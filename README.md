@@ -1,5 +1,9 @@
 # Automated Short Answer Scoring
 
+[Detailed guide](https://github.com/vemichelleve/fypcode/blob/master/Guide.pdf)
+
+[Project report](https://github.com/vemichelleve/fypcode/blob/master/report/Report.pdf)
+
 ## Requirements
 
 The code is written in [Python 3.7](https://www.python.org/), and it needs to be run inside a virtual environment to isolate package installation from the system. Hence, Package manager, [pip](https://pip.pypa.io/en/stable/installing/), and [virtual environment](https://pypi.org/project/virtualenv/) is required in this project.
