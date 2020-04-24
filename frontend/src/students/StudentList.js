@@ -97,7 +97,6 @@ class StudentList extends Component {
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Action</th>
-                                    <th>Approved</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -107,9 +106,6 @@ class StudentList extends Component {
                                         <td>{user.first_name} {user.last_name}</td>
                                         <td>{user.username}</td>
                                         <td>{user.email}</td>
-                                        <td>
-                                            <button className='btn btn-primary' onClick={() => window.location = '/admin/students/' + user.pk}>Details</button>
-                                        </td>
                                         <td>
                                             <button className='btn btn-primary' onClick={() => this.approveStudent(user.pk)} disabled={approved[user.pk]}>Approve</button>
                                         </td>
