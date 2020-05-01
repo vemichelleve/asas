@@ -441,17 +441,15 @@ class AddAutoQuestionView(APIView):
             post = Post.objects.get(name=name)
 
         fileobj = request.data['file']
-        for line in fileobj:
-            arr = re.compile(
-                '(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))').split(line.decode('utf-8'))
-            arr = list(filter(None, arr))
-            question = arr[0].replace('"', '')
-            try:
-                refans = arr[1].replace('"', '')
-            except IndexError:
-                msg = 'Error! No reference answer. ' + \
-                      str(count) + ' questions added.'
-                return Response({'message': msg, 'status': 0})
+
+        import pandas as pd
+        df = pd.read_csv(fileobj, error_bad_lines=False)
+        arr = df.values.tolist()
+
+        for x in arr:
+            question = arr[0]
+            refans = arr[1]
+
             if not Question.objects.filter(question=question, refans=refans, post=post).exists():
                 Question(
                     post=post, question=question, refans=refans).save()
@@ -516,7 +514,7 @@ class TrainModel(APIView):
                     serializer.save()
 
         result = score(df_test, model, tokenizer, scaler)
-        
+
         oldmin = min(result)
 
         indices = [i for i, x in enumerate(result) if x == oldmin]
@@ -529,7 +527,7 @@ class TrainModel(APIView):
             tmp = (i.score1 + i.score2) / 2
             if tmp < newmin:
                 newmin = tmp
-        
+
         for m in result:
             tmp = ((m - oldmin) / (5 - oldmin) * (5 - newmin)) + newmin
             m = tmp

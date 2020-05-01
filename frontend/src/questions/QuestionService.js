@@ -30,10 +30,11 @@ export default class QuestionService {
     }
 
     addQuestions(data) {
+        var s = 'Token ' + c.getCookie('token')
         return axios.post(`${API_URL}/addquestion/auto/`, data, {
             headers: {
                 'content-type': 'multipart/form-data',
-                Authorization: c.getCookie('token')
+                Authorization: s
             }
         }).then(response => response.data)
     }
